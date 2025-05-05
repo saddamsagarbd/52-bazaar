@@ -1,13 +1,43 @@
 import React from "react";
-import { Link } from "react-router-dom";
+import { Link, useLocation } from "react-router-dom";
+import DashboardIcon from '@mui/icons-material/Dashboard';
+import ProductIcon from '@mui/icons-material/LineAxis';
+
+const menuItems = [
+    { name: "Dashboard", icon: DashboardIcon, to: "/admin/dashboard" },
+    { name: "Products", icon: ProductIcon, to: "/admin/products", badge: "Pro" },
+];
 
 const Sidenav = () => {
+    const location = useLocation();
     return (
         <>
             <aside id="logo-sidebar" className="fixed top-0 left-0 z-40 w-64 h-screen pt-20 transition-transform -translate-x-full bg-white border-r border-gray-200 sm:translate-x-0 dark:bg-gray-800 dark:border-gray-700" aria-label="Sidebar">
                 <div className="h-full px-3 pb-4 overflow-y-auto bg-white dark:bg-gray-800">
                     <ul className="space-y-2 font-medium">
-                        <li>
+                    {menuItems.map((item, index) => {
+                        // Check if the current path matches the menu item's path
+                        const isActive = location.pathname === item.to;
+
+                        return (
+                            <li key={index}>
+                                <Link
+                                    to={item.to}
+                                    className={`flex items-center p-2 text-gray-900 rounded-lg dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700 group ${isActive ? 'bg-gray-200 dark:bg-gray-700' : ''}`}
+                                >
+                                    <item.icon className="w-5 h-5 text-gray-500" />
+                                    <span className="ms-3">{item.name}</span>
+                                    {item.badge && (
+                                        <span className="ml-2 bg-blue-500 text-white text-xs rounded-full px-2 py-1">
+                                            {item.badge}
+                                        </span>
+                                    )}
+                                </Link>
+                            </li>
+                        );
+                    })}
+
+                        {/* <li>
                             <a href="#" className="flex items-center p-2 text-gray-900 rounded-lg dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700 group">
                             <svg className="w-5 h-5 text-gray-500 transition duration-75 dark:text-gray-400 group-hover:text-gray-900 dark:group-hover:text-white" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 22 21">
                                 <path d="M16.975 11H10V4.025a1 1 0 0 0-1.066-.998 8.5 8.5 0 1 0 9.039 9.039.999.999 0 0 0-1-1.066h.002Z"/>
@@ -67,7 +97,7 @@ const Sidenav = () => {
                             </svg>
                             <span className="flex-1 ms-3 whitespace-nowrap">Sign Up</span>
                             </a>
-                        </li>
+                        </li> */}
                     </ul>
                 </div>
             </aside>

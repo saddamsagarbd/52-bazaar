@@ -4,6 +4,7 @@ const initialState = {
   user: null,
   token: null,
   loading: false,
+  isAuthenticated: false,
 };
 
 const authSlice = createSlice({
@@ -17,10 +18,12 @@ const authSlice = createSlice({
       state.user = action.payload.user;
       state.token = action.payload.token;
       state.loading = false;
+      state.isAuthenticated = true;
     },
     logout: (state) => {
       state.user = null;
       state.token = null;
+      state.isAuthenticated = false;
     },
   },
 });

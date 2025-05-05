@@ -19,6 +19,11 @@ export const loginUser = (credentials, navigate) => async (dispatch) => {
 
     if (response.ok) {
       dispatch(loginSuccess({ user: data.user, token: data.token }));
+      
+      localStorage.setItem('token', data.token);
+      localStorage.setItem('user', JSON.stringify(data.user));
+      localStorage.setItem('isAuthenticated', 'true');
+
       navigate('/admin/dashboard');
     } else {
       console.error('Login failed:', data.message);

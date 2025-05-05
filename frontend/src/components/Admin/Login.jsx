@@ -1,11 +1,9 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import axios from 'axios';
-import Logo from '../../assets/images/52-bazaar-logo.png';
-import usePageTitle from '../../hooks/usePageTitle';
-
 import { useDispatch } from 'react-redux';
 import { loginUser } from '../../redux/authActions';
+import Logo from '../../assets/images/52-bazaar-logo.png';
+import usePageTitle from '../../hooks/usePageTitle';
 
 const Login = () => {
 
@@ -15,19 +13,8 @@ const Login = () => {
 
     const handleLogin = (e) => {
         e.preventDefault();
-        // const credentials = { email, password };
         dispatch(loginUser(credentials, navigate));
     };
-
-    // const handleLogin = async () => {
-    //     try {
-    //       const res = await axios.post('http://localhost:5000/api/admin/login', { email, password });
-    //       localStorage.setItem('token', res.data.token);
-    //       navigate('/admin/dashboard');
-    //     } catch (err) {
-    //       alert('Login failed');
-    //     }
-    // };
 
     usePageTitle("Admin Login");
 
@@ -35,7 +22,7 @@ const Login = () => {
         <>
             <section className="bg-gray-50 dark:bg-gray-900">
                 <div className="flex flex-col items-center justify-center px-6 py-8 mx-auto md:h-screen lg:py-0">
-                    <a href="#" className="flex items-center mb-6 text-2xl font-semibold text-gray-900 dark:text-white">
+                    <a href='#' className="flex items-center mb-6 text-2xl font-semibold text-gray-900 dark:text-white">
                         <img className="w-[80px] h-[80px] mr-2" src={Logo} alt="logo" />    
                     </a>
                     <div className="w-full bg-white rounded-lg shadow dark:border md:mt-0 sm:max-w-md xl:p-0 dark:bg-gray-800 dark:border-gray-700">
