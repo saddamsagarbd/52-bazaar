@@ -5,11 +5,17 @@ import LandingPage from './components/LandingPage';
 import AdminLogin from './components/Admin/Login';
 import AdminLayout from './components/Admin/AdminLayout';
 import AdminDashboard from './components/Admin/Dashboard'
+import AdminCategories from './components/Admin/Categories'
 import AdminProducts from './components/Admin/Product';
 import ProtectedRoute from "./components/ProtectedRoute";
 import RedirectIfLoggedIn from "./components/RedirectIfLoggedIn";
 import { useDispatch } from 'react-redux';
 import { loginSuccess } from './redux/authSlice';
+import Modal from 'react-modal';
+import 'flowbite';
+import 'flowbite-react';
+
+Modal.setAppElement('#root');
 
 function App() {
   const dispatch = useDispatch();
@@ -38,6 +44,11 @@ function App() {
               <Route path="dashboard" element={
                 <ProtectedRoute>
                   <AdminDashboard />
+                </ProtectedRoute>
+              } />
+              <Route path="categories" element={
+                <ProtectedRoute>
+                  <AdminCategories />
                 </ProtectedRoute>
               } />
               <Route path="products" element={
