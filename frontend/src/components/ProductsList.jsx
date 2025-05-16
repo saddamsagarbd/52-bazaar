@@ -40,9 +40,6 @@ const ProductsList = () => {
     const [products, setProducts] = useState([]);
 
     const fetchProducts = async () => {
-        const token = localStorage.getItem('token');
-        if (!token) return;
-
         try {
             const response = await axios.get(`${process.env.REACT_APP_API_URL}/products`, {
                 headers: {
