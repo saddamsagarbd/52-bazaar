@@ -14,6 +14,8 @@ import { loginSuccess } from './redux/authSlice';
 import Modal from 'react-modal';
 import 'flowbite';
 import 'flowbite-react';
+import { ToastContainer } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 Modal.setAppElement('#root');
 
@@ -32,6 +34,7 @@ function App() {
 
   return (
     <>
+      <ToastContainer />
       <Router>
         <Routes>
           <Route path="/" element={<LandingPage />} />

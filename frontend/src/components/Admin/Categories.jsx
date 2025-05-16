@@ -61,8 +61,9 @@ const Categories = () => {
     
             const savedCategory = await response.json();
     
-            // Optionally append to local UI state
-            setData(prev => [...prev, savedCategory]);
+            // Refresh category list
+            fetchCategories();
+
             closeModal();
     
         } catch (err) {
@@ -85,12 +86,10 @@ const Categories = () => {
         },
         {
             header: 'Parent Category',
-            accessorKey: 'parent',
-            cell: ({ row }) => {
-                const parentId = row.original.parent;
-                if (!parentId) return '-';
-                const parent = data.find(cat => cat.id.toString() === parentId);
-                return parent ? parent.name : 'Invalid Parent';
+            accessorKey: 'parent_id',
+            cell: ({ getValue }) => {
+                const parent_id = getValue();
+                return parent_id?.name || 'N/A';
             },
         },
         {
@@ -104,17 +103,15 @@ const Categories = () => {
                 </button>
             ),
         },
-    ], [data, handleDelete]);
+    ], [categories, handleDelete]);
 
-    // const filteredData = useMemo(() => 
-    //     data.filter(cat => 
-    //         `${cat.name} ${cat.parent}`.toLowerCase().includes(searchQuery.toLowerCase())
-    //     ),
-    //     [data, searchQuery]
-    // );
+    const filteredData = useMemo(() => {
+        return categories.filter((category) => `${category.name}`.toLowerCase().includes(searchQuery.toLowerCase()));
+    }, [categories, searchQuery]);
+    
 
     const table = useReactTable({
-        data: categories,
+        data: filteredData,
         columns,
         getCoreRowModel: getCoreRowModel(),
         initialState: {
@@ -124,25 +121,26 @@ const Categories = () => {
         },
     });
 
-    useEffect(() => {
+    const fetchCategories = async () => {
         const token = localStorage.getItem('token');
+        if (!token) return;
 
-        if (!token) {
-            console.error("No token found, user not authenticated");
-            return; // Optionally handle the case where the token is missing
+        try {
+            const response = await fetch(`${process.env.REACT_APP_API_URL}/categories`, {
+                headers: {
+                    'Authorization': `Bearer ${token}`,
+                    'Content-Type': 'application/json',
+                },
+            });
+            const data = await response.json();
+            setCategories(data);
+        } catch (err) {
+            console.error("Failed to fetch categories", err);
         }
+    };
 
-        fetch(`${process.env.REACT_APP_API_URL}/categories`, {
-            method: 'GET',
-            headers: {
-                'Authorization': `Bearer ${token}`, // Attach token here
-                'Content-Type': 'application/json'
-            }
-        })
-        .then((res) => res.json())
-        .then((data) => setCategories(data))
-        .catch((err) => console.error('Error fetching categories:', err));
-
+    useEffect(() => {
+        fetchCategories();
     }, []);
 
     return (
@@ -193,7 +191,9 @@ const Categories = () => {
                                                 key={cell.id} 
                                                 className="px-6 py-4 whitespace-nowrap text-sm text-gray-500"
                                             >
-                                                {flexRender(cell.column.columnDef.cell, cell.getContext())}
+                                                {
+                                                    flexRender(cell.column.columnDef.cell, cell.getContext())
+                                                }
                                             </td>
                                         ))}
                                     </tr>
@@ -305,7 +305,7 @@ const Categories = () => {
                                 
                                 <div className="mb-6">
                                     <label className="block text-sm font-medium text-gray-700 mb-1">
-                                        Parent Category (ID)
+                                        Parent Category
                                     </label>
                                     <select
                                         value={newCategory.parent}
@@ -315,7 +315,7 @@ const Categories = () => {
                                         <option value="">-- None --</option>
                                         {categories.length > 0 ? (
                                         categories.map((cat) => (
-                                            <option key={cat.id} value={cat.id}>
+                                            <option key={cat._id} value={cat._id}>
                                             {cat.name}
                                             </option>
                                         ))

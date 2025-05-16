@@ -2,8 +2,10 @@
 require('dotenv').config();
 const express = require('express');
 const path = require('path');
+const fs = require('fs');
 const authRoute = require('./routes/auth');
 const catRoute = require('./routes/category');
+const productRoute = require('./routes/product');
 const cors = require('cors');
 
 const { connA } = require('./db-config/db-conn');
@@ -21,8 +23,11 @@ const corsOptions = {
 app.use(cors(corsOptions));
 app.use(express.json());
 
+app.use("/uploads", express.static(path.join(__dirname, "public/uploads")));
+
 app.use('/api', authRoute);
 app.use('/api', catRoute);
+app.use('/api', productRoute);
 
 app.get('/api/health', (req, res) => {
     res.send({ status: 'OK' });

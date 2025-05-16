@@ -25,7 +25,7 @@ exports.getCategories = async (req, res) => {
             return res.status(400).json({ message: 'Invalid parent ID format' });
         }
 
-        const categories = await Category.find(query).sort({ created_at: -1 });
+        const categories = await Category.find(query).populate('parent_id', 'name').sort({ created_at: -1 });
 
         console.log('Categories found:', categories);
 
@@ -46,6 +46,20 @@ exports.addCategory = async (req, res) => {
     
     try {
         const { name, parent_id, is_active } = req.body;
+
+        // Check for existing product with same name and category
+        const existingCategory = await Category.findOne({ 
+            name: name.trim(), 
+            parent_id 
+        });
+
+        if(existingCategory){
+            return res.status(400).json({ 
+                success: false, 
+                message: "Category with the same name already exists" 
+            });
+        }
+
         const newCategory = new Category({
             name,
             parent_id: parent_id || null,
@@ -55,6 +69,7 @@ exports.addCategory = async (req, res) => {
         });
 
         const saved = await newCategory.save();
+
         res.status(201).json(saved);
     } catch (error) {
         console.error('Add Category Error:', error);
