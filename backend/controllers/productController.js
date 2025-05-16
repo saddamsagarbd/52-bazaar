@@ -8,11 +8,11 @@ const Product = ProductModel(connA);
 const Category = CategoryModel(connA);
 
 exports.getProducts = async (req, res) => {
-    const token = req.headers['authorization']?.split(' ')[1]; // Extract token from Bearer header
+    // const token = req.headers['authorization']?.split(' ')[1]; // Extract token from Bearer header
 
-    if (!token) {
-        return res.status(401).json({ message: 'Unauthorized. No token provided.' });
-    }
+    // if (!token) {
+    //     return res.status(401).json({ message: 'Unauthorized. No token provided.' });
+    // }
 
     try {
         const { name, price, category } = req.query;

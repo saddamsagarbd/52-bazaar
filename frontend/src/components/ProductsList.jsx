@@ -46,7 +46,6 @@ const ProductsList = () => {
         try {
             const response = await axios.get(`${process.env.REACT_APP_API_URL}/products`, {
                 headers: {
-                    'Authorization': `Bearer ${token}`,
                     'Content-Type': 'application/json',
                 },
             });
