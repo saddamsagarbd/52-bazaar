@@ -4,7 +4,6 @@ import { toast } from 'react-toastify';
 import {
   useReactTable,
   getCoreRowModel,
-  getPaginationRowModel,
   flexRender,
 } from '@tanstack/react-table';
 import Modal from 'react-modal';
@@ -13,11 +12,8 @@ import usePageTitle from "../../hooks/usePageTitle";
 // Initialize modal root (prevents freezing)
 Modal.setAppElement('#root');
 
-const defaultData = [];
-
 const Products = () => {
     usePageTitle("Products");
-    const [data, setData] = useState(defaultData);
     const [searchQuery, setSearchQuery] = useState('');
     const [modalIsOpen, setModalIsOpen] = useState(false);
     const [newProduct, setNewProduct] = useState({ name: '', price: '', product_image: null, category: '' });
