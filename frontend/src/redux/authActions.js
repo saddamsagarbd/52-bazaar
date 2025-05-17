@@ -9,6 +9,7 @@ export const loginUser = (credentials, navigate) => async (dispatch) => {
       headers: {
         'Content-Type': 'application/json',
       },
+      credentials: 'include',
       body: JSON.stringify(credentials),
     });
 

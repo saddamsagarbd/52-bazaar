@@ -15,8 +15,8 @@ const { connA } = require('./db-config/db-conn');
 const app = express();
 
 const corsOptions = {
-    origin: ['http://localhost:3000', 'https://eurovisionbdg.com'],
-    methods: ['GET', 'POST', 'PUT', 'DELETE'],
+    origin: ['http://localhost:3000', 'https://eurovisionbdg.vercel.app', 'https://eurovisionbdg.com'],
+    methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
     credentials: true,
 };
 
