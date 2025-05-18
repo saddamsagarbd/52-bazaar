@@ -1,4 +1,4 @@
-import { loginStart, loginSuccess, logout } from './authSlice';
+import { loginStart, loginSuccess } from './authSlice';
 
 export const loginUser = (credentials, navigate) => async (dispatch) => {
   dispatch(loginStart());

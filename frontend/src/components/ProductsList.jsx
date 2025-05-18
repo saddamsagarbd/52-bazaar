@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import axios from 'axios';
+// import axios from 'axios';
 import DefaultProImg from '../assets/images/default-img.jpg';
 import Product from "./Product";
 
@@ -39,24 +39,25 @@ import Product from "./Product";
 const ProductsList = () => {
     const [products, setProducts] = useState([]);
 
-    const fetchProducts = async () => {
-        try {
-            // const response = await axios.get(`${process.env.REACT_APP_API_URL}/products`, {
-            //     headers: {
-            //         'Content-Type': 'application/json',
-            //     },
-            // });
-            const response = {data: []};
-            const data = await response.data;
-            console.log(data);
-            setProducts(data);
-        } catch (err) {
-            console.error("Failed to fetch products", err);
-        }
-    };
+    // const fetchProducts = async () => {
+    //     try {
+    //         const response = await axios.get(`${process.env.REACT_APP_API_URL}/products`, {
+    //             headers: {
+    //                 'Content-Type': 'application/json',
+    //             },
+    //         });
+    //         // const response = {data: []};
+    //         const data = await response.data;
+    //         console.log(data);
+    //         setProducts(data);
+    //     } catch (err) {
+    //         console.error("Failed to fetch products", err);
+    //     }
+    // };
 
     useEffect(() => {
-        fetchProducts();
+        setProducts([]);
+        // fetchProducts();
     }, []);
 
     return (

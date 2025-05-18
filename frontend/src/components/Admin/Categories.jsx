@@ -35,7 +35,7 @@ const Categories = () => {
         const token = localStorage.getItem('token');
     
         if (!token) {
-            console.error("No token found, user not authenticated");
+            console.log("No token found, user not authenticated");
             return;
         }
 
@@ -65,7 +65,7 @@ const Categories = () => {
             fetchCategories();
     
         } catch (err) {
-            console.error('Category submission error:', err);
+            console.log('Category submission error:', err);
         
             // Enhanced error messages
             const errorMessage = err.response?.data?.message || 
@@ -108,7 +108,7 @@ const Categories = () => {
                 </button>
             ),
         },
-    ], []);
+    ], [handleDelete]);
 
     const filteredData = useMemo(() => {
         return categories.filter((category) => `${category.name}`.toLowerCase().includes(searchQuery.toLowerCase()));
@@ -140,7 +140,7 @@ const Categories = () => {
             const data = await response.json();
             setCategories(data);
         } catch (err) {
-            console.error("Failed to fetch categories", err);
+            console.log("Failed to fetch categories", err);
         }
     };
 
