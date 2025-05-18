@@ -41,20 +41,11 @@ if (process.env.NODE_ENV === 'production') {
     res.sendFile(path.join(__dirname, '../frontend/build', 'index.html'));
   });
 }
+
   
 
 const PORT = process.env.PORT || 5000;
 
-app.listen(PORT, () => {
-    console.log(`Server running on port ${PORT}`)
-
-    connA.once('open', async () => {
-        console.log('Custom connection established.');
-      
-        const result = await connA.db.admin().ping();
-        console.log('Ping response:', result);
-    });
-});
 
 connA.on('error', err => {
     console.error('MongoDB connection error:', err);
@@ -64,4 +55,21 @@ app.use((err, req, res, next) => {
     console.error('Unhandled error:', err);
     res.status(500).json({ message: 'Internal server error' });
 });
+
+if (process.env.NODE_ENV === 'production') {
+    module.exports = app;
+}else{
+    app.listen(PORT, () => {
+        console.log(`Server running on port ${PORT}`)
+
+        connA.once('open', async () => {
+            console.log('Custom connection established.');
+        
+            const result = await connA.db.admin().ping();
+            console.log('Ping response:', result);
+        });
+    });
+}
+
+
   

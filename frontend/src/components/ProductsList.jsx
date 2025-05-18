@@ -41,13 +41,14 @@ const ProductsList = () => {
 
     const fetchProducts = async () => {
         try {
-            const response = await axios.get(`${process.env.REACT_APP_API_URL}/products`, {
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-            });
+            // const response = await axios.get(`${process.env.REACT_APP_API_URL}/products`, {
+            //     headers: {
+            //         'Content-Type': 'application/json',
+            //     },
+            // });
+            const response = {data: []};
             const data = await response.data;
-            console.log
+            console.log(data);
             setProducts(data);
         } catch (err) {
             console.error("Failed to fetch products", err);
