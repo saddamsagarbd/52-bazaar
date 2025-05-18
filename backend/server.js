@@ -16,7 +16,7 @@ const app = express();
 
 const corsOptions = {
     origin: ['http://localhost:3000', 'https://eurovisionbdg.com'],
-    methods: ['GET', 'POST', 'PUT', 'DELETE'],
+    methods: ['GET', 'POST', 'PUT', 'DELETE', 'PATCH', 'OPTIONS'],
     credentials: true,
 };
 
@@ -25,6 +25,7 @@ app.use(express.json());
 
 app.use("/uploads", express.static(path.join(__dirname, "public/uploads")));
 
+app.use('/', (req, res) => res.send('API stablished'));
 app.use('/api', authRoute);
 app.use('/api', catRoute);
 app.use('/api', productRoute);

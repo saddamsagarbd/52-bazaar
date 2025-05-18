@@ -1,4 +1,6 @@
 import React, { useCallback, useEffect, useMemo, useState } from 'react';
+import axios from 'axios';
+import { toast } from 'react-toastify';
 import {
     useReactTable,
     getCoreRowModel,
@@ -10,12 +12,9 @@ import usePageTitle from "../../hooks/usePageTitle";
 // Initialize modal root (prevents freezing)
 Modal.setAppElement('#root');
 
-const defaultData = [];
-
 const Categories = () => {
     usePageTitle("Categories");
 
-    const [data, setData] = useState(defaultData);
     const [searchQuery, setSearchQuery] = useState('');
     const [modalIsOpen, setModalIsOpen] = useState(false);
     const [newCategory, setNewCategory] = useState({ name: '', parent: '' });
@@ -39,42 +38,48 @@ const Categories = () => {
             console.error("No token found, user not authenticated");
             return;
         }
+
+        const formData = new FormData();
+    
+        formData.append("name", newCategory.name.trim());
+        formData.append("parent_id", newCategory.parent || null);
+        formData.append("is_active", true);
     
         try {
-            const response = await fetch(`${process.env.REACT_APP_API_URL}/add-category`, {
-                method: 'POST',
+            const response = await axios.post(`${process.env.REACT_APP_API_URL}/add-category`, formData, {
                 headers: {
                     'Authorization': `Bearer ${token}`,
-                    'Content-Type': 'application/json'
+                    "Content-Type": "multipart/form-data"
                 },
-                body: JSON.stringify({
-                    name: newCategory.name.trim(),
-                    parent_id: newCategory.parent.trim() || null,
-                    is_active: true
-                })
+                timeout: 10000
             });
-    
-            if (!response.ok) {
-                const errorData = await response.json();
-                throw new Error(errorData.message || 'Failed to add category');
-            }
-    
-            const savedCategory = await response.json();
-    
-            // Refresh category list
-            fetchCategories();
 
+            // Validate response structure
+            if (!response?.data?.success) {
+                throw new Error(response.data.message || "Invalid response from server");
+            }
+
+            // Success handling
+            toast.success("Category added successfully");
             closeModal();
+            fetchCategories();
     
         } catch (err) {
-            console.error('Error adding category:', err.message);
+            console.error('Category submission error:', err);
+        
+            // Enhanced error messages
+            const errorMessage = err.response?.data?.message || 
+                                err.message || 
+                                "Failed to add category";
+            
+            toast.error(errorMessage);
         }
     };    
 
     const handleDelete = useCallback((id) => {
         const confirmDelete = window.confirm('Are you sure you want to delete this category?');
         if (confirmDelete) {
-            setData(prev => prev.filter(category => category.id !== id));
+            setCategories(prev => prev.filter(category => category.id !== id));
         }
     }, []);
 
@@ -103,7 +108,7 @@ const Categories = () => {
                 </button>
             ),
         },
-    ], [categories, handleDelete]);
+    ], []);
 
     const filteredData = useMemo(() => {
         return categories.filter((category) => `${category.name}`.toLowerCase().includes(searchQuery.toLowerCase()));

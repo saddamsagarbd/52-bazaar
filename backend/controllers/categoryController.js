@@ -43,6 +43,8 @@ exports.getCategories = async (req, res) => {
 
 
 exports.addCategory = async (req, res) => {
+
+    console.table(req.body);
     
     try {
         const { name, parent_id, is_active } = req.body;

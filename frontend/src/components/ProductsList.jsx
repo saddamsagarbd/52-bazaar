@@ -47,6 +47,7 @@ const ProductsList = () => {
                 },
             });
             const data = await response.data;
+            console.log
             setProducts(data);
         } catch (err) {
             console.error("Failed to fetch products", err);
