@@ -14,7 +14,7 @@ const productRoute = require('./routes/product');
 // Enable CORS for all routes
 
 const corsOptions = {
-    origin: ['http://localhost:3000', 'https://eurovisionbdg.com'],
+    origin: ['http://localhost:3000/', 'https://eurovisionbdg.com/', 'https://52-bazaar.vercel.app/'],
     methods: ['GET', 'POST', 'PUT', 'DELETE', 'PATCH', 'OPTIONS'],
     credentials: true,
 };
