@@ -6,6 +6,7 @@ const fs = require('fs');
 const cors = require('cors');
 const { connA } = require('./db-config/db-conn');
 const app = express();
+const serverless = require('serverless-http');
 const authRoute = require('./routes/auth');
 const categoryRoute = require('./routes/category');
 const productRoute = require('./routes/product');
@@ -55,7 +56,7 @@ app.use((err, req, res, next) => {
 });
 
 // Always export the app for serverless
-module.exports = app;
+module.exports = serverless(app);
 
 if (process.env.NODE_ENV !== 'production') {
     app.listen(PORT, () => {
