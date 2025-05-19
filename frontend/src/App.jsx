@@ -11,13 +11,8 @@ import ProtectedRoute from "./components/ProtectedRoute";
 import RedirectIfLoggedIn from "./components/RedirectIfLoggedIn";
 import { useDispatch } from 'react-redux';
 import { loginSuccess } from './redux/authSlice';
-import Modal from 'react-modal';
-// import 'flowbite';
-// import 'flowbite-react';
 import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
-
-Modal.setAppElement('#root');
 
 function App() {
   const dispatch = useDispatch();
@@ -35,33 +30,31 @@ function App() {
   return (
     <>
       <ToastContainer />
-      <Router>
-        <Routes>
-          <Route path="/" element={<LandingPage />} />
-          <Route path="/admin" element={
-            <RedirectIfLoggedIn>
-              <AdminLogin />
-            </RedirectIfLoggedIn>
-          } />
-          <Route path="/admin" element={<AdminLayout />}>
-              <Route path="dashboard" element={
-                <ProtectedRoute>
-                  <AdminDashboard />
-                </ProtectedRoute>
-              } />
-              <Route path="categories" element={
-                <ProtectedRoute>
-                  <AdminCategories />
-                </ProtectedRoute>
-              } />
-              <Route path="products" element={
-                <ProtectedRoute>
-                  <AdminProducts />
-                </ProtectedRoute>
-              } />
-          </Route>
-        </Routes>
-      </Router>
+      <Routes>
+        <Route path="/" element={<LandingPage />} />
+        <Route path="/admin" element={
+          <RedirectIfLoggedIn>
+            <AdminLogin />
+          </RedirectIfLoggedIn>
+        } />
+        <Route path="/admin" element={<AdminLayout />}>
+            <Route path="dashboard" element={
+              <ProtectedRoute>
+                <AdminDashboard />
+              </ProtectedRoute>
+            } />
+            <Route path="categories" element={
+              <ProtectedRoute>
+                <AdminCategories />
+              </ProtectedRoute>
+            } />
+            <Route path="products" element={
+              <ProtectedRoute>
+                <AdminProducts />
+              </ProtectedRoute>
+            } />
+        </Route>
+      </Routes>
     </>
   );
 }

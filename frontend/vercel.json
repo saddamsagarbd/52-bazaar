@@ -11,11 +11,15 @@
     }
   ],
   "routes": [
-    { 
-      "src": "/(.*)", 
-      "dest": "/dist/$1",
+    {
+      "src": "/api/.*",
+      "dest": "backend/index.js"
+    },
+    {
+      "src": "/(.*)",
+      "dest": "/dist/index.html",
       "headers": {
-        "Cache-Control": "s-maxage=0, stale-while-revalidate=60"
+        "Cache-Control": "no-cache"
       }
     }
   ]
