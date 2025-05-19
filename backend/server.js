@@ -6,11 +6,9 @@ const fs = require('fs');
 const cors = require('cors');
 const { connA } = require('./db-config/db-conn');
 const app = express();
-// const authRoute = require('./routes/auth');
-// const categoryRoute = require('./routes/category');
-// const productRoute = require('./routes/product');
-
-
+const authRoute = require('./routes/auth');
+const categoryRoute = require('./routes/category');
+const productRoute = require('./routes/product');
 
 // Enable CORS for all routes
 
@@ -26,9 +24,9 @@ app.use(express.urlencoded({ extended: true }));
 
 app.use("/uploads", express.static(path.join(__dirname, "public/uploads")));
 
-// app.use('/api', authRoute);
-// app.use('/api', categoryRoute);
-// app.use('/api', productRoute);
+app.use('/api', authRoute);
+app.use('/api', categoryRoute);
+app.use('/api', productRoute);
 app.get('/api/test', (req, res) => {
     res.json({ message: 'Hello from API' });
 });
@@ -39,9 +37,9 @@ app.get('/api/health', (req, res) => {
 
 // Serve React frontend
 if (process.env.NODE_ENV === 'production') {
-  app.use(express.static(path.join(__dirname, '../frontend/build')));
+  app.use(express.static(path.join(__dirname, '../frontend/dist')));
   app.get('*', (req, res) => {
-    res.sendFile(path.join(__dirname, '../frontend/build', 'index.html'));
+    res.sendFile(path.join(__dirname, '../frontend/dist', 'index.html'));
   });
 }
 
