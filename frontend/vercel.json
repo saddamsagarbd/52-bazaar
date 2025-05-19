@@ -2,25 +2,18 @@
   "version": 2,
   "builds": [
     {
-      "src": "backend/*.js",
-      "use": "@vercel/node"
-    },
-    {
-      "src": "frontend/package.json",
+      "src": "package.json",
       "use": "@vercel/static-build",
       "config": {
-        "distDir": "dist"
+        "distDir": "dist",
+        "outputDirectory": "dist"
       }
     }
   ],
   "routes": [
     { 
-      "src": "/api/.*",
-      "dest": "backend/*.js" 
-    },
-    { 
       "src": "/(.*)", 
-      "dest": "frontend/dist/$1",
+      "dest": "/dist/$1",
       "headers": {
         "Cache-Control": "s-maxage=0, stale-while-revalidate=60"
       }
