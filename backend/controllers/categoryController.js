@@ -72,7 +72,7 @@ exports.addCategory = async (req, res) => {
 
         const saved = await newCategory.save();
 
-        res.status(201).json(saved);
+        res.status(201).json({"status" : saved, "message" : "Category added successfully"});
     } catch (error) {
         console.error('Add Category Error:', error);
         res.status(500).json({ message: 'Failed to create category' });

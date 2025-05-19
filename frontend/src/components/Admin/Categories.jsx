@@ -6,11 +6,16 @@ import {
     getCoreRowModel,
     flexRender,
 } from '@tanstack/react-table';
-import Modal from 'react-modal';
-import usePageTitle from "../../hooks/usePageTitle";
+import {
+  Dialog,
+  DialogTrigger,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+  DialogFooter,
+} from "@/components/ui/dialog";
 
-// Initialize modal root (prevents freezing)
-Modal.setAppElement('#root');
+import usePageTitle from "../../hooks/usePageTitle";
 
 const Categories = () => {
     usePageTitle("Categories");
@@ -40,14 +45,14 @@ const Categories = () => {
             return;
         }
 
-        const formData = new FormData();
-    
-        formData.append("name", newCategory.name.trim());
-        formData.append("parent_id", newCategory.parent || null);
-        formData.append("is_active", true);
+        const data = {
+            name: newCategory.name.trim(),
+            parent_id: newCategory.parent || null,
+            is_active: true
+        };
     
         try {
-            const response = await axios.post(`${apiUrl}/add-category`, formData, {
+            const response = await axios.post(`${apiUrl}/add-category`, data, {
                 headers: {
                     'Authorization': `Bearer ${token}`,
                     "Content-Type": "multipart/form-data"
@@ -56,8 +61,8 @@ const Categories = () => {
             });
 
             // Validate response structure
-            if (!response?.data?.success) {
-                throw new Error(response.data.message || "Invalid response from server");
+            if (!response?.status) {
+                throw new Error(response.message || "Invalid response from server");
             }
 
             // Success handling
@@ -154,12 +159,62 @@ const Categories = () => {
             <div className="p-4 border-2 border-dashed rounded-lg mt-14">
                 <div className="flex justify-between items-center mb-6">
                     <h2 className="text-2xl font-semibold">Categories</h2>
-                    <button
+                    {/* <button
                         onClick={openModal}
                         className="bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded-lg transition-colors"
                     >
                         Add Category
-                    </button>
+                    </button> */}
+                    <Dialog open={modalIsOpen} onOpenChange={setModalIsOpen}>
+                        <DialogTrigger asChild>
+                            <button
+                                className="bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded-lg transition-colors"
+                            >
+                                Add Category
+                            </button>
+                        </DialogTrigger>
+                        <DialogContent>
+                            <DialogHeader>
+                            <DialogTitle>Add New Category</DialogTitle>
+                            </DialogHeader>
+
+                            <form onSubmit={handleAddCategory} className="space-y-4 mt-2">
+                                <input
+                                    type="text"
+                                    placeholder="Category Name"
+                                    value={newCategory.name}
+                                    onChange={(e) => setNewCategory({ ...newCategory, name: e.target.value })}
+                                    className="w-full px-4 py-2 border rounded-md focus:outline-none"
+                                    required
+                                />
+
+                                <input
+                                    type="text"
+                                    placeholder="Parent Category (optional)"
+                                    value={newCategory.parent}
+                                    onChange={(e) => setNewCategory({ ...newCategory, parent: e.target.value })}
+                                    className="w-full px-4 py-2 border rounded-md focus:outline-none"
+                                />
+
+                                <DialogFooter>
+                                    <button
+                                    type="button"
+                                    onClick={() => setModalIsOpen(false)}
+                                    className="px-4 py-2 bg-gray-300 hover:bg-gray-400 rounded-md text-sm"
+                                    >
+                                    Cancel
+                                    </button>
+                                    <button
+                                    type="submit"
+                                    className="px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-md text-sm"
+                                    >
+                                    Add
+                                    </button>
+                                </DialogFooter>
+                            </form>
+                        </DialogContent>
+                    </Dialog>
+                    
                 </div>
 
                 <div className="mb-4">
@@ -271,7 +326,7 @@ const Categories = () => {
                 </div>
 
                 {/* Add Category Modal */}
-                <Modal
+                {/* <Modal
                     isOpen={modalIsOpen}
                     onRequestClose={closeModal}
                     contentLabel="Add Category"
@@ -349,7 +404,9 @@ const Categories = () => {
                             </form>
                         </div>
                     </div>
-                </Modal>
+                </Modal> */}
+                
+
             </div>
         </div>
     );

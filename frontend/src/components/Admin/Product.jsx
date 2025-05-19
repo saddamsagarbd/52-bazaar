@@ -6,11 +6,16 @@ import {
   getCoreRowModel,
   flexRender,
 } from '@tanstack/react-table';
-import Modal from 'react-modal';
+import {
+  Dialog,
+  DialogTrigger,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+  DialogFooter,
+} from "@/components/ui/dialog";
 import usePageTitle from "../../hooks/usePageTitle";
 
-// Initialize modal root (prevents freezing)
-Modal.setAppElement('#root');
 
 const Products = () => {
     usePageTitle("Products");
@@ -81,8 +86,6 @@ const Products = () => {
         ],
         []
     );
-
-
 
     const filteredData = useMemo(() => 
         products.filter((product) =>
@@ -191,12 +194,111 @@ const Products = () => {
         <div className="p-4 border-2 border-dashed rounded-lg mt-14">
             <div className="flex justify-between items-center mb-6">
                 <h2 className="text-2xl font-semibold">Categories</h2>
-                <button
+                {/* <button
                     onClick={openModal}
                     className="bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded-lg transition-colors"
                 >
                     Add Product
-                </button>
+                </button> */}
+                <Dialog open={modalIsOpen} onOpenChange={setModalIsOpen}>
+                    <DialogTrigger asChild>
+                        <button
+                            className="bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded-lg transition-colors"
+                        >
+                            Add Product
+                        </button>
+                    </DialogTrigger>
+                    <DialogContent>
+                        <DialogHeader>
+                        <DialogTitle>Add New Product</DialogTitle>
+                        </DialogHeader>
+
+                        <form onSubmit={handleAddProduct} className="space-y-4 mt-2">
+                            <div className="mb-4">
+                                <label className="block text-sm font-medium text-gray-700 mb-1">
+                                    Product Name
+                                </label>
+                                <input
+                                    type="text"
+                                    value={newProduct.name}
+                                    onChange={(e) => setNewProduct({...newProduct, name: e.target.value})}
+                                    className="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500"
+                                    required
+                                />
+                            </div>
+                        
+                            <div className="mb-6">
+                                <label className="block text-sm font-medium text-gray-700 mb-1">
+                                    Price (ID)
+                                </label>
+                                <input
+                                    type="text"
+                                    value={newProduct.price}
+                                    onChange={(e) => setNewProduct({...newProduct, price: e.target.value})}
+                                    className="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500"
+                                    placeholder="Leave empty for root Product"
+                                />
+                            </div>
+                        
+                            <div className="mb-6">
+                                <label className="block text-sm font-medium text-gray-700 mb-1">
+                                    Category
+                                </label>
+                                <select
+                                    value={newProduct.category}
+                                    onChange={(e) => setNewProduct({...newProduct, category: e.target.value})}
+                                    className="w-full border px-3 py-2 rounded"
+                                >
+                                    <option value="">-- None --</option>
+                                    {categories.length > 0 ? (
+                                    categories.map((cat) => (
+                                        <option key={cat._id} value={cat._id}>
+                                        {cat.name}
+                                        </option>
+                                    ))
+                                    ) : (
+                                    <option disabled>No categories found</option>
+                                    )}
+                                </select>
+                            </div>
+
+                            <div className="mb-6">
+                                <label className="block text-sm font-medium text-gray-700 mb-1">
+                                    Product Image
+                                </label>
+                                <input
+                                    type="file"
+                                    accept="image/*"
+                                    onChange={handleImageChange}
+                                    className="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500"
+                                />
+                                {preview && (
+                                    <img
+                                        src={preview}
+                                        alt="Preview"
+                                        className="mt-4 h-32 object-cover rounded"
+                                    />
+                                )}
+                            </div>
+                            
+                            <div className="flex justify-end space-x-3">
+                                <button
+                                    type="button"
+                                    onClick={closeModal}
+                                    className="px-4 py-2 border border-gray-300 rounded-md shadow-sm text-sm font-medium text-gray-700 hover:bg-gray-50"
+                                >
+                                    Cancel
+                                </button>
+                                <button
+                                    type="submit"
+                                    className="px-4 py-2 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"
+                                >
+                                    Add Product
+                                </button>
+                            </div>
+                        </form>
+                    </DialogContent>
+                </Dialog>
             </div>
 
             <div className="mb-4">
@@ -306,7 +408,7 @@ const Products = () => {
             </div>
 
             {/* Add Product Modal */}
-            <Modal
+            {/* <Modal
                 isOpen={modalIsOpen}
                 onRequestClose={closeModal}
                 contentLabel="Add Product"
@@ -416,7 +518,7 @@ const Products = () => {
                         </form>
                     </div>
                 </div>
-            </Modal>
+            </Modal> */}
         </div>
     </div>
   );
