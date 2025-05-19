@@ -4,7 +4,7 @@ const express = require('express');
 const path = require('path');
 const fs = require('fs');
 const authRoute = require('./routes/auth');
-const catRoute = require('./routes/category');
+const categoryRoute = require('./routes/category');
 const productRoute = require('./routes/product');
 const cors = require('cors');
 
@@ -27,7 +27,7 @@ app.use(express.urlencoded({ extended: true }));
 app.use("/uploads", express.static(path.join(__dirname, "public/uploads")));
 
 app.use('/api', authRoute);
-app.use('/api', catRoute);
+app.use('/api', categoryRoute);
 app.use('/api', productRoute);
 app.get('/api/test', (req, res) => {
     res.json({ message: 'Hello from API' });
