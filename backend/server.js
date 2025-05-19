@@ -56,15 +56,15 @@ app.use((err, req, res, next) => {
     res.status(500).json({ message: 'Internal server error' });
 });
 
-if (process.env.NODE_ENV === 'production') {
-    module.exports = app;
-}else{
+// Always export the app for serverless
+module.exports = app;
+
+if (process.env.NODE_ENV !== 'production') {
     app.listen(PORT, () => {
-        console.log(`Server running on port ${PORT}`)
+        console.log(`Server running on port ${PORT}`);
 
         connA.once('open', async () => {
             console.log('Custom connection established.');
-        
             const result = await connA.db.admin().ping();
             console.log('Ping response:', result);
         });
