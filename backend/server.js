@@ -3,16 +3,16 @@ require('dotenv').config();
 const express = require('express');
 const path = require('path');
 const fs = require('fs');
+const cors = require('cors');
+const { connA } = require('./db-config/db-conn');
+const app = express();
 const authRoute = require('./routes/auth');
 const categoryRoute = require('./routes/category');
 const productRoute = require('./routes/product');
-const cors = require('cors');
 
-const { connA } = require('./db-config/db-conn');
 
 
 // Enable CORS for all routes
-const app = express();
 
 const corsOptions = {
     origin: ['http://localhost:3000', 'https://eurovisionbdg.com'],
