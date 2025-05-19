@@ -25,10 +25,10 @@ app.use(express.json());
 
 app.use("/uploads", express.static(path.join(__dirname, "public/uploads")));
 
-app.use('/', (req, res) => res.send('API stablished'));
 app.use('/api', authRoute);
 app.use('/api', catRoute);
 app.use('/api', productRoute);
+app.use('/', (req, res) => res.send('API stablished'));
 
 app.get('/api/health', (req, res) => {
     res.send({ status: 'OK' });
@@ -42,10 +42,7 @@ if (process.env.NODE_ENV === 'production') {
   });
 }
 
-  
-
 const PORT = process.env.PORT || 5000;
-
 
 connA.on('error', err => {
     console.error('MongoDB connection error:', err);

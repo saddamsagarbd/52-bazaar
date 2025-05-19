@@ -20,6 +20,9 @@ const Products = () => {
     const [products, setProducts] = useState([]);
     const [preview, setPreview] = useState(null);
     const [categories, setCategories] = useState([]);
+    
+    const apiUrl = import.meta.env.VITE_API_URL;
+    const folderUrl = import.meta.env.VITE_API_URL_FILE_LOCATION;
 
     const handleImageChange = (e) => {
         const file = e.target.files[0];
@@ -36,7 +39,7 @@ const Products = () => {
                 accessorKey: 'name',
                 cell: ({ row }) => {
                     const name = row.original.name;
-                    const imgUrl = `${process.env.REACT_APP_FILE_LOCATION}`+row.original.imgUrl; // Adjust key based on your actual field
+                    const imgUrl = `${folderUrl}`+row.original.imgUrl; // Adjust key based on your actual field
 
                     return (
                         <div className="flex items-center space-x-3">
@@ -123,7 +126,7 @@ const Products = () => {
 
         try {
 
-            const response = await axios.post(`${process.env.REACT_APP_API_URL}/add-product`, formData, {
+            const response = await axios.post(`${apiUrl}/add-product`, formData, {
                 headers: {
                     "Content-Type": "multipart/form-data"
                 }
@@ -145,7 +148,7 @@ const Products = () => {
         if (!token) return;
 
         try {
-            const response = await axios.get(`${process.env.REACT_APP_API_URL}/categories`, {
+            const response = await axios.get(`${apiUrl}/categories`, {
                 headers: {
                     'Authorization': `Bearer ${token}`,
                     'Content-Type': 'application/json',
@@ -164,7 +167,7 @@ const Products = () => {
         if (!token) return;
 
         try {
-            const response = await axios.get(`${process.env.REACT_APP_API_URL}/products`, {
+            const response = await axios.get(`${apiUrl}/products`, {
                 headers: {
                     'Authorization': `Bearer ${token}`,
                     'Content-Type': 'application/json',

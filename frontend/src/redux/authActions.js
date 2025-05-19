@@ -1,10 +1,10 @@
 import { loginStart, loginSuccess } from './authSlice';
 
-export const loginUser = (credentials, navigate) => async (dispatch) => {
+export const loginUser = (credentials, navigate, apiUrl) => async (dispatch) => {
   dispatch(loginStart());
   try {
 
-    const response = await fetch(`${process.env.REACT_APP_API_URL}/admin/login`, {
+    const response = await fetch(`${apiUrl}/admin/login`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',

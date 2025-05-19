@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-// import axios from 'axios';
+import axios from 'axios';
 import DefaultProImg from '../assets/images/default-img.jpg';
 import Product from "./Product";
 
@@ -38,26 +38,29 @@ import Product from "./Product";
 
 const ProductsList = () => {
     const [products, setProducts] = useState([]);
+    const apiUrl = import.meta.env.VITE_API_URL;
+    const folderUrl = import.meta.env.VITE_API_URL_FILE_LOCATION;
 
-    // const fetchProducts = async () => {
-    //     try {
-    //         const response = await axios.get(`${process.env.REACT_APP_API_URL}/products`, {
-    //             headers: {
-    //                 'Content-Type': 'application/json',
-    //             },
-    //         });
-    //         // const response = {data: []};
-    //         const data = await response.data;
-    //         console.log(data);
-    //         setProducts(data);
-    //     } catch (err) {
-    //         console.error("Failed to fetch products", err);
-    //     }
-    // };
+
+    const fetchProducts = async () => {
+        try {
+            const response = await axios.get(`${apiUrl}/products`, {
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+            });
+            // const response = {data: []};
+            const data = await response.data;
+            console.log(data);
+            setProducts(response.data);
+        } catch (err) {
+            console.error("Failed to fetch products", err);
+        }
+    };
 
     useEffect(() => {
-        setProducts([]);
-        // fetchProducts();
+        // setProducts([]);
+        fetchProducts();
     }, []);
 
     return (
@@ -67,7 +70,7 @@ const ProductsList = () => {
                 <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
                     {
                         products.map(({name, price, imgUrl}, index) => (
-                            <Product key={index} imgSrc={imgUrl?`${process.env.REACT_APP_FILE_LOCATION}`+imgUrl:DefaultProImg} title={name} price={price} />
+                            <Product key={index} imgSrc={imgUrl?`${folderUrl}`+imgUrl:DefaultProImg} title={name} price={price} />
                         ))
                     }
                 </div>

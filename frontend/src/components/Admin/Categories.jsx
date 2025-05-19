@@ -19,6 +19,7 @@ const Categories = () => {
     const [modalIsOpen, setModalIsOpen] = useState(false);
     const [newCategory, setNewCategory] = useState({ name: '', parent: '' });
     const [categories, setCategories] = useState([]);
+    const apiUrl = import.meta.env.VITE_API_URL;
 
     const openModal = () => setModalIsOpen(true);
     const closeModal = () => {
@@ -46,7 +47,7 @@ const Categories = () => {
         formData.append("is_active", true);
     
         try {
-            const response = await axios.post(`${process.env.REACT_APP_API_URL}/add-category`, formData, {
+            const response = await axios.post(`${apiUrl}/add-category`, formData, {
                 headers: {
                     'Authorization': `Bearer ${token}`,
                     "Content-Type": "multipart/form-data"
@@ -131,7 +132,7 @@ const Categories = () => {
         if (!token) return;
 
         try {
-            const response = await fetch(`${process.env.REACT_APP_API_URL}/categories`, {
+            const response = await fetch(`${apiUrl}/categories`, {
                 headers: {
                     'Authorization': `Bearer ${token}`,
                     'Content-Type': 'application/json',

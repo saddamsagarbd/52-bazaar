@@ -10,10 +10,11 @@ const Login = () => {
     const [credentials, setCredentials] = useState({ email: '', password: '' });
     const dispatch = useDispatch();
     const navigate = useNavigate();
+    const apiUrl = import.meta.env.VITE_API_URL;
 
     const handleLogin = (e) => {
         e.preventDefault();
-        dispatch(loginUser(credentials, navigate));
+        dispatch(loginUser(credentials, navigate, apiUrl));
     };
 
     usePageTitle("Admin Login");

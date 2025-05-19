@@ -12,8 +12,8 @@ import RedirectIfLoggedIn from "./components/RedirectIfLoggedIn";
 import { useDispatch } from 'react-redux';
 import { loginSuccess } from './redux/authSlice';
 import Modal from 'react-modal';
-import 'flowbite';
-import 'flowbite-react';
+// import 'flowbite';
+// import 'flowbite-react';
 import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 

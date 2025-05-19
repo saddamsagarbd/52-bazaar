@@ -1,10 +1,4 @@
-/* src/index.css */
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
 
-/* Your custom styles can go here */
-@import 'flowbite/dist/flowbite.min.css';
 
 /* Add to your global CSS file */
 .modal-portal {
