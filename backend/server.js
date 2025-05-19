@@ -22,13 +22,16 @@ const corsOptions = {
 
 app.use(cors(corsOptions));
 app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
 
 app.use("/uploads", express.static(path.join(__dirname, "public/uploads")));
 
 app.use('/api', authRoute);
 app.use('/api', catRoute);
 app.use('/api', productRoute);
-app.use('/', (req, res) => res.send('API stablished'));
+app.get('/api/test', (req, res) => {
+    res.json({ message: 'Hello from API' });
+});
 
 app.get('/api/health', (req, res) => {
     res.send({ status: 'OK' });
