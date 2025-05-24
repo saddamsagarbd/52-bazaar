@@ -13,8 +13,20 @@ const productRoute = require('./routes/product');
 
 // Enable CORS for all routes
 
+const allowedOrigins = [
+  'http://localhost:3000',          // Local development
+  'https://52-bazaar-frontend-saddamsagars-projects.vercel.app/',   // Production frontend
+  'https://52bazaar.eurovisionbdg.com' // Custom domain
+];
+
 const corsOptions = {
-    origin: ['http://localhost:3000', 'https://52bazaar.eurovisionbdg.com'],
+    origin: (origin, callback) => {
+        if (allowedOrigins.includes(origin) || !origin) {
+            callback(null, true);
+        } else {
+            callback(new Error('Not allowed by CORS'));
+        }
+    },
     methods: ['GET', 'POST', 'PUT', 'DELETE', 'PATCH', 'OPTIONS'],
     allowedHeaders: ['Content-Type', 'Authorization'],
     credentials: true,
