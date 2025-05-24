@@ -8,6 +8,7 @@ const Product = ProductModel(connA);
 const Category = CategoryModel(connA);
 
 exports.getProducts = async (req, res) => {
+    
     // const token = req.headers['authorization']?.split(' ')[1]; // Extract token from Bearer header
 
     // if (!token) {
@@ -52,7 +53,6 @@ exports.getProducts = async (req, res) => {
         // Log the actual error message and stack trace
         console.error('Error fetching products:', err.message);
         console.error(err.stack);
-
         // Send server error response
         res.status(500).json({ message: 'Server error', error: err.message });
     }

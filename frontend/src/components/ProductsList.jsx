@@ -16,8 +16,6 @@ const ProductsList = () => {
                     'Content-Type': 'application/json',
                 },
             });
-            // const response = {data: []};
-            // const data = await response.data;
             console.log(response.data);
             if (Array.isArray(response.data)) {
                 setProducts(response.data);
@@ -26,7 +24,6 @@ const ProductsList = () => {
             }
         } catch (err) {
             console.error("Failed to fetch products", err);
-            
         }
     };
 
