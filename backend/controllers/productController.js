@@ -40,7 +40,7 @@ exports.getProducts = async (req, res) => {
 
         console.log('Products found:', products);
 
-        res.json(products);
+        res.status(200).json(products);
         
     } catch (err) {
         // Log the actual error message and stack trace
