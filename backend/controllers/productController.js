@@ -19,28 +19,43 @@ exports.getProducts = async (req, res) => {
 
         const query = {};
 
+        // Name filter
         if (name) {
             query.name = { $regex: name, $options: 'i' };
         }
 
+        // Price filter - better handling for numeric values
         if (price) {
-            query.price = { $regex: price, $options: 'i' };
+            if (!isNaN(price)) {
+                query.price = Number(price);
+            } else {
+                return res.status(400).json({ message: 'Price must be a number' });
+            }
         }
 
-
-        if (category && Types.ObjectId.isValid(category)) {
-            query.category = Types.ObjectId(category);
-        } else if (category) {
-            return res.status(400).json({ message: 'Invalid category ID format' });
+        // Category filter
+        if (category) {
+            if (Types.ObjectId.isValid(category)) {
+                query.category = new Types.ObjectId(category);
+            } else {
+                return res.status(400).json({ message: 'Invalid category ID format' });
+            }
         }
 
         const products = await Product.find(query)
-            .populate('category', 'name')
-            .sort({ created_at: -1 });
-
-        console.log('Products found:', products);
+            .populate('category', 'name', 'price')
+            .sort({ created_at: -1 })
+            .maxTimeMS(5000); // Add timeout for Vercel
 
         res.status(200).json(products);
+
+        // const products = await Product.find(query)
+        //     .populate('category', 'name')
+        //     .sort({ created_at: -1 });
+
+        // console.log('Products found:', products);
+
+        // res.status(200).json(products);
         
     } catch (err) {
         // Log the actual error message and stack trace
