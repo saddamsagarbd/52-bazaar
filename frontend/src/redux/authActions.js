@@ -10,6 +10,7 @@ export const loginUser = (credentials, navigate, apiUrl) => async (dispatch) => 
         'Content-Type': 'application/json',
       },
       credentials: 'include',
+      mode: 'cors',
       body: JSON.stringify(credentials),
     });
 
