@@ -8,7 +8,6 @@ const ProductsList = () => {
     const apiUrl = import.meta.env.VITE_API_URL;
     const folderUrl = import.meta.env.VITE_API_URL_FILE_LOCATION;
 
-
     const fetchProducts = async () => {
         try {
             const response = await axios.get(`${apiUrl}/products`, {
