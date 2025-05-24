@@ -1,10 +1,6 @@
 {
     "rewrites": [
         {
-            "source": "/api/(.*)",
-            "destination": "https://52-bazaar-api.vercel.app/api/$1"
-        },
-        {
             "source": "/(.*)",
             "destination": "/"
         }
