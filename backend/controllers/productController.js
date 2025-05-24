@@ -19,12 +19,10 @@ exports.getProducts = async (req, res) => {
 
         const query = {};
 
-        // Name filter
         if (name) {
             query.name = { $regex: name, $options: 'i' };
         }
 
-        // Price filter - better handling for numeric values
         if (price) {
             if (!isNaN(price)) {
                 query.price = Number(price);
@@ -33,7 +31,6 @@ exports.getProducts = async (req, res) => {
             }
         }
 
-        // Category filter
         if (category) {
             if (Types.ObjectId.isValid(category)) {
                 query.category = new Types.ObjectId(category);
@@ -43,19 +40,13 @@ exports.getProducts = async (req, res) => {
         }
 
         const products = await Product.find(query)
-            .populate('category', 'name', 'price')
+            .populate('category', 'name')
             .sort({ created_at: -1 })
-            .maxTimeMS(5000); // Add timeout for Vercel
+            .maxTimeMS(5000);
+
+        console.log(products);
 
         res.status(200).json(products);
-
-        // const products = await Product.find(query)
-        //     .populate('category', 'name')
-        //     .sort({ created_at: -1 });
-
-        // console.log('Products found:', products);
-
-        // res.status(200).json(products);
         
     } catch (err) {
         // Log the actual error message and stack trace
