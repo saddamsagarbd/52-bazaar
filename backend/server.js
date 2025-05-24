@@ -14,7 +14,7 @@ const productRoute = require('./routes/product');
 // Enable CORS for all routes
 
 const corsOptions = {
-    origin: ['http://localhost:3000/', 'https://52bazaar.eurovisionbdg.com/'],
+    origin: ['http://localhost:3000', 'https://52bazaar.eurovisionbdg.com'],
     methods: ['GET', 'POST', 'PUT', 'DELETE', 'PATCH', 'OPTIONS'],
     credentials: true,
 };

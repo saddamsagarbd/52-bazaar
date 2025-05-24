@@ -3,39 +3,6 @@ import axios from 'axios';
 import DefaultProImg from '../assets/images/default-img.jpg';
 import Product from "./Product";
 
-// const products = [
-//     {
-//         'source': DefaultProImg,
-//         'title' : 'Product 1',
-//         'price' : '29.99'
-//     },
-//     {
-//         'source': DefaultProImg,
-//         'title' : 'Product 2',
-//         'price' : '29.99'
-//     },
-//     {
-//         'source': DefaultProImg,
-//         'title' : 'Product 3',
-//         'price' : '29.99'
-//     },
-//     {
-//         'source': DefaultProImg,
-//         'title' : 'Product 4',
-//         'price' : '29.99'
-//     },
-//     {
-//         'source': DefaultProImg,
-//         'title' : 'Product 5',
-//         'price' : '29.99'
-//     },
-//     {
-//         'source': DefaultProImg,
-//         'title' : 'Product 6',
-//         'price' : '29.99'
-//     },
-// ];
-
 const ProductsList = () => {
     const [products, setProducts] = useState([]);
     const apiUrl = import.meta.env.VITE_API_URL;
@@ -50,11 +17,16 @@ const ProductsList = () => {
                 },
             });
             // const response = {data: []};
-            const data = await response.data;
-            console.log(data);
-            setProducts(response.data);
+            // const data = await response.data;
+            console.log(response.data);
+            if (Array.isArray(response.data)) {
+                setProducts(response.data);
+            } else {
+                console.error("Unexpected response format:", response.data);
+            }
         } catch (err) {
             console.error("Failed to fetch products", err);
+            
         }
     };
 
