@@ -15,7 +15,7 @@ const productRoute = require('./routes/product');
 
 const allowedOrigins = [
   'http://localhost:3000',          // Local development
-  'https://52-bazaar-frontend-saddamsagars-projects.vercel.app/',   // Production frontend
+  'https://52-bazaar-frontend-saddamsagars-projects.vercel.app',   // Production frontend
   'https://52bazaar.eurovisionbdg.com' // Custom domain
 ];
 
@@ -33,7 +33,10 @@ const corsOptions = {
     optionsSuccessStatus: 200
 };
 
-app.use(cors(corsOptions));
+app.use(cors({
+    origin: ['https://52-bazaar-frontend-saddamsagars-projects.vercel.app'],
+    credentials: true
+}));
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
