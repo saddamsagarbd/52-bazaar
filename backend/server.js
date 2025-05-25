@@ -34,7 +34,8 @@ const corsOptions = {
 };
 
 app.use(cors({
-    origin: ['https://52-bazaar-frontend-saddamsagars-projects.vercel.app'],
+    origin: ['https://52-bazaar-frontend-saddamsagars-projects.vercel.app', 'http://localhost:3000'],
+    methods: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE'],
     credentials: true
 }));
 app.use(express.json());

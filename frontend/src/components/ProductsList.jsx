@@ -5,11 +5,11 @@ import Product from "./Product";
 
 const ProductsList = () => {
     const [products, setProducts] = useState([]);
-    const apiUrl = import.meta.env.VITE_API_URL;
     const folderUrl = import.meta.env.VITE_API_URL_FILE_LOCATION;
 
     const fetchProducts = async () => {
         try {
+            const apiUrl = import.meta.env.VITE_API_URL;
             const response = await axios.get(`${apiUrl}/products`, {
                 headers: {
                     'Content-Type': 'application/json',

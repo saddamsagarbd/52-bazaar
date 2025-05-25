@@ -26,7 +26,6 @@ const Products = () => {
     const [preview, setPreview] = useState(null);
     const [categories, setCategories] = useState([]);
     
-    const apiUrl = import.meta.env.VITE_API_URL;
     const folderUrl = import.meta.env.VITE_API_URL_FILE_LOCATION;
 
     const handleImageChange = (e) => {
@@ -128,7 +127,7 @@ const Products = () => {
         formData.append("product_image", newProduct.product_image);
 
         try {
-
+            const apiUrl = import.meta.env.VITE_API_URL;
             const response = await axios.post(`${apiUrl}/add-product`, formData, {
                 headers: {
                     "Content-Type": "multipart/form-data"
@@ -151,6 +150,7 @@ const Products = () => {
         if (!token) return;
 
         try {
+            const apiUrl = import.meta.env.VITE_API_URL;
             const response = await axios.get(`${apiUrl}/categories`, {
                 headers: {
                     'Authorization': `Bearer ${token}`,
@@ -170,6 +170,7 @@ const Products = () => {
         if (!token) return;
 
         try {
+            const apiUrl = import.meta.env.VITE_API_URL;
             const response = await axios.get(`${apiUrl}/products`, {
                 headers: {
                     'Authorization': `Bearer ${token}`,

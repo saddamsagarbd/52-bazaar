@@ -24,7 +24,7 @@ const Categories = () => {
     const [modalIsOpen, setModalIsOpen] = useState(false);
     const [newCategory, setNewCategory] = useState({ name: '', parent: '' });
     const [categories, setCategories] = useState([]);
-    const apiUrl = import.meta.env.VITE_API_URL;
+    
 
     const openModal = () => setModalIsOpen(true);
     const closeModal = () => {
@@ -52,6 +52,7 @@ const Categories = () => {
         };
     
         try {
+            const apiUrl = import.meta.env.VITE_API_URL;
             const response = await axios.post(`${apiUrl}/add-category`, data, {
                 headers: {
                     'Authorization': `Bearer ${token}`,
@@ -137,6 +138,7 @@ const Categories = () => {
         if (!token) return;
 
         try {
+            const apiUrl = import.meta.env.VITE_API_URL;
             const response = await fetch(`${apiUrl}/categories`, {
                 headers: {
                     'Authorization': `Bearer ${token}`,
