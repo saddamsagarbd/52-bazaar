@@ -1,18 +1,17 @@
 const { createConnection } = require('mongoose');
 
-const connA = async () => {
-    try {
-        const conn = createConnection(process.env.MONGO_URI, {
-            useNewUrlParser: true,
-            useUnifiedTopology: true
-        });
+let cachedConn = null;
 
-        console.log('MongoDB connected');
-        return conn;
-    } catch (error) {
-        console.error('MongoDB connection error:', error.message);
-        throw error;
-    }
+const connA = () => {
+    if (cachedConn) return cachedConn;
+
+    const conn = createConnection(process.env.MONGO_URI, {
+        useNewUrlParser: true,
+        useUnifiedTopology: true,
+    });
+
+    cachedConn = conn;
+    return conn;
 };
 
 module.exports = { connA };
