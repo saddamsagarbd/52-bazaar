@@ -19,4 +19,6 @@ const categorySchema = new mongoose.Schema({
   timestamps: { createdAt: 'created_at', updatedAt: 'updated_at' }
 });
 
+categorySchema.index({ is_active: 1 });
+
 module.exports = (conn) => conn.model('Category', categorySchema);

@@ -31,7 +31,18 @@ exports.getCategories = async (req, res) => {
             return res.status(400).json({ message: 'Invalid parent ID format' });
         }
 
-        const categories = await Category.find(query).populate('parent_id', 'name').sort({ created_at: -1 });
+        // const categories = await Category.find(query).populate('parent_id', 'name').sort({ created_at: -1 });
+
+        const page = parseInt(req.query.page) || 1;
+        const limit = parseInt(req.query.limit) || 20;
+
+        const categories = await Category.find({ is_active: true })
+            .select('name parent_id')
+            .populate('parent_id', 'name')
+            .lean()
+            .skip((page - 1) * limit)
+            .limit(limit)
+            .maxTimeMS(3000);
 
         console.log('Categories found:', categories);
 
@@ -48,8 +59,6 @@ exports.getCategories = async (req, res) => {
 };
 
 exports.addCategory = async (req, res) => {
-
-    console.table(req.body);
     
     try {
         const { name, parent_id, is_active } = req.body;

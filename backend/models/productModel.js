@@ -30,6 +30,10 @@ const productSchema = new mongoose.Schema({
     timestamps: { createdAt: 'created_at', updatedAt: 'updated_at' }
 });
 
+productSchema.index({ is_active: 1 });
+productSchema.index({ category: 1 });
+productSchema.index({ price: 1 });
+
 module.exports = (conn) => {
   require('./categoryModel')(conn); 
   return conn.model('Product', productSchema);

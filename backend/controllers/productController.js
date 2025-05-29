@@ -38,10 +38,21 @@ exports.getProducts = async (req, res) => {
             }
         }
 
-        const products = await Product.find(query)
+        // const products = await Product.find(query)
+        //     .populate('category', 'name')
+        //     .sort({ created_at: -1 })
+        //     .maxTimeMS(5000);
+
+        const page = parseInt(req.query.page) || 1;
+        const limit = parseInt(req.query.limit) || 20;
+
+        const products = await Product.find({ is_active: true })
+            .select('name price imgUrl category')
             .populate('category', 'name')
-            .sort({ created_at: -1 })
-            .maxTimeMS(5000);
+            .lean()
+            .skip((page - 1) * limit)
+            .limit(limit)
+            .maxTimeMS(3000);
 
         console.log(products);
 
