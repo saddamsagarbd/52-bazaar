@@ -3,15 +3,19 @@ const bcrypt = require('bcryptjs');
 
 const { connA } = require('../db-config/db-conn');
 const UserModel = require('../models/userModel');
-const User = UserModel(connA);
 
 const JWT_SECRET = process.env.JWT_SECRET_KEY;
 
-// Controller to get a list of all barcodes
+async function getUserModel() {
+  const conn = await connA();
+  return UserModel(conn);
+}
+
 exports.login = async (req, res) => {
     const { email, password } = req.body;
   
     try {
+      const User = await getUserModel();
       const user = await User.findOne({ email });
       if (!user)
         return res.status(400).json({ message: 'Invalid email or password' });

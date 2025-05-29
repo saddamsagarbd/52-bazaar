@@ -1,7 +1,11 @@
 const { Types } = require('mongoose');
 const { connA } = require('../db-config/db-conn');
 const CategoryModel = require('../models/categoryModel');
-const Category = CategoryModel(connA);
+
+async function getCategoryModel() {
+    const conn = await connA();
+    return CategoryModel(conn);
+}
 
 exports.getCategories = async (req, res) => {
     const token = req.headers['authorization']?.split(' ')[1]; // Extract token from Bearer header
@@ -11,6 +15,8 @@ exports.getCategories = async (req, res) => {
     }
 
     try {
+        const Category = await getCategoryModel();
+        
         const { name, parent } = req.query;
 
         const query = {};

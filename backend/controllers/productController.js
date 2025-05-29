@@ -3,9 +3,11 @@ const path = require('path');
 const fs = require('fs');
 const { connA } = require('../db-config/db-conn');
 const ProductModel = require('../models/productModel');
-const CategoryModel = require('../models/categoryModel');
-const Product = ProductModel(connA);
-const Category = CategoryModel(connA);
+
+async function getProductModel() {
+    const conn = await connA();
+    return ProductModel(conn);
+}
 
 exports.getProducts = async (req, res) => {
     
@@ -16,6 +18,8 @@ exports.getProducts = async (req, res) => {
     // }
 
     try {
+        const Product = await getProductModel();
+        
         const { name, price, category } = req.query;
 
         const query = {};
@@ -63,7 +67,6 @@ exports.addProduct = async (req, res) => {
     try {
         const { name, price, category } = req.body;
 
-        // Check for existing product with same name and category
         const existingProduct = await Product.findOne({ 
             name: name.trim(), 
             category 
@@ -84,7 +87,6 @@ exports.addProduct = async (req, res) => {
         
         await newProduct.save();
 
-        // Handle image only after product saved
         if (req.file) {
             const uploadsDir = path.join(__dirname, '../public/uploads/products');
             if (!fs.existsSync(uploadsDir)) fs.mkdirSync(uploadsDir, { recursive: true });
@@ -93,10 +95,10 @@ exports.addProduct = async (req, res) => {
             const fileName = `${newProduct._id}${ext}`;
             const filePath = path.join(uploadsDir, fileName);
 
-            fs.writeFileSync(filePath, req.file.buffer); // Save file to disk
+            fs.writeFileSync(filePath, req.file.buffer);
 
             newProduct.imgUrl = `/uploads/products/${fileName}`;
-            await newProduct.save(); // Update product with image URL
+            await newProduct.save();
         }
 
         res.status(200).json({ success: true, data: newProduct });
