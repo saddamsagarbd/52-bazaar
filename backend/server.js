@@ -51,17 +51,17 @@ app.get('/api/health', (req, res) => {
 });
 
 // For local dev only
-if (process.env.NODE_ENV !== 'production') {
-    const PORT = process.env.PORT || 5000;
-    app.listen(PORT, async () => {
-        console.log(`Server running on port ${PORT}`);
-        connA.once('open', async () => {
-            console.log('MongoDB connected.');
-            const result = await connA.db.admin().ping();
-            console.log('Ping response:', result);
-        });
-    });
-}
+// if (process.env.NODE_ENV !== 'production') {
+//     const PORT = process.env.PORT || 5000;
+//     app.listen(PORT, async () => {
+//         console.log(`Server running on port ${PORT}`);
+//         connA.once('open', async () => {
+//             console.log('MongoDB connected.');
+//             const result = await connA.db.admin().ping();
+//             console.log('Ping response:', result);
+//         });
+//     });
+// }
 
 app.use((err, req, res, next) => {
     console.error('Unhandled error:', err);
