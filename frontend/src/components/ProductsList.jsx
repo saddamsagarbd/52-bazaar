@@ -11,6 +11,7 @@ const ProductsList = () => {
         try {
             const apiUrl = import.meta.env.VITE_API_URL;
             const response = await axios.get(`${apiUrl}/products`, {
+                timeout: 15000,
                 headers: {
                     'Content-Type': 'application/json',
                 },
@@ -27,7 +28,6 @@ const ProductsList = () => {
     };
 
     useEffect(() => {
-        // setProducts([]);
         fetchProducts();
     }, []);
 

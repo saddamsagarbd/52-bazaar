@@ -129,6 +129,7 @@ const Products = () => {
         try {
             const apiUrl = import.meta.env.VITE_API_URL;
             const response = await axios.post(`${apiUrl}/add-product`, formData, {
+                timeout: 15000,
                 headers: {
                     "Content-Type": "multipart/form-data"
                 }
