@@ -13,22 +13,6 @@ const productRoute = require('./routes/product');
 const app = express();
 
 // CORS configuration
-// const corsOptions = {
-//   origin: (origin, callback) => {
-//     if (!origin) return callback(null, true);
-//     const allowedOrigins = [
-//       'https://52bazaar.eurovisionbdg.com',
-//       'https://52-bazaar-frontend-saddamsagars-projects.vercel.app',
-//       'http://localhost:3000'
-//     ];
-//     if (allowedOrigins.includes(origin)) return callback(null, true);
-//     return callback(new Error('Not allowed by CORS'));
-//   },
-//   methods: ['GET', 'POST', 'PUT', 'DELETE', 'PATCH', 'OPTIONS'],
-//   allowedHeaders: ['Content-Type', 'Authorization', 'X-Requested-With'],
-//   credentials: true,
-// };
-
 const allowedOrigins = [
   'https://52bazaar.eurovisionbdg.com',
   'https://52-bazaar-frontend-saddamsagars-projects.vercel.app',
@@ -83,5 +67,5 @@ app.use((err, req, res, next) => {
 });
 
 // Correctly export for Vercel:
-module.exports = app;
+module.exports.app = app;
 module.exports.handler = serverless(app);
