@@ -1,9 +1,12 @@
 const { Types } = require('mongoose');
 const { connA } = require('../db-config/db-conn');
-const CategoryModel = require('../models/categoryModel');
+const Category = require('../models/categoryModel');
+
+
 
 async function getCategoryModel() {
     const conn = await connA();
+
     return CategoryModel(conn);
 }
 
@@ -15,8 +18,7 @@ exports.getCategories = async (req, res) => {
     }
 
     try {
-        const Category = await getCategoryModel();
-        
+
         const { name, parent } = req.query;
 
         const query = {};
@@ -31,23 +33,25 @@ exports.getCategories = async (req, res) => {
             return res.status(400).json({ message: 'Invalid parent ID format' });
         }
 
-        // const categories = await Category.find(query).populate('parent_id', 'name').sort({ created_at: -1 });
+        const categories = await Category.find(query)
+            .populate('parent_id', 'name')
+            .sort({ created_at: -1 });
 
         const page = parseInt(req.query.page) || 1;
         const limit = parseInt(req.query.limit) || 20;
 
-        const categories = await Category.find({ is_active: true })
-            .select('name parent_id')
-            .populate('parent_id', 'name')
-            .lean()
-            .skip((page - 1) * limit)
-            .limit(limit)
-            .maxTimeMS(3000);
+        // const categories = await Category.find({ is_active: true })
+        //     .select('name parent_id')
+        //     .populate('parent_id', 'name')
+        //     .lean()
+        //     .skip((page - 1) * limit)
+        //     .limit(limit)
+        //     .maxTimeMS(3000);
 
         console.log('Categories found:', categories);
 
         res.json(categories);
-        
+
     } catch (err) {
         // Log the actual error message and stack trace
         console.error('Error fetching categories:', err.message);
@@ -59,20 +63,20 @@ exports.getCategories = async (req, res) => {
 };
 
 exports.addCategory = async (req, res) => {
-    
+
     try {
         const { name, parent_id, is_active } = req.body;
-
+        // const Category = await getCategoryModel();
         // Check for existing product with same name and category
-        const existingCategory = await Category.findOne({ 
-            name: name.trim(), 
-            parent_id 
+        const existingCategory = await Category.findOne({
+            name: name.trim(),
+            parent_id
         });
 
-        if(existingCategory){
-            return res.status(400).json({ 
-                success: false, 
-                message: "Category with the same name already exists" 
+        if (existingCategory) {
+            return res.status(400).json({
+                success: false,
+                message: "Category with the same name already exists"
             });
         }
 
@@ -86,7 +90,7 @@ exports.addCategory = async (req, res) => {
 
         const saved = await newCategory.save();
 
-        res.status(201).json({"status" : saved, "message" : "Category added successfully"});
+        res.status(201).json({ "status": saved, "message": "Category added successfully" });
     } catch (error) {
         console.error('Add Category Error:', error);
         res.status(500).json({ message: 'Failed to create category' });

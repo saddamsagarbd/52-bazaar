@@ -1,6 +1,7 @@
 const mongoose = require('mongoose');
+const Schema = mongoose.Schema;
 
-const categorySchema = new mongoose.Schema({
+const categorySchema = new Schema({
   name: {
     type: String,
     required: true,
@@ -21,4 +22,9 @@ const categorySchema = new mongoose.Schema({
 
 categorySchema.index({ is_active: 1 });
 
-module.exports = (conn) => conn.model('Category', categorySchema);
+const Category = mongoose.model('Category', categorySchema);
+
+module.exports = Category;
+// module.exports = (conn)=> {
+//   return conn.model('Category', categorySchema, 'categories');
+// };
