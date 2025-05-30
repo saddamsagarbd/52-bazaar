@@ -1,14 +1,5 @@
 const { Types } = require('mongoose');
-const { connA } = require('../db-config/db-conn');
 const Category = require('../models/categoryModel');
-
-
-
-async function getCategoryModel() {
-    const conn = await connA();
-
-    return CategoryModel(conn);
-}
 
 exports.getCategories = async (req, res) => {
     const token = req.headers['authorization']?.split(' ')[1]; // Extract token from Bearer header
@@ -66,7 +57,6 @@ exports.addCategory = async (req, res) => {
 
     try {
         const { name, parent_id, is_active } = req.body;
-        // const Category = await getCategoryModel();
         // Check for existing product with same name and category
         const existingCategory = await Category.findOne({
             name: name.trim(),
