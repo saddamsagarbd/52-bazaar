@@ -82,8 +82,6 @@ app.use((err, req, res, next) => {
   res.status(500).json({ message: 'Internal server error' });
 });
 
-// Export app normally (for local dev)
-module.exports.app = app;
-
-// Export serverless handler (for Vercel production)
+// Correctly export for Vercel:
+module.exports = app;
 module.exports.handler = serverless(app);
