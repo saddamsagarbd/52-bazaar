@@ -15,28 +15,26 @@ const app = express();
 // Enhanced CORS configuration
 const corsOptions = {
     origin: (origin, callback) => {
-        // Allow requests with no origin (server-to-server)
-        if (!origin) return callback(null, true);
-        
-        // List of allowed domains and patterns
-        const allowed = [
+        console.log('CORS Request Origin:', origin);
+        if (!origin) return callback(null, true); // Allow server-to-server or curl
+
+        const allowedOrigins = [
             'https://52bazaar.eurovisionbdg.com',
-            /^https:\/\/52-bazaar-frontend(-[a-z0-9]+)?-saddamsagars-projects\.vercel\.app$/,
-            /^http:\/\/localhost(:\d+)?$/,
-            /\.vercel\.app$/
+            /^https:\/\/52-bazaar-frontend.*\.vercel\.app$/,
+            /^http:\/\/localhost(:\d+)?$/
         ];
 
-        // Check if origin matches any allowed pattern
-        if (allowed.some(pattern => 
-            typeof pattern === 'string' 
-                ? origin === pattern 
-                : pattern.test(origin))
-        ) {
-            return callback(null, true);
-        }
+        const isAllowed = allowedOrigins.some(pattern =>
+            typeof pattern === 'string' ? pattern === origin : pattern.test(origin)
+        );
 
-        console.warn(`CORS blocked for origin: ${origin}`);
-        callback(new Error('Not allowed by CORS'), false);
+        if (isAllowed) {
+            console.log('CORS Allowed for origin:', origin);
+            callback(null, true);
+        } else {
+            console.warn('CORS Blocked for origin:', origin);
+            callback(new Error('Not allowed by CORS'));
+        }
     },
     methods: ['GET', 'POST', 'PUT', 'DELETE', 'PATCH', 'OPTIONS'],
     allowedHeaders: ['Content-Type', 'Authorization', 'X-Requested-With'],
