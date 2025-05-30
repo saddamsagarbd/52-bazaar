@@ -16,7 +16,11 @@ const app = express();
 const corsOptions = {
     origin: (origin, callback) => {
         if (!origin) return callback(null, true);
-        const allowedOrigins = ['https://52bazaar.eurovisionbdg.com', 'http://localhost:3000'];
+        const allowedOrigins = [
+            'https://52bazaar.eurovisionbdg.com', 
+            'http://localhost:3000',
+            'https://52-bazaar-frontend-saddamsagars-projects.vercel.app'
+        ];
         const isAllowed = allowedOrigins.some(pattern =>
             typeof pattern === 'string' ? pattern === origin : pattern.test(origin)
         );
