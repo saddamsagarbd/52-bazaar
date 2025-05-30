@@ -146,8 +146,8 @@ const Categories = () => {
                     'Content-Type': 'application/json',
                 },
             });
-            const data = await response.json();
-            setCategories(data);
+            
+            setCategories(response.data);
         } catch (err) {
             console.log("Failed to fetch categories", err);
         }
