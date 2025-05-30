@@ -15,25 +15,13 @@ const app = express();
 // Enhanced CORS configuration
 const corsOptions = {
     origin: (origin, callback) => {
-        console.log('CORS Request Origin:', origin);
-        if (!origin) return callback(null, true); // Allow server-to-server or curl
-
-        const allowedOrigins = [
-            'https://52bazaar.eurovisionbdg.com',
-            'http://localhost:3000'
-        ];
-
+        if (!origin) return callback(null, true);
+        const allowedOrigins = ['https://52bazaar.eurovisionbdg.com', 'http://localhost:3000'];
         const isAllowed = allowedOrigins.some(pattern =>
             typeof pattern === 'string' ? pattern === origin : pattern.test(origin)
         );
-
-        if (isAllowed) {
-            console.log('CORS Allowed for origin:', origin);
-            callback(null, true);
-        } else {
-            console.warn('CORS Blocked for origin:', origin);
-            callback(new Error('Not allowed by CORS'));
-        }
+        if (isAllowed) return callback(null, true);
+        callback(new Error('Not allowed by CORS'));
     },
     methods: ['GET', 'POST', 'PUT', 'DELETE', 'PATCH', 'OPTIONS'],
     allowedHeaders: ['Content-Type', 'Authorization', 'X-Requested-With'],
