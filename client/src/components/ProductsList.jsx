@@ -10,15 +10,19 @@ const ProductsList = () => {
     const fetchProducts = async () => {
         try {
             const apiUrl = import.meta.env.VITE_API_URL;
-            console.log(`API url: ${apiUrl}`);
-            const response = await axios.get(`${apiUrl}/products`, {
+            const url = `${apiUrl}/products`;
+            console.log('Fetching products from:', url);
+
+            const response = await axios.get(url, {
                 withCredentials: true,
-                timeout: 10000,
+                timeout: 15000,
                 headers: {
                     'Content-Type': 'application/json',
                 },
             });
+
             console.log(response.data);
+
             if (Array.isArray(response.data)) {
                 setProducts(response.data);
             } else {

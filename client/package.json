@@ -1,5 +1,5 @@
 {
-  "name": "52-bazaar",
+  "name": "client",
   "version": "0.1.0",
   "private": true,
   "dependencies": {

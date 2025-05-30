@@ -1,6 +1,7 @@
 const { Types } = require('mongoose');
 const path = require('path');
 const fs = require('fs');
+const fsPromises = fs.promises;
 const Product = require('../models/productModel');
 
 exports.getProducts = async (req, res) => {
@@ -39,13 +40,17 @@ exports.getProducts = async (req, res) => {
         const page = parseInt(req.query.page) || 1;
         const limit = parseInt(req.query.limit) || 20;
 
-        const products = await Product.find({ is_active: true })
+        const filterQuery = { ...query, is_active: true };
+
+        const products = await Product.find({is_active: true})
             .select('name price imgUrl category')
             .populate('category', 'name')
             .lean()
             .skip((page - 1) * limit)
             .limit(limit)
             .maxTimeMS(5000);
+
+        console.log("products:", products);
 
         res.status(200).json(products);
         
@@ -85,13 +90,13 @@ exports.addProduct = async (req, res) => {
 
         if (req.file) {
             const uploadsDir = path.join(__dirname, '../public/uploads/products');
-            if (!fs.existsSync(uploadsDir)) fs.mkdirSync(uploadsDir, { recursive: true });
+            if (!fs.existsSync(uploadsDir)) fsPromises.mkdirSync(uploadsDir, { recursive: true });
 
             const ext = path.extname(req.file.originalname);
             const fileName = `${newProduct._id}${ext}`;
             const filePath = path.join(uploadsDir, fileName);
 
-            fs.writeFileSync(filePath, req.file.buffer);
+            fsPromises.writeFileSync(filePath, req.file.buffer);
 
             newProduct.imgUrl = `/uploads/products/${fileName}`;
             await newProduct.save();

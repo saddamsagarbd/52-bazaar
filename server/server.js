@@ -12,7 +12,7 @@ const productRoute = require('./routes/product');
 
 const app = express();
 
-// CORS configuration for Vercel + production domain
+// CORS configuration
 const corsOptions = {
   origin: (origin, callback) => {
     if (!origin) return callback(null, true);
@@ -33,8 +33,19 @@ app.use(cors(corsOptions));
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
-// Static files (if needed)
+// Static files
 app.use('/uploads', express.static(path.join(__dirname, 'public/uploads')));
+
+// Ensure MongoDB is connected before handling any route
+app.use(async (req, res, next) => {
+  try {
+    await connA(); // important: await DB connection on every request in Vercel
+    next();
+  } catch (err) {
+    console.error("DB connection error middleware:", err);
+    res.status(500).json({ message: "Database connection error" });
+  }
+});
 
 // Routes
 app.use('/api', authRoute);
@@ -42,12 +53,8 @@ app.use('/api', categoryRoute);
 app.use('/api', productRoute);
 
 // Health check
-app.get('/api/health', async (req, res) => {
-  try {
-    res.send({ status: 'OK' });
-  } catch (err) {
-    res.status(500).send({ status: 'ERROR', error: err.message });
-  }
+app.get('/api/health', (req, res) => {
+  res.send({ status: 'OK' });
 });
 
 // Error handler
@@ -56,8 +63,8 @@ app.use((err, req, res, next) => {
   res.status(500).json({ message: 'Internal server error' });
 });
 
-// Only connect DB once on cold start (in Vercel)
-connA();
+// Export app normally (for local dev)
+module.exports.app = app;
 
-module.exports = app;
+// Export serverless handler (for Vercel production)
 module.exports.handler = serverless(app);
