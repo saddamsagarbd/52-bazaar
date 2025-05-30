@@ -46,9 +46,7 @@ app.use('/api', productRoute);
 
 app.get('/api/health', async (req, res) => {
     try {
-        const conn = await connA();
-        await conn.connection.db.admin().ping();
-        res.send({ status: 'OK', mongo: 'connected' });
+        res.send({ status: 'OK'});
     } catch (err) {
         res.status(500).send({ status: 'ERROR', error: err.message });
     }
@@ -59,13 +57,7 @@ if (process.env.NODE_ENV !== 'production') {
     const PORT = process.env.PORT || 5000;
     app.listen(PORT, async () => {
         console.log(`Server running on port ${PORT}`);
-        connA();
-        // const conn = await connA();
-        // conn.once('open', async () => {
-        //     console.log('MongoDB connected.');
-        //     const result = await conn.db.admin().ping();
-        //     console.log('Ping response:', result);
-        // });
+        await connA();
     });
 }
 
