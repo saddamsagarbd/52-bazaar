@@ -48,8 +48,6 @@ exports.getCategories = async (req, res) => {
         //     .limit(limit)
         //     .maxTimeMS(3000);
 
-        console.log('Categories found:', categories);
-
         res.json(categories);
 
     } catch (err) {

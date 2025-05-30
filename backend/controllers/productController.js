@@ -52,9 +52,7 @@ exports.getProducts = async (req, res) => {
             .lean()
             .skip((page - 1) * limit)
             .limit(limit)
-            .maxTimeMS(3000);
-
-        console.log(products);
+            .maxTimeMS(5000);
 
         res.status(200).json(products);
         
