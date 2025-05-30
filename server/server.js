@@ -2,7 +2,6 @@ require('dotenv').config();
 const express = require('express');
 const path = require('path');
 const cors = require('cors');
-const serverless = require('serverless-http');
 
 const { connA } = require('./db-config/db-conn');
 
@@ -12,59 +11,57 @@ const productRoute = require('./routes/product');
 
 const app = express();
 
-// Enhanced CORS configuration
+// CORS configuration (blocking Vercel)
 const corsOptions = {
     origin: (origin, callback) => {
         if (!origin) return callback(null, true);
+        if (origin.includes('vercel.app')) {
+            return callback(new Error('Vercel domains are not allowed by CORS'));
+        }
         const allowedOrigins = [
-            'https://52bazaar.eurovisionbdg.com', 
-            'http://localhost:3000',
-            'https://52-bazaar-frontend-saddamsagars-projects.vercel.app'
+            'https://52bazaar.eurovisionbdg.com',
+            'http://localhost:3000'
         ];
-        const isAllowed = allowedOrigins.some(pattern =>
-            typeof pattern === 'string' ? pattern === origin : pattern.test(origin)
-        );
-        if (isAllowed) return callback(null, true);
+        if (allowedOrigins.includes(origin)) {
+            return callback(null, true);
+        }
         callback(new Error('Not allowed by CORS'));
     },
     methods: ['GET', 'POST', 'PUT', 'DELETE', 'PATCH', 'OPTIONS'],
     allowedHeaders: ['Content-Type', 'Authorization', 'X-Requested-With'],
-    credentials: true,
-    maxAge: 86400,
-    optionsSuccessStatus: 204
+    credentials: true
 };
 
 app.use(cors(corsOptions));
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
+// Static files
 app.use('/uploads', express.static(path.join(__dirname, 'public/uploads')));
 
+// Routes
 app.use('/api', authRoute);
 app.use('/api', categoryRoute);
 app.use('/api', productRoute);
 
+// Health check route
 app.get('/api/health', async (req, res) => {
     try {
-        res.send({ status: 'OK'});
+        res.send({ status: 'OK' });
     } catch (err) {
         res.status(500).send({ status: 'ERROR', error: err.message });
     }
 });
 
-// For local dev only
-if (process.env.NODE_ENV !== 'production') {
-    const PORT = process.env.PORT || 5000;
-    app.listen(PORT, async () => {
-        console.log(`Server running on port ${PORT}`);
-        await connA();
-    });
-}
-
+// Error handler
 app.use((err, req, res, next) => {
     console.error('Unhandled error:', err);
     res.status(500).json({ message: 'Internal server error' });
 });
 
-// Always export for serverless (Vercel)
-module.exports = serverless(app);
+// Start server (Render always uses PORT from env)
+const PORT = process.env.PORT || 5000;
+app.listen(PORT, async () => {
+    console.log(`Server running on port ${PORT}`);
+    await connA();
+});
