@@ -20,16 +20,40 @@ const allowedOrigins = [
 
 const corsOptions = {
     origin: (origin, callback) => {
-        if (!origin || allowedOrigins.includes(origin)) {
-            callback(null, true);
-        } else {
-            callback(new Error('Not allowed by CORS'));
+        // Allow requests with no origin (like mobile apps or curl requests)
+        if (!origin) return callback(null, true);
+        
+        // Check against allowed origins
+        for (const allowedOrigin of allowedOrigins) {
+            if (typeof allowedOrigin === 'string' && origin === allowedOrigin) {
+                return callback(null, true);
+            }
+            if (allowedOrigin instanceof RegExp && allowedOrigin.test(origin)) {
+                return callback(null, true);
+            }
         }
+        
+        // Origin not allowed
+        console.warn(`CORS blocked for origin: ${origin}`);
+        callback(new Error('Not allowed by CORS'), false);
     },
     methods: ['GET', 'POST', 'PUT', 'DELETE', 'PATCH', 'OPTIONS'],
-    allowedHeaders: ['Content-Type', 'Authorization'],
+    allowedHeaders: [
+        'Content-Type',
+        'Authorization',
+        'X-Requested-With',
+        'Accept',
+        'Origin'
+    ],
+    exposedHeaders: [
+        'Content-Length',
+        'X-Request-ID',
+        'X-Response-Time'
+    ],
     credentials: true,
-    optionsSuccessStatus: 200
+    maxAge: 86400, // 24 hours browser cache for CORS preflight
+    optionsSuccessStatus: 200,
+    preflightContinue: false
 };
 
 app.use(cors(corsOptions));
