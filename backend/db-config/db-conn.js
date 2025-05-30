@@ -2,10 +2,10 @@ const { createConnection, default: mongoose } = require('mongoose');
 
 let cachedConn = null;
 
-const connectDB = () => {
+const connA = () => {
     if (cachedConn) return cachedConn;
 
-    mongoose.connect(process.env.MONGO_URI, {
+    const conn = mongoose.connect(process.env.MONGO_URI, {
         useNewUrlParser: true,
         useUnifiedTopology: true,
         enableUtf8Validation: false,
@@ -16,8 +16,8 @@ const connectDB = () => {
     //     useUnifiedTopology: true,
     // });
 
-    // cachedConn = conn;
-    // return conn;
+    cachedConn = conn;
+    return conn;
 };
 
-module.exports = { connectDB };
+module.exports = { connA };

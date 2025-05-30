@@ -2,17 +2,17 @@ const { Types } = require('mongoose');
 const path = require('path');
 const fs = require('fs');
 const { connA } = require('../db-config/db-conn');
-const ProductModel = require('../models/productModel');
+const Product = require('../models/productModel');
 
-async function getProductModel() {
-    const conn = await connA();
-    return ProductModel(conn);
-}
+// async function getProductModel() {
+//     const conn = await connA();
+//     return ProductModel(conn);
+// }
 
 exports.getProducts = async (req, res) => {
 
     try {
-        const Product = await getProductModel();
+        // const Product = await getProductModel();
         
         const { name, price, category } = req.query;
 

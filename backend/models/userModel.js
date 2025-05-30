@@ -1,4 +1,3 @@
-// models/UserA.js (for dbA)
 const mongoose = require('mongoose');
 
 const userSchema = new mongoose.Schema({
@@ -25,4 +24,5 @@ const userSchema = new mongoose.Schema({
 
 userSchema.index({ is_active: 1 });
 
-module.exports = (conn) => conn.model('User', userSchema);
+// module.exports = (conn) => conn.model('User', userSchema);
+module.exports = mongoose.model('User', userSchema);

@@ -4,7 +4,7 @@ const path = require('path');
 const cors = require('cors');
 const serverless = require('serverless-http');
 
-const { connA, connectDB } = require('./db-config/db-conn');
+const { connA } = require('./db-config/db-conn');
 
 const authRoute = require('./routes/auth');
 const categoryRoute = require('./routes/category');
@@ -55,7 +55,7 @@ if (process.env.NODE_ENV !== 'production') {
     const PORT = process.env.PORT || 5000;
     app.listen(PORT, async () => {
         console.log(`Server running on port ${PORT}`);
-        connectDB();
+        connA();
         // const conn = await connA();
         // conn.once('open', async () => {
         //     console.log('MongoDB connected.');
