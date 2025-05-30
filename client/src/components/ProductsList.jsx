@@ -5,6 +5,8 @@ import Product from "./Product";
 
 const ProductsList = () => {
     const [products, setProducts] = useState([]);
+    const [loading, setLoading] = useState(true);
+
     const folderUrl = import.meta.env.VITE_API_URL_FILE_LOCATION;
 
     const fetchProducts = async () => {
@@ -30,12 +32,16 @@ const ProductsList = () => {
             }
         } catch (err) {
             console.error("Failed to fetch products", err);
+        } finally {
+            setLoading(false)   
         }
     };
 
     useEffect(() => {
         fetchProducts();
     }, []);
+
+    if (loading) return <div>Loading products...</div>;
 
     return (
         <div className='flex flex-col justify-center bg-[transparent] w-full items-center'>
