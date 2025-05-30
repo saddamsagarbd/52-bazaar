@@ -12,49 +12,37 @@ const productRoute = require('./routes/product');
 
 const app = express();
 
-const allowedOrigins = [
-    'http://localhost:3000',
-    /^https:\/\/52-bazaar-frontend.*\.vercel\.app$/,
-    'https://52bazaar.eurovisionbdg.com'
-];
-
-
+// Enhanced CORS configuration
 const corsOptions = {
     origin: (origin, callback) => {
-        // Allow requests with no origin (like mobile apps or curl requests)
+        // Allow requests with no origin (server-to-server)
         if (!origin) return callback(null, true);
         
-        // Check against allowed origins
-        for (const allowedOrigin of allowedOrigins) {
-            if (typeof allowedOrigin === 'string' && origin === allowedOrigin) {
-                return callback(null, true);
-            }
-            if (allowedOrigin instanceof RegExp && allowedOrigin.test(origin)) {
-                return callback(null, true);
-            }
+        // List of allowed domains and patterns
+        const allowed = [
+            'https://52bazaar.eurovisionbdg.com',
+            /^https:\/\/52-bazaar-frontend(-[a-z0-9]+)?-saddamsagars-projects\.vercel\.app$/,
+            /^http:\/\/localhost(:\d+)?$/,
+            /\.vercel\.app$/
+        ];
+
+        // Check if origin matches any allowed pattern
+        if (allowed.some(pattern => 
+            typeof pattern === 'string' 
+                ? origin === pattern 
+                : pattern.test(origin))
+        ) {
+            return callback(null, true);
         }
-        
-        // Origin not allowed
+
         console.warn(`CORS blocked for origin: ${origin}`);
         callback(new Error('Not allowed by CORS'), false);
     },
     methods: ['GET', 'POST', 'PUT', 'DELETE', 'PATCH', 'OPTIONS'],
-    allowedHeaders: [
-        'Content-Type',
-        'Authorization',
-        'X-Requested-With',
-        'Accept',
-        'Origin'
-    ],
-    exposedHeaders: [
-        'Content-Length',
-        'X-Request-ID',
-        'X-Response-Time'
-    ],
+    allowedHeaders: ['Content-Type', 'Authorization', 'X-Requested-With'],
     credentials: true,
-    maxAge: 86400, // 24 hours browser cache for CORS preflight
-    optionsSuccessStatus: 200,
-    preflightContinue: false
+    maxAge: 86400,
+    optionsSuccessStatus: 204
 };
 
 app.use(cors(corsOptions));

@@ -139,7 +139,8 @@ const Categories = () => {
 
         try {
             const apiUrl = import.meta.env.VITE_API_URL;
-            const response = await fetch(`${apiUrl}/categories`, {
+            const response = await axios.get(`${apiUrl}/categories`, {
+                withCredentials: true,
                 headers: {
                     'Authorization': `Bearer ${token}`,
                     'Content-Type': 'application/json',
