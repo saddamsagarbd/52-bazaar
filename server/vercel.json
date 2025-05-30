@@ -7,7 +7,9 @@
     }
   ],
   "routes": [
-    { "src": "/api/(.*)", "dest": "index.js" }
-  ],
-  "installCommand": "npm install --legacy-peer-deps"
+    {
+      "src": "/api/(.*)",
+      "dest": "/index.js"
+    }
+  ]
 }
