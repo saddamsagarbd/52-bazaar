@@ -13,9 +13,8 @@ const productRoute = require('./routes/product');
 const app = express();
 
 const allowedOrigins = [
+    'https://52bazaar.eurovisionbdg.com',
     'http://localhost:3000',
-    'https://52-bazaar-frontend-saddamsagars-projects.vercel.app',
-    'https://52bazaar.eurovisionbdg.com'
 ];
 
 const corsOptions = {
