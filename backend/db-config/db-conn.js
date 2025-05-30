@@ -2,22 +2,23 @@ const { createConnection, default: mongoose } = require('mongoose');
 
 let cachedConn = null;
 
-const connA = () => {
+const connA = async () => {
     if (cachedConn) return cachedConn;
 
-    const conn = mongoose.connect(process.env.MONGO_URI, {
-        useNewUrlParser: true,
-        useUnifiedTopology: true,
-        enableUtf8Validation: false,
-    });
+    try {
+        const conn = await mongoose.connect(process.env.MONGO_URI, {
+            useNewUrlParser: true,
+            useUnifiedTopology: true,
+            enableUtf8Validation: false,
+        });
 
-    // const conn = createConnection(process.env.MONGO_URI, {
-    //     useNewUrlParser: true,
-    //     useUnifiedTopology: true,
-    // });
-
-    cachedConn = conn;
-    return conn;
+        cachedConn = conn;
+        console.log("MongoDB connected");
+        return conn;
+    } catch (err) {
+        console.error("MongoDB connection error:", err);
+        throw err;
+    }
 };
 
 module.exports = { connA };

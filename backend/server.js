@@ -20,8 +20,7 @@ const corsOptions = {
 
         const allowedOrigins = [
             'https://52bazaar.eurovisionbdg.com',
-            /^https:\/\/52-bazaar-frontend.*\.vercel\.app$/,
-            /^http:\/\/localhost(:\d+)?$/
+            'http://localhost:3000'
         ];
 
         const isAllowed = allowedOrigins.some(pattern =>
@@ -53,12 +52,14 @@ app.use('/api', authRoute);
 app.use('/api', categoryRoute);
 app.use('/api', productRoute);
 
-app.get('/api/test', (req, res) => {
-    res.json({ message: 'Hello from API' });
-});
-
-app.get('/api/health', (req, res) => {
-    res.send({ status: 'OK' });
+app.get('/api/health', async (req, res) => {
+    try {
+        const conn = await connA();
+        await conn.connection.db.admin().ping();
+        res.send({ status: 'OK', mongo: 'connected' });
+    } catch (err) {
+        res.status(500).send({ status: 'ERROR', error: err.message });
+    }
 });
 
 // For local dev only
