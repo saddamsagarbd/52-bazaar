@@ -13,7 +13,7 @@ const ProductsList = () => {
             console.log(`API url: ${apiUrl}`);
             const response = await axios.get(`${apiUrl}/products`, {
                 withCredentials: true,
-                timeout: 15000,
+                timeout: 10000,
                 headers: {
                     'Content-Type': 'application/json',
                 },
