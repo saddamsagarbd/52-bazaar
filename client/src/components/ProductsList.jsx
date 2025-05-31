@@ -23,8 +23,6 @@ const ProductsList = () => {
                 },
             });
 
-            console.log(response.data);
-
             if (Array.isArray(response.data)) {
                 setProducts(response.data);
             } else {

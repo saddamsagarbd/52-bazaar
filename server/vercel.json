@@ -1,6 +1,14 @@
 {
   "version": 2,
   "routes": [
-    { "src": "/api/(.*)", "dest": "server/index.js" }
+    { 
+      "src": "/api/(.*)", 
+      "headers": {
+        "Access-Control-Allow-Origin": "*",
+        "Access-Control-Allow-Methods": "GET, POST, PUT, DELETE, OPTIONS",
+        "Access-Control-Allow-Headers": "Content-Type, Authorization",
+        "Access-Control-Allow-Credentials": "true"
+      },
+      "dest": "server/index.js" }
   ]
 }
