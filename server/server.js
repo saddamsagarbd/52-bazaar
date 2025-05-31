@@ -15,7 +15,7 @@ const app = express();
 // CORS configuration
 const allowedOrigins = [
   'https://52bazaar.eurovisionbdg.com',
-  'https://52-bazaar-frontend-saddamsagars-projects.vercel.app',
+  'https://52-bazaar-frontend.vercel.app/',
   /\.vercel\.app$/,
   'http://localhost:3000'
 ];

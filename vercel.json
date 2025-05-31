@@ -10,7 +10,7 @@
           "server/**/*.json",
           "server/node_modules/**"
         ],
-        "maxDuration": 10
+        "maxDuration": 30
       }
     }
   ],
