@@ -58,18 +58,24 @@ app.use(async (req, res, next) => {
 
 // Routes
 app.get('/api/test', (req, res) => {
-
   res.json('Hello');
-
 });
-app.use('/api', authRoute);
-app.use('/api', categoryRoute);
-app.use('/api', productRoute);
 
 // Health check
 app.get('/api/health', (req, res) => {
   res.send({ status: 'OK' });
 });
+
+app.get('/api/products', (req, res) => {
+  res.json({
+    message: "Direct products endpoint works",
+    timestamp: new Date().toISOString()
+  });
+});
+
+app.use('/api', authRoute);
+app.use('/api', categoryRoute);
+app.use('/api', productRoute);
 
 // Error handler
 app.use((err, req, res, next) => {

@@ -5,13 +5,7 @@
         "src": "server/index.js",
         "use": "@vercel/node",
         "config": {
-            "includeFiles": [
-            "server/**/*.js",
-            "server/**/*.json",
-            "server/node_modules/**",
-            "server/public/uploads/**"
-            ],
-            "maxDuration": 10
+            "includeFiles": ["server/**/*"]
         }
         }
     ],
@@ -19,7 +13,7 @@
         {
         "src": "/api/(.*)",
         "dest": "/server/index.js",
-        "methods": ["GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"]
+        "methods": ["GET", "POST", "PUT", "DELETE", "OPTIONS"]
         }
     ]
 }
