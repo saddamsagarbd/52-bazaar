@@ -12,43 +12,33 @@ const productRoute = require('./routes/product');
 
 const app = express();
 
+// CORS Configuration
 const allowedOrigins = [
   'http://localhost:3000',
   'https://52-bazaar-frontend.vercel.app',
   'https://52bazaar.eurovisionbdg.com',
-  // Include all Vercel preview URLs
-  /^https:\/\/52-bazaar-frontend(-[\w]+)?-saddamsagars-projects\.vercel\.app$/,
   /\.vercel\.app$/,
   /\.eurovisionbdg\.com$/
 ];
 
-const corsOptions = {
+app.use(cors({
   origin: function (origin, callback) {
-    // Allow requests with no origin (like mobile apps or curl)
-    if (!origin) return callback(null, true);
-    
-    // Check each allowed origin pattern
-    for (const pattern of allowedOrigins) {
-      if (typeof pattern === 'string' && origin === pattern) {
-        return callback(null, true);
-      }
-      if (pattern instanceof RegExp && pattern.test(origin)) {
-        return callback(null, true);
-      }
+    if (!origin || allowedOrigins.some(pattern => 
+      typeof pattern === 'string' 
+        ? origin === pattern 
+        : pattern.test(origin)
+    )) {
+      callback(null, true);
+    } else {
+      callback(new Error('Not allowed by CORS'));
     }
-    
-    console.warn(`CORS blocked for origin: ${origin}`);
-    callback(new Error('Not allowed by CORS'));
   },
-  methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
-  allowedHeaders: ['Content-Type', 'Authorization', 'X-Requested-With'],
-  credentials: true,
-  maxAge: 86400 // 24 hours
-};
+  credentials: true
+}));
 
 app.use(cors(corsOptions));
-// Handle preflight requests
 app.options('*', cors(corsOptions));
+
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
