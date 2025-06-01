@@ -9,6 +9,8 @@ const ProductsList = () => {
 
     const folderUrl = import.meta.env.VITE_API_URL_FILE_LOCATION;
 
+    axios.defaults.withCredentials=true;
+
     const fetchProducts = async () => {
         try {
             const apiUrl = import.meta.env.VITE_API_URL;
@@ -16,8 +18,6 @@ const ProductsList = () => {
             console.log('Fetching products from:', url);
 
             const response = await axios.get(url, {
-                withCredentials: true,
-                timeout: 15000,
                 headers: {
                     'Content-Type': 'application/json',
                 },

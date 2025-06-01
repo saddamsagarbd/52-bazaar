@@ -15,7 +15,8 @@ const app = express();
 // CORS configuration
 const allowedOrigins = [
   'https://52bazaar.eurovisionbdg.com',
-  'https://52-bazaar-frontend.vercel.app/',
+  'https://52-bazaar-frontend.vercel.app',
+  'https://52-bazaar-frontend-saddamsagars-projects.vercel.app',
   /\.vercel\.app$/,
   'http://localhost:3000'
 ];
@@ -56,6 +57,11 @@ app.use(async (req, res, next) => {
 });
 
 // Routes
+app.get('/api/test', (req, res) => {
+
+  res.json('Hello');
+
+});
 app.use('/api', authRoute);
 app.use('/api', categoryRoute);
 app.use('/api', productRoute);
