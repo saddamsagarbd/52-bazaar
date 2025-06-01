@@ -63,7 +63,7 @@ app.get('/api/test', (req, res) => {
 
 // Health check
 app.get('/api/health', (req, res) => {
-  res.send({ status: 'OK' });
+  res.json({ status: 'OK' });
 });
 
 app.get('/api/products', (req, res) => {
