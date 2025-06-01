@@ -9,8 +9,7 @@
             "server/**/*.js",
             "server/**/*.json",
             "server/node_modules/**",
-            "server/models/**",
-            "server/routes/**"
+            "server/public/uploads/**"
             ],
             "maxDuration": 10
         }

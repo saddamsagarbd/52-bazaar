@@ -78,5 +78,7 @@ app.use((err, req, res, next) => {
 });
 
 // Correctly export for Vercel:
-module.exports.app = app;
-module.exports.handler = serverless(app);
+module.exports = {
+  app,
+  handler: serverless(app)
+};

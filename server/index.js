@@ -1,15 +1,14 @@
+// server/index.js
 const { app, handler } = require('./server');
 
-const isProd = process.env.NODE_ENV === 'production';
+// For Vercel deployment
+module.exports = handler;
 
-if (isProd) {
-  // Export handler for Vercel
-  module.exports = handler;
-} else {
-  // Start normal server for dev
+// For local development
+if (require.main === module) {
   const PORT = process.env.PORT || 5000;
   app.listen(PORT, () => {
     console.log(`Server running on port ${PORT}`);
+    console.log(`Test endpoint: http://localhost:${PORT}/api/health`);
   });
 }
-
