@@ -1,0 +1,26 @@
+{
+    "version": 2,
+    "builds": [
+        {
+        "src": "server/index.js",
+        "use": "@vercel/node",
+        "config": {
+            "includeFiles": [
+            "server/**/*.js",
+            "server/**/*.json",
+            "server/node_modules/**",
+            "server/models/**",
+            "server/routes/**"
+            ],
+            "maxDuration": 10
+        }
+        }
+    ],
+    "routes": [
+        {
+        "src": "/api/(.*)",
+        "dest": "/server/index.js",
+        "methods": ["GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"]
+        }
+    ]
+}
