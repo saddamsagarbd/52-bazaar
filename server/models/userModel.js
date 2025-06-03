@@ -1,28 +1,48 @@
-const mongoose = require('mongoose');
+const mongoose = require("mongoose");
+const bcrypt = require("bcrypt");
 
-const userSchema = new mongoose.Schema({
-  name: {
-    type: String,
-    required: true,
-    trim: true,
+const userSchema = new mongoose.Schema(
+  {
+    name: {
+      type: String,
+      required: true,
+      trim: true,
+    },
+    email: {
+      type: String,
+      required: true,
+      trim: true,
+      unique: true, // Ensures emails are unique
+    },
+    password: {
+      type: String,
+      required: true,
+      trim: true,
+    },
+    is_active: {
+      type: Boolean,
+      default: true,
+    },
   },
-  email: {
-    type: String,
-    required: true,
-    trim: true,
-  },
-  password: {
-    type: String,
-    required: true,
-    trim: true,
-  },
-  is_active: {
-    type: Boolean,
-    default: true,
-  },
+  {
+    timestamps: true,
+  }
+);
+
+// Optimized Indexing
+userSchema.index({ is_active: 1 });
+userSchema.index({ email: 1 }, { unique: true });
+
+// Secure Password Storage
+userSchema.pre("save", async function (next) {
+  if (!this.isModified("password")) return next();
+  this.password = await bcrypt.hash(this.password, 10);
+  next();
 });
 
-userSchema.index({ is_active: 1 });
+// Password Validation Method
+userSchema.methods.isValidPassword = async function (password) {
+  return await bcrypt.compare(password, this.password);
+};
 
-// module.exports = (conn) => conn.model('User', userSchema);
-module.exports = mongoose.model('User', userSchema);
+module.exports = mongoose.model("User", userSchema);

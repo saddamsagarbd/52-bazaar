@@ -9,6 +9,7 @@ const { connA } = require('./db-config/db-conn');
 const authRoute = require('./routes/auth');
 const categoryRoute = require('./routes/category');
 const productRoute = require('./routes/product');
+const userRoutes = require("./routes/userRoutes");
 
 const app = express();
 
@@ -66,6 +67,7 @@ app.get('/api/products', (req, res) => {
 app.use('/api', authRoute);
 app.use('/api', categoryRoute);
 app.use('/api', productRoute);
+app.use("/api/users", userRoutes);
 
 // Error handler
 app.use((err, req, res, next) => {

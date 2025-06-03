@@ -29,12 +29,9 @@ const productSchema = new mongoose.Schema({
   timestamps: { createdAt: 'created_at', updatedAt: 'updated_at' }
 });
 
-// Indexes
-productSchema.index({ is_active: 1 });
-productSchema.index({ category: 1 });
-productSchema.index({ price: 1 });
-productSchema.index({ name: 1 }); // for regex search
-productSchema.index({ is_active: 1, category: 1 }); // compound index
+productSchema.index({ is_active: 1, category: 1 }); // Helps filter by category & active status
+productSchema.index({ price: 1 }); // Improves price-based sorting & queries
+productSchema.index({ name: "text" }); // Enables fast full-text search on product names
 
 require('./categoryModel');
 const Product = mongoose.model('Product', productSchema);

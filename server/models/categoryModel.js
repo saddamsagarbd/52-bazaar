@@ -20,11 +20,13 @@ const categorySchema = new Schema({
   timestamps: { createdAt: 'created_at', updatedAt: 'updated_at' }
 });
 
-categorySchema.index({ is_active: 1 });
+
+
+// ✅ Optimized Indexes
+categorySchema.index({ name: 1 }); // Improves text-based category lookups
+categorySchema.index({ parent_id: 1 }); // Efficient subcategory retrieval
+categorySchema.index({ is_active: 1, parent_id: 1 }); // Fast filtering for active subcategories
 
 const Category = mongoose.model('Category', categorySchema);
 
 module.exports = Category;
-// module.exports = (conn)=> {
-//   return conn.model('Category', categorySchema, 'categories');
-// };
