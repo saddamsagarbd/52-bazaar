@@ -34,13 +34,29 @@ exports.getProducts = async (req, res) => {
     }
 };
 
+async function processProductImage(newProduct, file) {
+
+    if (!file) return; // Prevent execution if no file is uploaded
+
+    const uploadsDir = path.join(__dirname, "../public/uploads/products");
+    await fsPromises.mkdir(uploadsDir, { recursive: true });
+
+    const fileName = `${newProduct._id}${path.extname(file.originalname)}`;
+    const filePath = path.join(uploadsDir, fileName);
+
+    await fsPromises.writeFile(filePath, file.buffer);
+    newProduct.imgUrl = `/uploads/products/${fileName}`;
+    return await newProduct.save();
+
+}
+
 exports.addProduct = async (req, res) => {
     try {
         const { name, price, category } = req.body;
 
         // Check if product already exists within the category
         const existingProduct = await Product.findOne({ name: name.trim(), category });
-        
+
         if (existingProduct) {
             return res.status(400).json({
                 success: false,
@@ -49,21 +65,14 @@ exports.addProduct = async (req, res) => {
         }
 
         const newProduct = new Product({ name, price, category });
+
         await newProduct.save();
 
         res.status(201).json({ success: true, data: newProduct });
 
         // Process image upload separately
         setImmediate(async () => {
-            const uploadsDir = path.join(__dirname, "../public/uploads/products");
-            await fsPromises.mkdir(uploadsDir, { recursive: true });
-
-            const fileName = `${newProduct._id}${path.extname(req.file.originalname)}`;
-            const filePath = path.join(uploadsDir, fileName);
-
-            await fsPromises.writeFile(filePath, req.file.buffer);
-            newProduct.imgUrl = `/uploads/products/${fileName}`;
-            await newProduct.save();
+            if (req.file) await processProductImage(newProduct, req.file);
         });
 
     } catch (error) {
