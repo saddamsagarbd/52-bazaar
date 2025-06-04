@@ -51,7 +51,7 @@ const Categories = () => {
     
         try {
             const apiUrl = import.meta.env.VITE_API_URL;
-            const response = await axios.post(`${apiUrl}/add-category`, data, {
+            const response = await axios.post(`${apiUrl}/api/add-category`, data, {
                 headers: {
                     'Authorization': `Bearer ${token}`,
                     "Content-Type": "multipart/form-data"
@@ -137,7 +137,7 @@ const Categories = () => {
 
         try {
             const apiUrl = import.meta.env.VITE_API_URL;
-            const response = await axios.get(`${apiUrl}/categories`, {
+            const response = await axios.get(`${apiUrl}/api/categories`, {
                 withCredentials: true,
                 headers: {
                     'Authorization': `Bearer ${token}`,

@@ -4,7 +4,7 @@ export const loginUser = (credentials, navigate, apiUrl) => async (dispatch) => 
   dispatch(loginStart());
   try {
 
-    const response = await fetch(`${apiUrl}/admin/login`, {
+    const response = await fetch(`${apiUrl}/api/admin/login`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',

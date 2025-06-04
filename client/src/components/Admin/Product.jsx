@@ -27,7 +27,7 @@ const Products = () => {
     const [categories, setCategories] = useState([]);
     const [loading, setLoading] = useState(true);
     
-    const folderUrl = import.meta.env.VITE_API_URL_FILE_LOCATION;
+    const apiUrl = import.meta.env.VITE_API_URL;
 
     const handleImageChange = (e) => {
         const file = e.target.files[0];
@@ -51,7 +51,7 @@ const Products = () => {
                 accessorKey: 'name',
                 cell: ({ row }) => {
                     const name = row.original.name;
-                    const imgUrl = `${folderUrl}`+row.original.imgUrl; // Adjust key based on your actual field
+                    const imgUrl = `${apiUrl}`+row.original.imgUrl; // Adjust key based on your actual field
 
                     return (
                         <div className="flex items-center space-x-3">
@@ -90,7 +90,7 @@ const Products = () => {
                     </button>
                 ),
             },
-        ], [folderUrl, handleDelete]);
+        ], [apiUrl, handleDelete]);
 
     const filteredData = useMemo(() => 
         products.filter((product) =>
@@ -132,7 +132,7 @@ const Products = () => {
 
         try {
             const apiUrl = import.meta.env.VITE_API_URL;
-            const response = await axios.post(`${apiUrl}/add-product`, formData, {
+            const response = await axios.post(`${apiUrl}/api/add-product`, formData, {
                 timeout: 10000,
                 headers: {
                     "Content-Type": "multipart/form-data"
@@ -150,13 +150,12 @@ const Products = () => {
         }
     };
 
-    const fetchCategories = async () => {
+    const fetchCategories = async (apiUrl) => {
         const token = localStorage.getItem('token');
         if (!token) return;
 
         try {
-            const apiUrl = import.meta.env.VITE_API_URL;
-            const response = await axios.get(`${apiUrl}/categories`, {
+            const response = await axios.get(`${apiUrl}/api/categories`, {
                 withCredentials: true,
                 headers: {
                     'Authorization': `Bearer ${token}`,
@@ -170,14 +169,13 @@ const Products = () => {
         }
     };
 
-    const fetchProducts = async () => {
+    const fetchProducts = async (apiUrl) => {
 
         const token = localStorage.getItem('token');
         if (!token) return;
 
         try {
-            const apiUrl = import.meta.env.VITE_API_URL;
-            const url = `${apiUrl}/products`;
+            const url = `${apiUrl}/api/products`;
             console.log('Fetching products from:', url);
 
             const response = await axios.get(url, {
@@ -200,9 +198,9 @@ const Products = () => {
     };
 
     useEffect(() => {
-        fetchCategories();
-        fetchProducts();
-    }, []);
+        fetchCategories(apiUrl);
+        fetchProducts(apiUrl);
+    }, [apiUrl]);
 
 
     return (

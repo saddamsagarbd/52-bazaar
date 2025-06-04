@@ -7,14 +7,13 @@ const ProductsList = () => {
     const [products, setProducts] = useState([]);
     const [loading, setLoading] = useState(true);
 
-    const folderUrl = import.meta.env.VITE_API_URL_FILE_LOCATION;
+    const apiUrl = import.meta.env.VITE_API_URL;
 
     axios.defaults.withCredentials=true;
 
-    const fetchProducts = async () => {
+    const fetchProducts = async (apiUrl) => {
         try {
-            const apiUrl = import.meta.env.VITE_API_URL;
-            const url = `${apiUrl}/products`;
+            const url = `${apiUrl}/api/products`;
             console.log('Fetching products from:', url);
 
             const response = await axios.get(url, {
@@ -36,7 +35,7 @@ const ProductsList = () => {
     };
 
     useEffect(() => {
-        fetchProducts();
+        fetchProducts(apiUrl);
     }, []);
 
     if (loading) return <div>Loading products...</div>;
@@ -48,7 +47,7 @@ const ProductsList = () => {
                 <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
                     {
                         products.map(({name, price, imgUrl}, index) => (
-                            <Product key={index} imgSrc={imgUrl?`${folderUrl}`+imgUrl:DefaultProImg} title={name} price={price} />
+                            <Product key={index} imgSrc={imgUrl?`${apiUrl}`+imgUrl:DefaultProImg} title={name} price={price} />
                         ))
                     }
                 </div>
