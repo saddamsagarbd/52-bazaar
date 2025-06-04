@@ -12,7 +12,7 @@ const userSchema = new mongoose.Schema(
       type: String,
       required: true,
       trim: true,
-      unique: true, // Ensures emails are unique
+      unique: true,
     },
     password: {
       type: String,
@@ -31,7 +31,6 @@ const userSchema = new mongoose.Schema(
 
 // Optimized Indexing
 userSchema.index({ is_active: 1 });
-userSchema.index({ email: 1 }, { unique: true });
 
 // Secure Password Storage
 userSchema.pre("save", async function (next) {
