@@ -1,15 +1,9 @@
 require('dotenv').config();
-const express = require('express');
-const path = require('path');
-const cors = require('cors');
-const serverless = require('serverless-http');
-
-const { connA } = require('./db-config/db-conn');
-
-const authRoute = require('./routes/auth');
-const categoryRoute = require('./routes/category');
-const productRoute = require('./routes/product');
-const userRoutes = require("./routes/userRoutes");
+const express       = require('express');
+const path          = require('path');
+const cors          = require('cors');
+const serverless    = require('serverless-http');
+const { connA }     = require('./db-config/db-conn');
 
 const app = express();
 
@@ -61,6 +55,11 @@ app.get('/api/test', (req, res) => {
 app.get('/api/health', (req, res) => {
   res.json({ status: 'OK' });
 });
+
+const authRoute     = require("./routes/auth");
+const categoryRoute = require("./routes/category");
+const productRoute  = require("./routes/product");
+const userRoutes    = require("./routes/userRoutes");
 
 app.use('/api', authRoute);
 app.use('/api', categoryRoute);
