@@ -56,10 +56,10 @@ app.get('/api/health', (req, res) => {
   res.json({ status: 'OK' });
 });
 
-const authRoute     = require("./routes/auth");
-const categoryRoute = require("./routes/category");
-const productRoute  = require("./routes/product");
-const userRoutes    = require("./routes/userRoutes");
+const authRoute     = require("./routes/auth.js");
+const categoryRoute = require("./routes/category.js");
+const productRoute  = require("./routes/product.js");
+const userRoutes    = require("./routes/userRoutes.js");
 
 app.use('/api', authRoute);
 app.use('/api', categoryRoute);
