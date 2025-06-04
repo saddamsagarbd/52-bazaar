@@ -14,6 +14,8 @@ exports.getProducts = async (req, res) => {
         if (category && Types.ObjectId.isValid(category)) query.category = new Types.ObjectId(category);
 
         const totalProducts = await Product.countDocuments(query);
+
+        console.time("Before: Product Query");
         const products = await Product.find(query)
                         .select("name price imgUrl category")
                         .populate("category", "name")
@@ -21,6 +23,7 @@ exports.getProducts = async (req, res) => {
                         .skip((page - 1) * limit)
                         .limit(limit)
                         .maxTimeMS(5000);
+        console.timeEnd("After: Product Query");
 
         res.status(200).json({
             totalProducts,

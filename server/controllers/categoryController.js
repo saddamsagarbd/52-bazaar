@@ -37,7 +37,7 @@ exports.getCategories = async (req, res) => {
                             .lean()
                             .skip((page - 1) * limit)
                             .limit(limit)
-                            .maxTimeMS(3000)
+                            .maxTimeMS(5000)
                             .explain("executionStats"); // Check if MongoDB uses indexes
 
         res.json(categories);
