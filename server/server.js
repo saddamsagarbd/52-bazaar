@@ -48,6 +48,11 @@ app.use(async (req, res, next) => {
 });
 
 // Routes
+
+app.get('/api', (req, res) => {
+  res.json('API established');
+});
+
 app.get('/api/test', (req, res) => {
   res.json('Hello');
 });
