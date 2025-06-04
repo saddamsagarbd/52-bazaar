@@ -23,6 +23,8 @@ const app = express();
 
 // app.use(cors(corsOptions));
 // app.options('*', cors(corsOptions));
+// app.use(express.urlencoded({ extended: true }));
+
 app.use(cors({
   origin: "https://52-bazaar-frontend.vercel.app", // Replace with your frontend URL
   methods: "GET, POST, PUT, DELETE, OPTIONS",
@@ -31,7 +33,6 @@ app.use(cors({
 }));
 
 app.use(express.json());
-app.use(express.urlencoded({ extended: true }));
 
 // Static files
 app.use('/uploads', express.static(path.join(__dirname, 'public/uploads')));
@@ -53,15 +54,6 @@ app.get('/api', (req, res) => {
   res.json('API established');
 });
 
-app.get('/api/test', (req, res) => {
-  res.json('Hello');
-});
-
-// Health check
-app.get('/api/health', (req, res) => {
-  res.json({ status: 'OK' });
-});
-
 const authRoute     = require("./routes/auth.js");
 const categoryRoute = require("./routes/category.js");
 const productRoute  = require("./routes/product.js");
@@ -81,7 +73,4 @@ app.use((err, req, res, next) => {
 console.log("Registered Routes:", app._router.stack.map(layer => layer.route?.path).filter(Boolean));
 
 // Correctly export for Vercel:
-module.exports = {
-  app,
-  handler: serverless(app)
-};
+module.exports = app;
