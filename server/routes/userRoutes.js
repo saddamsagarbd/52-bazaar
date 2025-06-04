@@ -3,10 +3,10 @@ const { createUser, getUsers, getUserById, updateUser, deleteUser } = require(".
 
 const router = express.Router();
 
-router.post("/", createUser);
-router.get("/", getUsers);
-router.get("/:id", getUserById);
-router.put("/:id", updateUser);
-router.delete("/:id", deleteUser);
+router.post("/api/users/", createUser);
+router.get("/api/users/", getUsers);
+router.get("/api/users/:id", getUserById);
+router.put("/api/users/:id", updateUser);
+router.delete("/api/users/:id", deleteUser);
 
 module.exports = router;

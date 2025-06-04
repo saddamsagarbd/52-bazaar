@@ -61,10 +61,10 @@ const categoryRoute = require("./routes/category.js");
 const productRoute  = require("./routes/product.js");
 const userRoutes    = require("./routes/userRoutes.js");
 
-app.use('/api', authRoute);
-app.use('/api', categoryRoute);
-app.use('/api', productRoute);
-app.use("/api/users", userRoutes);
+app.use(authRoute);
+app.use(categoryRoute);
+app.use(productRoute);
+app.use(userRoutes);
 
 // Error handler
 app.use((err, req, res, next) => {
