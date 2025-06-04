@@ -8,21 +8,27 @@ const { connA }     = require('./db-config/db-conn');
 const app = express();
 
 // CORS Configuration
-const allowedOrigins = [
-  'http://localhost:3000',
-  'https://52-bazaar-frontend.vercel.app',
-  'https://52bazaar.eurovisionbdg.com',
-  /\.vercel\.app$/,
-  /\.eurovisionbdg\.com$/
-];
+// const allowedOrigins = [
+//   'http://localhost:3000',
+//   'https://52-bazaar-frontend.vercel.app',
+//   'https://52bazaar.eurovisionbdg.com',
+//   /\.vercel\.app$/,
+//   /\.eurovisionbdg\.com$/
+// ];
 
-const corsOptions = {
-  origin: allowedOrigins,
-  credentials: true,
-};
+// const corsOptions = {
+//   origin: allowedOrigins,
+//   credentials: true,
+// };
 
-app.use(cors(corsOptions));
-app.options('*', cors(corsOptions));
+// app.use(cors(corsOptions));
+// app.options('*', cors(corsOptions));
+app.use(cors({
+  origin: "https://52-bazaar-frontend.vercel.app", // Replace with your frontend URL
+  methods: "GET, POST, PUT, DELETE, OPTIONS",
+  allowedHeaders: "Content-Type, Authorization",
+  credentials: true
+}));
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
