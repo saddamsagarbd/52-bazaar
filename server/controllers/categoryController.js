@@ -32,12 +32,13 @@ exports.getCategories = async (req, res) => {
         const limit = parseInt(req.query.limit) || 20;
 
         const categories = await Category.find({ is_active: true })
-            .select('name parent_id')
-            .populate('parent_id', 'name')
-            .lean()
-            .skip((page - 1) * limit)
-            .limit(limit)
-            .maxTimeMS(3000);
+                            .select("name parent_id")
+                            .populate("parent_id", "name")
+                            .lean()
+                            .skip((page - 1) * limit)
+                            .limit(limit)
+                            .maxTimeMS(3000)
+                            .explain("executionStats"); // Check if MongoDB uses indexes
 
         console.log(categories);
 
