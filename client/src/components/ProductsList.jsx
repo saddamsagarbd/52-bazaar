@@ -23,10 +23,10 @@ const ProductsList = () => {
                 },
             });
 
-            if (Array.isArray(response.data)) {
-                setProducts(response.data);
+            if (Array.isArray(response.data.products)) {
+                setProducts(response.data.products);
             } else {
-                console.error("Unexpected response format:", response.data);
+                console.error("Unexpected response format:", response.data.products);
             }
         } catch (err) {
             console.error("Failed to fetch products", err);

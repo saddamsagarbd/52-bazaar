@@ -25,6 +25,7 @@ const Products = () => {
     const [products, setProducts] = useState([]);
     const [preview, setPreview] = useState(null);
     const [categories, setCategories] = useState([]);
+    const [loading, setLoading] = useState(true);
     
     const folderUrl = import.meta.env.VITE_API_URL_FILE_LOCATION;
 
@@ -170,21 +171,31 @@ const Products = () => {
     };
 
     const fetchProducts = async () => {
+
         const token = localStorage.getItem('token');
         if (!token) return;
 
         try {
             const apiUrl = import.meta.env.VITE_API_URL;
-            const response = await axios.get(`${apiUrl}/products`, {
+            const url = `${apiUrl}/products`;
+            console.log('Fetching products from:', url);
+
+            const response = await axios.get(url, {
                 headers: {
                     'Authorization': `Bearer ${token}`,
                     'Content-Type': 'application/json',
                 },
             });
-            // const data = await response.data;
-            setProducts(response.data);
+
+            if (Array.isArray(response.data.products)) {
+                setProducts(response.data.products);
+            } else {
+                console.error("Unexpected response format:", response.data.products);
+            }
         } catch (err) {
             console.error("Failed to fetch products", err);
+        } finally {
+            setLoading(false)   
         }
     };
 
@@ -404,119 +415,6 @@ const Products = () => {
                         </button>
                     </div>
                 </div>
-
-                {/* Add Product Modal */}
-                {/* <Modal
-                    isOpen={modalIsOpen}
-                    onRequestClose={closeModal}
-                    contentLabel="Add Product"
-                    className="fixed inset-0 z-50 flex items-center justify-center p-4"
-                    overlayClassName="fixed inset-0 bg-black bg-opacity-50"
-                    portalClassName="modal-portal"
-                    ariaHideApp={true}
-                    shouldCloseOnOverlayClick={true}
-                    shouldCloseOnEsc={true}
-                    preventScroll={true}
-                >
-                    <div className="bg-white rounded-lg shadow-xl w-full max-w-md">
-                        <div className="p-6">
-                            <div className="flex justify-between items-center mb-4">
-                                <h2 className="text-xl font-semibold">Add Product</h2>
-                                <button 
-                                    onClick={closeModal}
-                                    className="text-gray-400 hover:text-gray-500"
-                                >
-                                    ✕
-                                </button>
-                            </div>
-                            
-                            <form onSubmit={handleAddProduct}>
-                                <div className="mb-4">
-                                    <label className="block text-sm font-medium text-gray-700 mb-1">
-                                        Product Name
-                                    </label>
-                                    <input
-                                        type="text"
-                                        value={newProduct.name}
-                                        onChange={(e) => setNewProduct({...newProduct, name: e.target.value})}
-                                        className="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500"
-                                        required
-                                    />
-                                </div>
-                            
-                                <div className="mb-6">
-                                    <label className="block text-sm font-medium text-gray-700 mb-1">
-                                        Price (ID)
-                                    </label>
-                                    <input
-                                        type="text"
-                                        value={newProduct.price}
-                                        onChange={(e) => setNewProduct({...newProduct, price: e.target.value})}
-                                        className="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500"
-                                        placeholder="Leave empty for root Product"
-                                    />
-                                </div>
-                            
-                                <div className="mb-6">
-                                    <label className="block text-sm font-medium text-gray-700 mb-1">
-                                        Category
-                                    </label>
-                                    <select
-                                        value={newProduct.category}
-                                        onChange={(e) => setNewProduct({...newProduct, category: e.target.value})}
-                                        className="w-full border px-3 py-2 rounded"
-                                    >
-                                        <option value="">-- None --</option>
-                                        {categories.length > 0 ? (
-                                        categories.map((cat) => (
-                                            <option key={cat._id} value={cat._id}>
-                                            {cat.name}
-                                            </option>
-                                        ))
-                                        ) : (
-                                        <option disabled>No categories found</option>
-                                        )}
-                                    </select>
-                                </div>
-
-                                <div className="mb-6">
-                                    <label className="block text-sm font-medium text-gray-700 mb-1">
-                                        Product Image
-                                    </label>
-                                    <input
-                                        type="file"
-                                        accept="image/*"
-                                        onChange={handleImageChange}
-                                        className="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500"
-                                    />
-                                    {preview && (
-                                        <img
-                                            src={preview}
-                                            alt="Preview"
-                                            className="mt-4 h-32 object-cover rounded"
-                                        />
-                                    )}
-                                </div>
-                                
-                                <div className="flex justify-end space-x-3">
-                                    <button
-                                        type="button"
-                                        onClick={closeModal}
-                                        className="px-4 py-2 border border-gray-300 rounded-md shadow-sm text-sm font-medium text-gray-700 hover:bg-gray-50"
-                                    >
-                                        Cancel
-                                    </button>
-                                    <button
-                                        type="submit"
-                                        className="px-4 py-2 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"
-                                    >
-                                        Add Product
-                                    </button>
-                                </div>
-                            </form>
-                        </div>
-                    </div>
-                </Modal> */}
             </div>
         </div>
     );
