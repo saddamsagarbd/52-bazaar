@@ -73,6 +73,8 @@ app.use((err, req, res, next) => {
   res.status(500).json({ message: 'Internal server error' });
 });
 
+console.log("Registered Routes:", app._router.stack.map(layer => layer.route?.path).filter(Boolean));
+
 // Correctly export for Vercel:
 module.exports = {
   app,
