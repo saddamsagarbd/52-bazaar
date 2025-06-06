@@ -145,10 +145,10 @@ const Categories = () => {
                 },
             });
 
-            if (Array.isArray(response.data.products)) {
-                setCategories(response.data);
+            if (Array.isArray(response.data.categories)) {
+                setCategories(response.data.categories);
             } else {
-                console.error("Unexpected response format:", response.data.products);
+                console.error("Unexpected response format:", response.data.categories);
             }
             
         } catch (err) {
