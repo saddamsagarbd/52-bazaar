@@ -2,7 +2,6 @@ require('dotenv').config();
 const express       = require('express');
 const path          = require('path');
 const cors          = require('cors');
-const serverless    = require('serverless-http');
 const { connA }     = require('./db-config/db-conn');
 
 const app = express();
