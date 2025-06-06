@@ -24,9 +24,6 @@ app.use(cors({
   credentials: true
 }));
 
-// app.use(cors(corsOptions));
-// Handle preflight requests
-// app.options('*', cors(corsOptions));
 app.use(express.json());
 
 // Static files
@@ -35,7 +32,9 @@ app.use('/uploads', express.static(path.join(__dirname, 'public/uploads')));
 // Ensure MongoDB is connected before handling any route
 app.use(async (req, res, next) => {
   try {
-    await connA(); // important: await DB connection on every request in Vercel
+    console.log("Trying to connect to DB...");
+    await connA();
+    console.log("Connected to DB successfully");
     next();
   } catch (err) {
     console.error("DB connection error middleware:", err);
@@ -45,6 +44,11 @@ app.use(async (req, res, next) => {
 
 // Routes
 
+app.all('*', (req, res) => {
+  res.status(404).json({ message: 'API route not found', path: req.path });
+});
+
+
 app.get('/api', (req, res) => {
   res.json('API established');
 });
@@ -52,12 +56,12 @@ app.get('/api', (req, res) => {
 const authRoute     = require("./routes/auth.js");
 const categoryRoute = require("./routes/category.js");
 const productRoute  = require("./routes/product.js");
-const userRoutes    = require("./routes/userRoutes.js");
+// const userRoutes    = require("./routes/userRoutes.js");
 
-app.use(authRoute);
-app.use(categoryRoute);
-app.use(productRoute);
-app.use(userRoutes);
+app.use("/api", authRoute);
+app.use("/api", categoryRoute);
+app.use("/api", productRoute);
+// app.use("/api", userRoutes);
 
 // Error handler
 app.use((err, req, res, next) => {
