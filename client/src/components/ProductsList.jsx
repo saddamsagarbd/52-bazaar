@@ -17,6 +17,7 @@ const ProductsList = () => {
             console.log('Fetching products from:', url);
 
             const response = await axios.get(url, {
+                withCredentials: true,
                 headers: {
                     'Content-Type': 'application/json',
                 },

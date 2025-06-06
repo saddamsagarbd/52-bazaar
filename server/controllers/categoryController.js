@@ -10,37 +10,24 @@ exports.getCategories = async (req, res) => {
 
     try {
 
-        const { name, parent } = req.query;
+        const { name, parent, page = 1, limit = 20 } = req.query;
+        const query = { is_active: true };
 
-        const query = {};
+        if (name) query.name = { $regex: name, $options: "i" };
 
-        if (name) {
-            query.name = { $regex: name, $options: 'i' };
-        }
-
-        if (parent && Types.ObjectId.isValid(parent)) {
-            query.parent_id = Types.ObjectId(parent);
-        } else if (parent) {
-            return res.status(400).json({ message: 'Invalid parent ID format' });
-        }
-
-        // const categories = await Category.find(query)
-        //     .populate('parent_id', 'name')
-        //     .sort({ created_at: -1 });
-
-        const page = parseInt(req.query.page) || 1;
-        const limit = parseInt(req.query.limit) || 20;
+        if (parent && Types.ObjectId.isValid(parent)) query.parent_id = new Types.ObjectId(parent);
 
         const totalCategories = await Category.countDocuments(query);
 
-        const categories = await Category.find({ is_active: true })
+        const categories = await Category.find(query)
                             .select("name parent_id")
                             .populate("parent_id", "name")
                             .lean()
                             .skip((page - 1) * limit)
                             .limit(limit)
-                            .maxTimeMS(5000)
-                            .explain("executionStats"); // Check if MongoDB uses indexes
+                            .maxTimeMS(5000);
+
+        console.log('Categories response:', categories);
 
         res.status(200).json({
             totalCategories,

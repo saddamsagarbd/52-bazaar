@@ -131,8 +131,9 @@ const Products = () => {
         formData.append("product_image", newProduct.product_image);
 
         try {
-            const apiUrl = import.meta.env.VITE_API_URL;
-            const response = await axios.post(`${apiUrl}/api/add-product`, formData, {
+            let apiUrl = import.meta.env.VITE_API_URL;
+            const url = `${apiUrl}/api/add-product`;
+            const response = await axios.post(url, formData, {
                 timeout: 10000,
                 headers: {
                     "Content-Type": "multipart/form-data"
@@ -179,6 +180,7 @@ const Products = () => {
             console.log('Fetching products from:', url);
 
             const response = await axios.get(url, {
+                withCredentials: true,
                 headers: {
                     'Authorization': `Bearer ${token}`,
                     'Content-Type': 'application/json',

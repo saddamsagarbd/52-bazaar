@@ -9,11 +9,13 @@ const app = express();
 const allowedOrigins = [
   'http://localhost:3000',
   'https://52bazaar.eurovisionbdg.com',
-  'https://52-bazaar-frontend.vercel.app', // keep this if you still use it
+  'https://52-bazaar-frontend.vercel.app',
 ];
 
 app.use(cors({
   origin: function (origin, callback) {
+    console.log("CORS origin:", origin);
+
     if (!origin || allowedOrigins.includes(origin)) {
       callback(null, true);
     } else {
@@ -31,6 +33,7 @@ app.use('/uploads', express.static(path.join(__dirname, 'public/uploads')));
 // Ensure MongoDB is connected before handling any route
 app.use(async (req, res, next) => {
   try {
+    res.header('Access-Control-Allow-Credentials', 'true');
     console.log("Trying to connect to DB...");
     await connA();
     console.log("Connected to DB successfully");

@@ -24,6 +24,7 @@ const Categories = () => {
     const [modalIsOpen, setModalIsOpen] = useState(false);
     const [newCategory, setNewCategory] = useState({ name: '', parent: '' });
     const [categories, setCategories] = useState([]);
+    const apiUrl = import.meta.env.VITE_API_URL;
     
     const closeModal = () => {
         setModalIsOpen(false);
@@ -50,8 +51,9 @@ const Categories = () => {
         };
     
         try {
-            const apiUrl = import.meta.env.VITE_API_URL;
-            const response = await axios.post(`${apiUrl}/api/add-category`, data, {
+            let apiUrl = import.meta.env.VITE_API_URL;
+            const url = `${apiUrl}/api/add-category`;
+            const response = await axios.post(url, data, {
                 headers: {
                     'Authorization': `Bearer ${token}`,
                     "Content-Type": "multipart/form-data"
@@ -136,14 +138,16 @@ const Categories = () => {
         if (!token) return;
 
         try {
-            const apiUrl = import.meta.env.VITE_API_URL;
-            const response = await axios.get(`${apiUrl}/api/categories`, {
+            const url = `${apiUrl}/api/categories`;
+            const response = await axios.get(url, {
                 withCredentials: true,
                 headers: {
                     'Authorization': `Bearer ${token}`,
                     'Content-Type': 'application/json',
                 },
             });
+
+            console.log("response: ", response);
 
             if (Array.isArray(response.data.categories)) {
                 setCategories(response.data.categories);
@@ -157,7 +161,7 @@ const Categories = () => {
     };
 
     useEffect(() => {
-        fetchCategories();
+        fetchCategories(apiUrl);
     }, []);
 
     return (
