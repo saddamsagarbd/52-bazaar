@@ -144,8 +144,13 @@ const Categories = () => {
                     'Content-Type': 'application/json',
                 },
             });
+
+            if (Array.isArray(response.data.products)) {
+                setCategories(response.data);
+            } else {
+                console.error("Unexpected response format:", response.data.products);
+            }
             
-            setCategories(response.data);
         } catch (err) {
             console.log("Failed to fetch categories", err);
         }

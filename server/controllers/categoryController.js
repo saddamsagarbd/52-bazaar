@@ -31,6 +31,8 @@ exports.getCategories = async (req, res) => {
         const page = parseInt(req.query.page) || 1;
         const limit = parseInt(req.query.limit) || 20;
 
+        const totalCategories = await Category.countDocuments(query);
+
         const categories = await Category.find({ is_active: true })
                             .select("name parent_id")
                             .populate("parent_id", "name")
@@ -40,7 +42,12 @@ exports.getCategories = async (req, res) => {
                             .maxTimeMS(5000)
                             .explain("executionStats"); // Check if MongoDB uses indexes
 
-        res.json(categories);
+        res.status(200).json({
+            totalCategories,
+            totalPages: Math.ceil(totalCategories / limit),
+            currentPage: page,
+            categories,
+        });
 
     } catch (err) {
         // Log the actual error message and stack trace

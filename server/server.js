@@ -7,7 +7,7 @@ const { connA }     = require('./db-config/db-conn');
 const app = express();
 
 const allowedOrigins = [
-  'https://localhost:3000',
+  'http://localhost:3000',
   'https://52bazaar.eurovisionbdg.com',
   'https://52-bazaar-frontend.vercel.app', // keep this if you still use it
 ];
