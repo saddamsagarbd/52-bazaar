@@ -43,15 +43,6 @@ app.use(async (req, res, next) => {
 
 // Routes
 
-app.all('*', (req, res) => {
-  res.status(404).json({ message: 'API route not found', path: req.path });
-});
-
-
-app.get('/api', (req, res) => {
-  res.json('API established');
-});
-
 const authRoute     = require("./routes/auth.js");
 const categoryRoute = require("./routes/category.js");
 const productRoute  = require("./routes/product.js");
@@ -61,6 +52,15 @@ app.use("/api", authRoute);
 app.use("/api", categoryRoute);
 app.use("/api", productRoute);
 // app.use("/api", userRoutes);
+
+app.all('*', (req, res) => {
+  res.status(404).json({ message: 'API route not found', path: req.path });
+});
+
+
+app.get('/api', (req, res) => {
+  res.json('API established');
+});
 
 // Error handler
 app.use((err, req, res, next) => {
