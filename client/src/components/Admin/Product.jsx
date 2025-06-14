@@ -164,7 +164,7 @@ const Products = () => {
                 },
             });
 
-            setCategories(response.data);
+            setCategories(response.data.categories);
         } catch (err) {
             console.error("Failed to fetch categories", err);
         }
