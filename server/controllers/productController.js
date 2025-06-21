@@ -3,6 +3,7 @@ const path = require("path");
 const fs = require("fs");
 const fsPromises = fs.promises;
 const Product = require("../models/productModel");
+import { uploadToCloudinary } from '../utils/cloudinary.js';
 
 exports.getProducts = async (req, res) => {
     try {
@@ -37,7 +38,7 @@ exports.getProducts = async (req, res) => {
     }
 };
 
-async function processProductImage(newProduct, file) {
+async function processProductImageOld(newProduct, file) {
 
     if (!file) return; // Prevent execution if no file is uploaded
 
@@ -51,6 +52,35 @@ async function processProductImage(newProduct, file) {
     newProduct.imgUrl = `/uploads/products/${fileName}`;
     return await newProduct.save();
 
+}
+
+async function processProductImage(newProduct, file) {
+    if (!file) return;
+
+    try {
+
+        if (process.env.NODE_ENV === 'development') {
+            const uploadsDir = path.join(__dirname, "../../public/uploads/products");
+            await fsPromises.mkdir(uploadsDir, { recursive: true });
+            
+            const fileName = `${newProduct._id}${path.extname(file.originalname)}`;
+            const filePath = path.join(uploadsDir, fileName);
+            
+            await fsPromises.writeFile(filePath, file.buffer);
+            newProduct.imgUrl = `/uploads/products/${fileName}`;
+            return await newProduct.save();
+        }
+
+        // Upload to Cloudinary
+        const result = await uploadToCloudinary(file.buffer, 'products');
+        
+        // Save the secure URL to your database
+        newProduct.imgUrl = result.secure_url;
+        return await newProduct.save();
+    } catch (error) {
+        console.error('Image upload error:', error);
+        throw error;
+    }
 }
 
 exports.addProduct = async (req, res) => {
