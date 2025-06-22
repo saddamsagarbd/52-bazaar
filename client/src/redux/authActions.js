@@ -1,6 +1,6 @@
 import { loginStart, loginSuccess } from './authSlice';
 
-export const loginUser = (credentials, navigate, apiUrl) => async (dispatch) => {
+const loginUser = (credentials, navigate, apiUrl) => async (dispatch) => {
   dispatch(loginStart());
   try {
 
@@ -39,3 +39,5 @@ export const loginUser = (credentials, navigate, apiUrl) => async (dispatch) => 
     console.error('Network error:', error.message);
   }
 };
+
+export default loginUser;
