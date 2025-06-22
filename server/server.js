@@ -24,11 +24,19 @@ const allowedOrigins = [
 ];
 
 app.use(cors({
-  origin: allowedOrigins,
+  origin: function (origin, callback) {
+    if (!origin || allowedOrigins.includes(origin)) {
+      callback(null, true);
+    } else {
+      callback(new Error('Not allowed by CORS'));
+    }
+  },
   credentials: true,
   methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
   allowedHeaders: ['Content-Type', 'Authorization']
 }));
+
+app.options('*', cors());
 
 app.use(express.json());
 
@@ -39,9 +47,8 @@ app.use('/uploads', express.static(path.join(__dirname, 'public/uploads')));
 app.use(async (req, res, next) => {
   try {
     res.header('Access-Control-Allow-Credentials', 'true');
-    console.log("Trying to connect to DB...");
+    res.header('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept, Authorization');
     await connA();
-    console.log("Connected to DB successfully");
     next();
   } catch (err) {
     console.error("DB connection error middleware:", err);
