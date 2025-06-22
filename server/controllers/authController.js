@@ -2,8 +2,6 @@ import jwt    from 'jsonwebtoken';
 import bcrypt from 'bcryptjs';
 import User   from '../models/userModel.js';
 
-const JWT_SECRET = process.env.JWT_SECRET_KEY;
-
 const login = async (req, res) => {
     const { email, password } = req.body;
   
@@ -17,7 +15,7 @@ const login = async (req, res) => {
       if (!isMatch)
         return res.status(400).json({ message: 'Invalid email or password' });
   
-      const token = jwt.sign({ id: user._id, email: user.email }, JWT_SECRET, {
+      const token = jwt.sign({ id: user._id, email: user.email }, process.env.JWT_SECRET_KEY, {
         expiresIn: '1d',
       });
   
