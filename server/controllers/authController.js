@@ -10,13 +10,13 @@ const setCors = (req, res) => {
 
 const login = async (req, res) => {
 
+    setCors(req, res);
+
     console.log("Login body:", req.body);
 
     const { email, password } = req.body;
   
     try {
-
-      setCors(req, res);
 
       if (!email || !password) {
         return res.status(400).json({ message: 'Email and password are required' });
@@ -36,7 +36,13 @@ const login = async (req, res) => {
           process.env.JWT_SECRET_KEY,
           { expiresIn: '1d' }
         );
-        res.json({ token, user: { id: user._id, email: user.email } });
+        res.json({ 
+          token, 
+          user: { 
+            id: user._id, 
+            email: user.email 
+          } 
+        });
       } catch (tokenErr) {
         console.error("JWT Error:", tokenErr.message);
         res.status(500).json({ message: "Token generation failed" });
