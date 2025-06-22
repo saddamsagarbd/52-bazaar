@@ -14,14 +14,16 @@ export const loginUser = (credentials, navigate, apiUrl) => async (dispatch) => 
       body: JSON.stringify(credentials),
     });
 
-    let data = null;
-    try {
-      data = await response.json();
-    } catch (jsonError) {
-      console.error('Invalid JSON response from server');
-      return;
-    }
+    const contentType = response.headers.get("content-type");
 
+    let data = {};
+
+    if (contentType && contentType.includes("application/json")) {
+      data = await response.json();
+    } else {
+      throw new Error('Unexpected response format from server');
+    }
+    
     if (response.ok) {
       dispatch(loginSuccess({ user: data.user, token: data.token }));
       
