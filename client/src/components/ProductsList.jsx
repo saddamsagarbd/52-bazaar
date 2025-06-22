@@ -48,7 +48,7 @@ const ProductsList = () => {
                 <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
                     {
                         products.map(({name, price, imgUrl}, index) => (
-                            <Product key={index} imgSrc={imgUrl?`${apiUrl}`+imgUrl:DefaultProImg} title={name} price={price} />
+                            <Product key={index} imgSrc={imgUrl?imgUrl:DefaultProImg} title={name} price={price} />
                         ))
                     }
                 </div>

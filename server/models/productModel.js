@@ -1,4 +1,5 @@
-const mongoose = require('mongoose');
+import mongoose from 'mongoose';
+import './categoryModel.js';
 
 const productSchema = new mongoose.Schema({
   name: {
@@ -34,7 +35,6 @@ productSchema.index({ category: 1 });
 productSchema.index({ price: 1 });
 productSchema.index({ name: "text" }); // Enables full-text search on product names
 
-require('./categoryModel');
 const Product = mongoose.model('Product', productSchema);
 
-module.exports = Product;
+export default Product;

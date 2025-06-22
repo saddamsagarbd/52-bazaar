@@ -1,6 +1,7 @@
 // server/utils/cloudinary.js
 import { v2 as cloudinary } from 'cloudinary';
 import dotenv from 'dotenv';
+import { Readable } from 'stream';
 
 dotenv.config();
 
@@ -21,7 +22,6 @@ export const uploadToCloudinary = async (fileBuffer, folder) => {
         );
         
         // Create a readable stream from buffer
-        const { Readable } = require('stream');
         const stream = Readable.from(fileBuffer);
         stream.pipe(uploadStream);
     });

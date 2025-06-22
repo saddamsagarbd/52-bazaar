@@ -1,12 +1,10 @@
-const express = require('express');
+import express from 'express';
 const router = express.Router();
-const upload = require("../middleware/upload");
-const productController = require('../controllers/productController');
+import upload from "../middleware/upload.js";
+import productController from '../controllers/productController.js';
 
 
 router.get('/products', productController.getProducts);
 router.post('/add-product', upload.single("product_image"), productController.addProduct);
 
-console.log("Product Routes Loaded:", router.stack.map(layer => layer.route?.path).filter(Boolean));
-
-module.exports = router;
+export default router;

@@ -1,17 +1,11 @@
-const mongoose = require('mongoose');
+import mongoose from 'mongoose';
 
 let isConnected;
 
-const connA = async () => {
+export const connA = async () => {
   if (isConnected) return mongoose;
 
   try {
-    // const db = await mongoose.connect(process.env.MONGO_URI, {
-    //   serverSelectionTimeoutMS: 5000, // reduce timeout
-    //   bufferCommands: false,
-    //   useNewUrlParser: true,
-    //   useUnifiedTopology: true,
-    // });
 
     const db = await mongoose.connect(process.env.MONGO_URI, {
       maxPoolSize: 10,          // Maximum number of connections
@@ -26,5 +20,3 @@ const connA = async () => {
     throw error;
   }
 };
-
-module.exports = { connA };

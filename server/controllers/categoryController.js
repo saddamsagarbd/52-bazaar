@@ -1,7 +1,7 @@
-const { Types } = require('mongoose');
-const Category = require('../models/categoryModel');
+import { Types }   from 'mongoose';
+import Category    from '../models/categoryModel.js';
 
-exports.getCategories = async (req, res) => {
+const getCategories = async (req, res) => {
     const token = req.headers['authorization']?.split(' ')[1]; // Extract token from Bearer header
 
     if (!token) {
@@ -46,7 +46,7 @@ exports.getCategories = async (req, res) => {
     }
 };
 
-exports.addCategory = async (req, res) => {
+const addCategory = async (req, res) => {
 
     try {
         const { name, parent_id, is_active } = req.body;
@@ -79,3 +79,5 @@ exports.addCategory = async (req, res) => {
         res.status(500).json({ message: 'Failed to create category' });
     }
 };
+
+export default { getCategories, addCategory }

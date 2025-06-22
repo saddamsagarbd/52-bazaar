@@ -1,11 +1,10 @@
-const jwt = require('jsonwebtoken');
-const bcrypt = require('bcryptjs');
-
-const User = require('../models/userModel');
+import jwt    from 'jsonwebtoken';
+import bcrypt from 'bcryptjs';
+import User   from '../models/userModel.js';
 
 const JWT_SECRET = process.env.JWT_SECRET_KEY;
 
-exports.login = async (req, res) => {
+const login = async (req, res) => {
     const { email, password } = req.body;
   
     try {
@@ -28,3 +27,5 @@ exports.login = async (req, res) => {
       res.status(500).json({ message: 'Server error' });
     }
 };
+
+export default { login }

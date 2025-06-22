@@ -1,10 +1,10 @@
-const express = require('express');
+import express from 'express';
 const router = express.Router();
-const categoryController = require('../controllers/categoryController');
-const multer = require('multer');
+import categoryController from '../controllers/categoryController.js';
+import multer from 'multer';
 const upload = multer();
 
 router.get('/categories', categoryController.getCategories);
 router.post('/add-category', upload.none(), categoryController.addCategory);
 
-module.exports = router;
+export default router;

@@ -1,4 +1,4 @@
-const mongoose = require('mongoose');
+import mongoose from 'mongoose';
 const Schema = mongoose.Schema;
 
 const categorySchema = new Schema({
@@ -25,4 +25,4 @@ categorySchema.index({ is_active: 1, parent_id: 1, created_at: -1 });
 
 const Category = mongoose.model('Category', categorySchema);
 
-module.exports = Category;
+export default Category;

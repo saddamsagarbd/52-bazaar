@@ -9,10 +9,13 @@ import AdminCategories from './components/Admin/Categories'
 import AdminProducts from './components/Admin/Product';
 import ProtectedRoute from "./components/ProtectedRoute";
 import RedirectIfLoggedIn from "./components/RedirectIfLoggedIn";
+import CartPage from './components/CartPage';
+import CheckoutPage from './components/CheckoutPage';
 import { useDispatch } from 'react-redux';
 import { loginSuccess } from './redux/authSlice';
 import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+import { initCart } from './redux/cartActions';
 
 function App() {
   const dispatch = useDispatch();
@@ -24,6 +27,8 @@ function App() {
     if (token && user) {
       dispatch(loginSuccess({ token, user }));
     }
+
+    dispatch(initCart());
   }, [dispatch]);
 
 
@@ -32,6 +37,8 @@ function App() {
       <ToastContainer />
       <Routes>
         <Route path="/" element={<LandingPage />} />
+        <Route path="/cart" element={<CartPage />} />
+        <Route path="/checkout" element={<CheckoutPage />} />
         <Route path="/admin" element={
           <RedirectIfLoggedIn>
             <AdminLogin />

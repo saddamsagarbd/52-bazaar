@@ -1,10 +1,21 @@
-require('dotenv').config();
-const express       = require('express');
-const path          = require('path');
-const cors          = require('cors');
-const { connA }     = require('./db-config/db-conn');
+import dotenv from 'dotenv';
+dotenv.config();
+
+import express from 'express';
+import path from 'path';
+import cors from 'cors';
+import { fileURLToPath } from 'url';
+import { connA } from './db-config/db-conn.js';
+
+import authRoute from './routes/auth.js';
+import categoryRoute from './routes/category.js';
+import productRoute from './routes/product.js';
 
 const app = express();
+
+// Handle __dirname in ES modules
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
 
 const allowedOrigins = [
   'http://localhost:3000',
@@ -13,16 +24,10 @@ const allowedOrigins = [
 ];
 
 app.use(cors({
-  origin: function (origin, callback) {
-    console.log("CORS origin:", origin);
-
-    if (!origin || allowedOrigins.includes(origin)) {
-      callback(null, true);
-    } else {
-      callback(new Error('Not allowed by CORS'));
-    }
-  },
-  credentials: true
+  origin: allowedOrigins,
+  credentials: true,
+  methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
+  allowedHeaders: ['Content-Type', 'Authorization']
 }));
 
 app.use(express.json());
@@ -46,20 +51,13 @@ app.use(async (req, res, next) => {
 
 // Routes
 
-const authRoute     = require("./routes/auth.js");
-const categoryRoute = require("./routes/category.js");
-const productRoute  = require("./routes/product.js");
-// const userRoutes    = require("./routes/userRoutes.js");
-
 app.use("/api", authRoute);
 app.use("/api", categoryRoute);
 app.use("/api", productRoute);
-// app.use("/api", userRoutes);
 
 app.all('*', (req, res) => {
   res.status(404).json({ message: 'API route not found', path: req.path });
 });
-
 
 app.get('/api', (req, res) => {
   res.json('API established');
@@ -67,11 +65,9 @@ app.get('/api', (req, res) => {
 
 // Error handler
 app.use((err, req, res, next) => {
-  console.error('Unhandled error:', err);
   res.status(500).json({ message: 'Internal server error' });
 });
 
-console.log("Registered Routes:", app._router.stack.map(layer => layer.route?.path).filter(Boolean));
-
 // Correctly export for Vercel:
-module.exports = app;
+export { app };
+export default app;

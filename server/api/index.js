@@ -1,5 +1,5 @@
-const serverless    = require('serverless-http');
-const app = require('../server');
+import serverless from 'serverless-http';
+import app from '../server.js';
 
 const isProd = process.env.NODE_ENV === 'production';
 
@@ -14,4 +14,4 @@ if (isProd) {
   });
 }
 
-module.exports = app;
+export default app;

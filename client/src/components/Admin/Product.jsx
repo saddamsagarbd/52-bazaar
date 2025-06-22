@@ -51,7 +51,7 @@ const Products = () => {
                 accessorKey: 'name',
                 cell: ({ row }) => {
                     const name = row.original.name;
-                    const imgUrl = `${apiUrl}`+row.original.imgUrl; // Adjust key based on your actual field
+                    const imgUrl = row.original.imgUrl; // Adjust key based on your actual field
 
                     return (
                         <div className="flex items-center space-x-3">
@@ -143,7 +143,7 @@ const Products = () => {
             if (response.data.success) {
                 toast.success("Product added successfully");
                 closeModal();
-                fetchProducts();
+                fetchProducts(apiUrl);
             }
         } catch (error) {
             console.error(error);
@@ -163,6 +163,8 @@ const Products = () => {
                     'Content-Type': 'application/json',
                 },
             });
+
+            console.log(response);
 
             setCategories(response.data.categories);
         } catch (err) {

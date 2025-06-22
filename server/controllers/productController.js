@@ -1,11 +1,11 @@
-const { Types } = require("mongoose");
-const path = require("path");
-const fs = require("fs");
-const fsPromises = fs.promises;
-const Product = require("../models/productModel");
+import { Types } from "mongoose";
+import path      from "path";
+import fs        from "fs";
+const fsPromises  = fs.promises;
+import Product    from "../models/productModel.js";
 import { uploadToCloudinary } from '../utils/cloudinary.js';
 
-exports.getProducts = async (req, res) => {
+const getProducts = async (req, res) => {
     try {
         const { name, price, category, page = 1, limit = 20 } = req.query;
         const query = { is_active: true };
@@ -59,20 +59,23 @@ async function processProductImage(newProduct, file) {
 
     try {
 
-        if (process.env.NODE_ENV === 'development') {
-            const uploadsDir = path.join(__dirname, "../../public/uploads/products");
-            await fsPromises.mkdir(uploadsDir, { recursive: true });
+        // if (process.env.NODE_ENV === 'development') {
+        //     const uploadsDir = path.join(__dirname, "../../public/uploads/products");
+        //     await fsPromises.mkdir(uploadsDir, { recursive: true });
             
-            const fileName = `${newProduct._id}${path.extname(file.originalname)}`;
-            const filePath = path.join(uploadsDir, fileName);
+        //     const fileName = `${newProduct._id}${path.extname(file.originalname)}`;
+        //     const filePath = path.join(uploadsDir, fileName);
             
-            await fsPromises.writeFile(filePath, file.buffer);
-            newProduct.imgUrl = `/uploads/products/${fileName}`;
-            return await newProduct.save();
-        }
+        //     await fsPromises.writeFile(filePath, file.buffer);
+        //     newProduct.imgUrl = `/uploads/products/${fileName}`;
+        //     return await newProduct.save();
+        // }
 
         // Upload to Cloudinary
         const result = await uploadToCloudinary(file.buffer, 'products');
+
+        console.log("result: ", result);
+        // return;
         
         // Save the secure URL to your database
         newProduct.imgUrl = result.secure_url;
@@ -83,7 +86,7 @@ async function processProductImage(newProduct, file) {
     }
 }
 
-exports.addProduct = async (req, res) => {
+const addProduct = async (req, res) => {
     try {
         const { name, price, category } = req.body;
 
@@ -113,3 +116,5 @@ exports.addProduct = async (req, res) => {
         res.status(500).json({ success: false, message: "Failed to save product" });
     }
 };
+
+export default { getProducts, addProduct }
