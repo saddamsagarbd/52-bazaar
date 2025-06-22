@@ -36,7 +36,7 @@ const login = async (req, res) => {
           process.env.JWT_SECRET_KEY,
           { expiresIn: '1d' }
         );
-        res.json({ 
+        res.status(204).json({ 
           token, 
           user: { 
             id: user._id, 
