@@ -23,7 +23,7 @@ const allowedOrigins = [
   'https://52-bazaar-frontend.vercel.app',
 ];
 
-app.options('*', cors({
+const corsOptions = {
   origin: function (origin, callback) {
     if (!origin || allowedOrigins.includes(origin)) {
       callback(null, true);
@@ -34,8 +34,10 @@ app.options('*', cors({
   credentials: true,
   methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
   allowedHeaders: ['Content-Type', 'Authorization']
-}));
+};
 
+app.use(cors(corsOptions));
+app.options('*', cors(corsOptions));
 app.use(express.json());
 
 // Static files
@@ -44,8 +46,6 @@ app.use('/uploads', express.static(path.join(__dirname, 'public/uploads')));
 // Ensure MongoDB is connected before handling any route
 app.use(async (req, res, next) => {
   try {
-    res.header('Access-Control-Allow-Credentials', 'true');
-    res.header('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept, Authorization');
     await connA();
     next();
   } catch (err) {
