@@ -9,6 +9,9 @@ const setCors = (req, res) => {
 };
 
 const login = async (req, res) => {
+
+    console.log("Login body:", req.body);
+
     const { email, password } = req.body;
   
     try {
