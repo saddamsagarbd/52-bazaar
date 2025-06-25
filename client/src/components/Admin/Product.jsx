@@ -15,17 +15,25 @@ import {
     DialogFooter,
 } from "@/components/ui/dialog";
 import usePageTitle from "../../hooks/usePageTitle";
-
+import { DeleteForever, Edit } from "@mui/icons-material";
 
 const Products = () => {
     usePageTitle("Products");
     const [searchQuery, setSearchQuery] = useState('');
     const [modalIsOpen, setModalIsOpen] = useState(false);
-    const [newProduct, setNewProduct] = useState({ name: '', price: '', product_image: null, category: '' });
+    const [newProduct, setNewProduct] = useState({ 
+        name: '', 
+        price: '', 
+        unit: '', 
+        quantity: '', 
+        product_image: null, 
+        category: '' 
+    });
     const [products, setProducts] = useState([]);
     const [preview, setPreview] = useState(null);
     const [categories, setCategories] = useState([]);
     const [loading, setLoading] = useState(true);
+    const [editProduct, setEditProduct] = useState(null);
     
     const apiUrl = import.meta.env.VITE_API_URL;
 
@@ -43,6 +51,20 @@ const Products = () => {
             setProducts(prev => prev.filter(product => product.id !== id));
         }
     }, []);
+    const handleModify = useCallback((id) => {
+        console.log("is modal open: ", modalIsOpen);
+        const product = products.find(p => p._id === id);
+        if (product) {
+            console.table(product);
+            setEditProduct(product);
+            setNewProduct({
+                ...product,
+                category: typeof product.category === 'object' ? product.category._id : product.category
+            });
+            setPreview(product.imgUrl); // if you're previewing existing image
+            setModalIsOpen(true);
+        }
+    }, [products, modalIsOpen]);
 
     const columns = useMemo(
         () => [
@@ -80,15 +102,38 @@ const Products = () => {
                 accessorKey: 'price',
             },
             {
+                header: 'Unit',
+                accessorKey: 'unit',
+            },
+            {
+                header: 'Available Qty',
+                accessorKey: 'quantity',
+            },
+            {
                 header: 'Actions',
-                cell: ({ row }) => (
-                    <button
-                        onClick={() => handleDelete(row.original.id)}
-                        className="text-sm text-red-500 hover:text-red-700"
-                    >
-                        Delete
-                    </button>
-                ),
+                cell: ({ row }) => {
+                    const id = row.original._id;
+                    
+                    return (
+                        <div className="flex items-center gap-2">
+                            <button
+                                onClick={() => handleModify(id)}
+                                className="text-primary-500 hover:text-primary-700"
+                                title="Edit"
+                            >
+                                <Edit style={{ color: 'skyblue' }} />
+                            </button>
+
+                            <button
+                                onClick={() => handleDelete(id)}
+                                className="text-red-500 hover:text-red-700"
+                                title="Delete"
+                            >
+                                <DeleteForever />
+                            </button>
+                        </div>
+                    );
+                },
             },
         ], [apiUrl, handleDelete]);
 
@@ -112,6 +157,7 @@ const Products = () => {
             },
         },
     });
+
     const closeModal = () => {
         setModalIsOpen(false);
         setNewProduct({ name: '', price: '' });
@@ -119,8 +165,17 @@ const Products = () => {
 
     const handleAddProduct = async (e) => {
         e.preventDefault();
+
         if (!newProduct.name.trim()) return;
-        if (!newProduct.price.trim()) return;
+
+        const priceNum = Number(newProduct.price);
+        if (isNaN(priceNum) || priceNum <= 0) return;
+
+        if (!newProduct.unit.trim()) return;
+
+        const quantityNum = Number(newProduct.quantity);
+        if (isNaN(quantityNum) || quantityNum <= 0) return;
+        
         if (!newProduct.category.trim()) return;
 
         const formData = new FormData();
@@ -128,22 +183,40 @@ const Products = () => {
         formData.append("name", newProduct.name);
         formData.append("price", newProduct.price);
         formData.append("category", newProduct.category);
-        formData.append("product_image", newProduct.product_image);
+        formData.append("unit", newProduct.unit);
+        formData.append("quantity", newProduct.quantity);
+
+        if (newProduct.product_image) {
+            formData.append("product_image", newProduct.product_image);
+        }
+
 
         try {
             let apiUrl = import.meta.env.VITE_API_URL;
-            const url = `${apiUrl}/api/add-product`;
-            const response = await axios.post(url, formData, {
+
+            const url = editProduct
+            ? `${apiUrl}/api/product/${editProduct._id}`  // <-- PUT route
+            : `${apiUrl}/api/add-product`;                // <-- POST route
+
+            const method = editProduct ? "put" : "post";
+
+            const response = await axios({
+                method,
+                url,
+                data: formData,
                 timeout: 10000,
                 headers: {
                     "Content-Type": "multipart/form-data"
                 }
             });
 
+            console.log("Product: ", response);
+
             if (response.data.success) {
-                toast.success("Product added successfully");
+                toast.success(editProduct ? "Product updated successfully" : "Product added successfully");
                 closeModal();
-                fetchProducts(apiUrl);
+                await fetchProducts(apiUrl);
+                setEditProduct(null);
             }
         } catch (error) {
             console.error(error);
@@ -211,10 +284,16 @@ const Products = () => {
         <div className="p-4 sm:ml-64">
             <div className="p-4 border-2 border-dashed rounded-lg mt-14">
                 <div className="flex justify-between items-center mb-6">
-                    <h2 className="text-2xl font-semibold">Categories</h2>
+                    <h2 className="text-2xl font-semibold">Product</h2>
                     <Dialog open={modalIsOpen} onOpenChange={setModalIsOpen}>
                         <DialogTrigger asChild>
                             <button
+                                onClick={() => {
+                                    setNewProduct({ name: "", price: "", unit: "pcs", quantity: "", category: "", product_image: null });
+                                    setPreview(null);
+                                    setEditProduct(null); // reset edit mode
+                                    setModalIsOpen(true);
+                                }}
                                 className="bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded-lg transition-colors"
                             >
                                 Add Product
@@ -232,7 +311,7 @@ const Products = () => {
                                     </label>
                                     <input
                                         type="text"
-                                        value={newProduct.name}
+                                        value={newProduct.name || ''}
                                         onChange={(e) => setNewProduct({...newProduct, name: e.target.value})}
                                         className="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500"
                                         required
@@ -241,14 +320,43 @@ const Products = () => {
                             
                                 <div className="mb-6">
                                     <label className="block text-sm font-medium text-gray-700 mb-1">
-                                        Price (ID)
+                                        Price (BDT)
                                     </label>
                                     <input
                                         type="text"
-                                        value={newProduct.price}
+                                        value={newProduct.price || ''}
                                         onChange={(e) => setNewProduct({...newProduct, price: e.target.value})}
                                         className="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500"
                                         placeholder="Leave empty for root Product"
+                                    />
+                                </div>
+                                <div className="mb-6">
+                                    <label className="block text-sm font-medium text-gray-700 mb-1">
+                                        Unit(s)
+                                    </label>
+                                    <select
+                                        value={newProduct.unit || ''}
+                                        onChange={(e) => setNewProduct({...newProduct, unit: e.target.value})}
+                                        className="w-full border px-3 py-2 rounded"
+                                    >
+                                        <option value="pcs">Pcs</option>
+                                        <option value="kg">KG</option>
+                                        <option value="grm">Gram</option>
+                                        <option value="ltr">Litre</option>
+                                        <option value="box">Box/Packet</option>
+                                    </select>
+                                </div>
+                                <div className="mb-6">
+                                    <label className="block text-sm font-medium text-gray-700 mb-1">
+                                        Quantity
+                                    </label>
+                                    <input
+                                        type="number"
+                                        min={1}
+                                        value={newProduct.quantity || ''}
+                                        onChange={(e) => setNewProduct({...newProduct, quantity: e.target.value})}
+                                        className="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500"
+                                        placeholder=""
                                     />
                                 </div>
                             
@@ -257,7 +365,7 @@ const Products = () => {
                                         Category
                                     </label>
                                     <select
-                                        value={newProduct.category}
+                                        value={newProduct.category || ''}
                                         onChange={(e) => setNewProduct({...newProduct, category: e.target.value})}
                                         className="w-full border px-3 py-2 rounded"
                                     >
@@ -304,7 +412,7 @@ const Products = () => {
                                         type="submit"
                                         className="px-4 py-2 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"
                                     >
-                                        Add Product
+                                        {editProduct ? "Update Product" : "Add Product"}
                                     </button>
                                 </DialogFooter>
                             </form>

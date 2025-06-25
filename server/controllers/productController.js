@@ -3,7 +3,7 @@ import path      from "path";
 import fs        from "fs";
 const fsPromises  = fs.promises;
 import Product    from "../models/productModel.js";
-import { uploadToCloudinary } from '../utils/cloudinary.js';
+import { uploadToCloudinary, deleteFromCloudinary } from '../utils/cloudinary.js';
 
 const getProducts = async (req, res) => {
     try {
@@ -16,15 +16,15 @@ const getProducts = async (req, res) => {
 
         const totalProducts = await Product.countDocuments(query);
 
-        console.time("Before: Product Query");
         const products = await Product.find(query)
-                        .select("name price imgUrl category")
+                        .select("name price unit quantity imgUrl category")
                         .populate("category", "name")
                         .lean()
                         .skip((page - 1) * limit)
                         .limit(limit)
                         .maxTimeMS(5000);
-        console.timeEnd("After: Product Query");
+
+        console.table(products)
 
         res.status(200).json({
             totalProducts,
@@ -38,47 +38,17 @@ const getProducts = async (req, res) => {
     }
 };
 
-async function processProductImageOld(newProduct, file) {
-
-    if (!file) return; // Prevent execution if no file is uploaded
-
-    const uploadsDir = path.join(__dirname, "../public/uploads/products");
-    await fsPromises.mkdir(uploadsDir, { recursive: true });
-
-    const fileName = `${newProduct._id}${path.extname(file.originalname)}`;
-    const filePath = path.join(uploadsDir, fileName);
-
-    await fsPromises.writeFile(filePath, file.buffer);
-    newProduct.imgUrl = `/uploads/products/${fileName}`;
-    return await newProduct.save();
-
-}
-
 async function processProductImage(newProduct, file) {
     if (!file) return;
 
     try {
 
-        // if (process.env.NODE_ENV === 'development') {
-        //     const uploadsDir = path.join(__dirname, "../../public/uploads/products");
-        //     await fsPromises.mkdir(uploadsDir, { recursive: true });
-            
-        //     const fileName = `${newProduct._id}${path.extname(file.originalname)}`;
-        //     const filePath = path.join(uploadsDir, fileName);
-            
-        //     await fsPromises.writeFile(filePath, file.buffer);
-        //     newProduct.imgUrl = `/uploads/products/${fileName}`;
-        //     return await newProduct.save();
-        // }
-
         // Upload to Cloudinary
         const result = await uploadToCloudinary(file.buffer, 'products');
-
-        console.log("result: ", result);
-        // return;
         
         // Save the secure URL to your database
         newProduct.imgUrl = result.secure_url;
+        newProduct.imgPublicId = result.public_id;
         return await newProduct.save();
     } catch (error) {
         console.error('Image upload error:', error);
@@ -87,8 +57,9 @@ async function processProductImage(newProduct, file) {
 }
 
 const addProduct = async (req, res) => {
+
     try {
-        const { name, price, category } = req.body;
+        const { name, price, unit, quantity, category } = req.body;
 
         // Check if product already exists within the category
         const existingProduct = await Product.findOne({ name: name.trim(), category });
@@ -100,16 +71,16 @@ const addProduct = async (req, res) => {
             });
         }
 
-        const newProduct = new Product({ name, price, category });
+        const newProduct = new Product({ name, price, unit, quantity, category });
 
         await newProduct.save();
-
-        res.status(201).json({ success: true, data: newProduct });
 
         // Process image upload separately
         setImmediate(async () => {
             if (req.file) await processProductImage(newProduct, req.file);
         });
+
+        res.status(201).json({ success: true, data: newProduct });
 
     } catch (error) {
         console.error("Error adding product:", error);
@@ -117,4 +88,56 @@ const addProduct = async (req, res) => {
     }
 };
 
-export default { getProducts, addProduct }
+const updateProduct = async (req, res) => {
+    try {
+        const { name, price, category, unit, quantity } = req.body;
+        const productId = req.params.id;
+
+        // Check for duplicate product name in same category (exclude self)
+        const existingProduct = await Product.findOne({
+            _id: { $ne: productId },
+            name: name.trim(),
+            category,
+        });
+
+        if (existingProduct) {
+            return res.status(400).json({
+                success: false,
+                message: "Product with the same name already exists in this category",
+            });
+        }
+
+        // Find current product
+        const product = await Product.findById(productId);
+
+        if (!product) {
+            return res.status(404).json({ success: false, message: "Product not found" });
+        }
+
+        const updatedData = { name, price, category, unit, quantity };
+
+        // If a new image is uploaded
+        if (req.file) {
+            // 1. Delete old image from Cloudinary
+            if (product.imgPublicId) {
+                await deleteFromCloudinary(product.imgPublicId);
+            }
+
+            // 2. Upload new image to Cloudinary
+            const uploaded = await uploadToCloudinary(req.file.buffer, "products");
+
+            updatedData.imgUrl = uploaded.secure_url;
+            updatedData.imgPublicId = uploaded.public_id;
+        }
+
+        // 3. Update product in DB
+        const updated = await Product.findByIdAndUpdate(productId, updatedData, { new: true });
+
+        res.status(200).json({ success: true, data: updated });
+    } catch (error) {
+        console.error("Error updating product:", error);
+        res.status(500).json({ success: false, message: "Failed to update product" });
+    }
+};
+
+export default { getProducts, addProduct, updateProduct }

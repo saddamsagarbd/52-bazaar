@@ -12,7 +12,7 @@ const CartBadge = () => {
         <Badge count={count} showZero>
         <Button
             type="text"
-            icon={<ShoppingCart style={{ fontSize: '25px', color: '#FFFFFF' }} />}
+            icon={<ShoppingCart style={{ fontSize: '25px', color: '#000000' }} />}
             onClick={() => navigate('/cart')}
         />
         </Badge>

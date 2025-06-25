@@ -12,7 +12,22 @@ const productSchema = new mongoose.Schema({
     required: true,
     min: [0, 'Price must be a positive number'],
   },
+  quantity: {
+    type: Number,
+    required: true,
+    min: [1, 'Quantity must be a positive number'],
+  },
+  unit: {
+    type: String,
+    required: true,
+    trim: true,
+  },
   imgUrl: {
+    type: String,
+    default: null,
+    trim: true,
+  },
+  imgPublicId: {
     type: String,
     default: null,
     trim: true,
