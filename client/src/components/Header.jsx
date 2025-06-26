@@ -1,37 +1,18 @@
 import React from "react";
-import Logo from '../assets/images/52-bazaar-logo.png';
-import NavanaLogo from '../assets/images/logo.png';
-import { ShoppingCart, WhatsApp } from "@mui/icons-material";
+import Logo from "../assets/images/52-bazaar-logo.png";
+import NavanaLogo from "../assets/images/logo.png";
+import {
+  ShoppingCart,
+  WhatsApp,
+  Facebook,
+  LinkedIn,
+} from "@mui/icons-material";
 import { Link } from "react-router-dom";
 import CartBadge from "./CartBadge";
 
-// const Header = () => {
-//     return (
-//         // <>
-//         //     <div className='flex flex-col justify-center bg-[transparent] w-full h-[200px] items-center'>
-//         //         <div className='flex justify-center w-full max-w-[1100px]'>
-//         //             <img src={Logo} width="150" height="150" alt="52-bazaar" />
-//         //         </div>
-//         //     </div>
-//         //     <div className='flex flex-col justify-center bg-[#ff0000] w-full items-center shadow-[0_-4px_6px_-1px_rgba(0,0,0,0.1)]'>
-//         //         <div className='flex justify-center w-full max-w-[1100px]'>
-//         //             <ul className="flex divide-x-2 divide-white text-white font-semibold py-3">
-//         //                 <li className='px-3'><Link to='/admin'>Login</Link></li>
-//         //                 <li className='px-3'>
-//         //                     <CartBadge />
-//         //                 </li>
-//         //                 <li className='px-3'>Menu 3</li>
-//         //                 <li className='px-3'>Menu 4</li>
-//         //             </ul>
-//         //         </div>
-//         //     </div>
-//         // </>
-//     );
-// }
-
 const Header = () => {
   return (
-    <header className="bg-white border-b shadow-sm py-3">
+    <header className="bg-white border-b shadow-sm py-3 max-w-[990px] mx-auto">
       <div className="container mx-auto flex items-center justify-evenly px-4">
         {/* Left: Logo */}
         <div className="flex-shrink-0">
@@ -51,7 +32,7 @@ const Header = () => {
             />
             <button
               type="submit"
-              className="bg-blue-600 text-white px-4 py-2 rounded-r-md hover:bg-blue-700"
+              className="bg-[#6AB802] text-white px-4 py-2 rounded-r-md hover:bg-[#6AB802]"
             >
               Search
             </button>
@@ -59,24 +40,40 @@ const Header = () => {
         </div>
 
         {/* Right: Cart, Sell Item, Login */}
-        <div className="flex items-center space-x-3">
-          {/* CartBadge component (with image & count) */}
+        <div className="flex items-center space-x-3 md:static md:flex-row fixed bottom-0 left-0 right-0 bg-white border-t md:border-none justify-around md:justify-end py-2 md:py-0 z-50">
+          {/* CartBadge */}
           <Link to="/cart" className="relative">
             <CartBadge />
           </Link>
 
-          {/* Sell Item */}
+          {/* WhatsApp */}
           <a
-            href="https://wa.me/8801994282802" // Replace with your actual WhatsApp number
+            href="https://wa.me/8801994282802"
             target="_blank"
             rel="noopener noreferrer"
           >
-            <WhatsApp style={{ fontSize: "32px", color: "green" }} />
+            <WhatsApp style={{ fontSize: "28px", color: "green" }} />
+          </a>
+          <a
+            href="#"
+            onClick={(e) => e.preventDefault()}
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            <Facebook style={{ fontSize: "28px", color: "blue" }} />
+          </a>
+          <a
+            href="#"
+            onClick={(e) => e.preventDefault()}
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            <LinkedIn style={{ fontSize: "28px", color: "skyblue" }} />
           </a>
 
           {/* Login */}
           <Link to="/admin">
-            <button className="border px-4 py-2 rounded-md text-gray-800 hover:bg-gray-100">
+            <button className="bg-[#6AB802] border px-4 py-1 rounded-md text-white hover:bg-[#6AB802]">
               Login
             </button>
           </Link>
@@ -84,6 +81,6 @@ const Header = () => {
       </div>
     </header>
   );
-}
+};
 
 export default Header;

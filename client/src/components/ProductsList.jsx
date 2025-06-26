@@ -42,19 +42,22 @@ const ProductsList = () => {
     if (loading) return <div>Loading products...</div>;
 
     return (
-        <div className='flex flex-col justify-center bg-[transparent] w-full items-center'>
-            <div className='flex justify-center w-full max-w-[1100px]'>
-            <div className="p-6">
-                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
-                    {
-                        products.map(({name, price, imgUrl}, index) => (
-                            <Product key={index} imgSrc={imgUrl?imgUrl:DefaultProImg} title={name} price={price} />
-                        ))
-                    }
-                </div>
+      <div className="flex flex-col justify-center bg-[transparent] w-full items-center">
+        <div className="flex justify-center w-full max-w-[990px] mx-auto">
+          <div className="p-6">
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+              {products.map(({ name, price, imgUrl }, index) => (
+                <Product
+                  key={index}
+                  imgSrc={imgUrl ? imgUrl : DefaultProImg}
+                  title={name}
+                  price={price}
+                />
+              ))}
             </div>
-            </div>
+          </div>
         </div>
+      </div>
     );
 }
 

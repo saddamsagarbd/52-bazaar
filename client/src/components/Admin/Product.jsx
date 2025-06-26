@@ -48,23 +48,40 @@ const Products = () => {
     const handleDelete = useCallback((id) => {
         const confirmDelete = window.confirm('Are you sure you want to delete this category?');
         if (confirmDelete) {
-            setProducts(prev => prev.filter(product => product.id !== id));
+            setProducts(prev => prev.filter(product => product._id !== id));
         }
     }, []);
     const handleModify = useCallback((id) => {
-        console.log("is modal open: ", modalIsOpen);
-        const product = products.find(p => p._id === id);
-        if (product) {
-            console.table(product);
-            setEditProduct(product);
-            setNewProduct({
-                ...product,
-                category: typeof product.category === 'object' ? product.category._id : product.category
-            });
-            setPreview(product.imgUrl); // if you're previewing existing image
-            setModalIsOpen(true);
+
+        console.log("Modal open?", modalIsOpen);
+        console.log("Searching for product with id:", id);
+        console.log("products:", products);
+        
+        if (!products || products.length === 0) {
+          console.warn("No products loaded");
+          return;
         }
-    }, [products, modalIsOpen]);
+
+        const product = products.find((p) => String(p._id) === String(id));
+
+        if (!product) {
+          console.warn("Product not found for id:", id);
+          return;
+        }
+
+        console.table(product);
+        setEditProduct(product);
+        setNewProduct({
+          ...product,
+          category:
+            typeof product.category === "object"
+              ? product.category._id
+              : product.category,
+        });
+        console.log(product.imgUrl);
+        setPreview(product.imgUrl); // if you're previewing existing image
+        setModalIsOpen(true);
+    }, [products]);
 
     const columns = useMemo(
         () => [
@@ -113,25 +130,29 @@ const Products = () => {
                 header: 'Actions',
                 cell: ({ row }) => {
                     const id = row.original._id;
+
+                    console.log('products length:', products.length)
+                    console.log('loading:', loading)
                     
                     return (
-                        <div className="flex items-center gap-2">
-                            <button
-                                onClick={() => handleModify(id)}
-                                className="text-primary-500 hover:text-primary-700"
-                                title="Edit"
-                            >
-                                <Edit style={{ color: 'skyblue' }} />
-                            </button>
+                      <div className="flex items-center gap-2">
+                        <button
+                          disabled={loading || products.length === 0}
+                          onClick={() => handleModify(id)}
+                          className="text-primary-500 hover:text-primary-700"
+                          title="Edit"
+                        >
+                          <Edit style={{ color: "skyblue" }} />
+                        </button>
 
-                            <button
-                                onClick={() => handleDelete(id)}
-                                className="text-red-500 hover:text-red-700"
-                                title="Delete"
-                            >
-                                <DeleteForever />
-                            </button>
-                        </div>
+                        <button
+                          onClick={() => handleDelete(id)}
+                          className="text-red-500 hover:text-red-700"
+                          title="Delete"
+                        >
+                          <DeleteForever />
+                        </button>
+                      </div>
                     );
                 },
             },
@@ -248,7 +269,10 @@ const Products = () => {
     const fetchProducts = async (apiUrl) => {
 
         const token = localStorage.getItem('token');
+
         if (!token) return;
+
+        setLoading(true);
 
         try {
             const url = `${apiUrl}/api/products`;
@@ -262,10 +286,18 @@ const Products = () => {
                 },
             });
 
-            if (Array.isArray(response.data.products)) {
-                setProducts(response.data.products);
+            const productsList =
+              response.data.products || response.data?.data?.products || [];
+
+              console.log(productsList);
+
+            if (Array.isArray(productsList)) {
+                setProducts(productsList);
             } else {
-                console.error("Unexpected response format:", response.data.products);
+              console.error(
+                "Unexpected response format:",
+                response.data.products
+              );
             }
         } catch (err) {
             console.error("Failed to fetch products", err);
@@ -275,9 +307,14 @@ const Products = () => {
     };
 
     useEffect(() => {
+        if (!apiUrl) return;
         fetchCategories(apiUrl);
         fetchProducts(apiUrl);
     }, [apiUrl]);
+
+    useEffect(() => {
+      console.log("Products state updated:", products);
+    }, [products]);
 
 
     return (
