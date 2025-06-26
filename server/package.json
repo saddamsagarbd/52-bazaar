@@ -1,6 +1,7 @@
 {
   "name": "server-api",
   "main": "index.js",
+  "type": "module",
   "scripts": {
     "start": "node api/index.js",
     "dev": "nodemon api/index.js",
