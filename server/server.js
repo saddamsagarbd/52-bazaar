@@ -51,6 +51,7 @@ app.use('/uploads', express.static(path.join(__dirname, 'public/uploads')));
 // Ensure MongoDB is connected before handling any route
 app.use(async (req, res, next) => {
   try {
+    console.log(`${req.method} ${req.url}`);
     await connA();
     next();
   } catch (err) {

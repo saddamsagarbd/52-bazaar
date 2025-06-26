@@ -33,7 +33,14 @@ const getProducts = async (req, res) => {
             products,
         });
     } catch (err) {
-        console.error("Error fetching products:", err);
+        console.error("Full error in getProducts:", {
+          message: err.message,
+          stack: err.stack,
+          name: err.name,
+          code: err.code, // MongoDB error code if available
+          keyPattern: err.keyPattern, // MongoDB duplicate key info
+          keyValue: err.keyValue, // MongoDB duplicate key values
+        });
         res.status(500).json({ message: "Server error", error: err.message });
     }
 };

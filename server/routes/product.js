@@ -6,6 +6,6 @@ import productController from '../controllers/productController.js';
 
 router.get('/products', productController.getProducts);
 router.post('/add-product', upload.single("product_image"), productController.addProduct);
-// router.put('/product/:id', upload.single("product_image"), productController.updateProduct);
+router.put('/product/:id', upload.single("product_image"), productController.updateProduct);
 
 export default router;
