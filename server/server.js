@@ -40,7 +40,9 @@ const corsOptions = {
 };
 
 app.use(cors(corsOptions));
-app.options('*', cors(corsOptions));
+app.options('*', cors(corsOptions), (req, res) => {
+  res.sendStatus(200);
+});
 app.use(express.json());
 
 // Static files
