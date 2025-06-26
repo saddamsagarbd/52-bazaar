@@ -4,7 +4,7 @@ import app from "../server.js";
 const isProd = process.env.NODE_ENV === "production";
 
 // Always export the handler (for Vercel)
-export const handler = serverless(app);
+const handler = serverless(app);
 
 // In dev, also start the server
 if (!isProd) {
@@ -13,3 +13,5 @@ if (!isProd) {
     console.log(`Server running on port ${PORT}`);
   });
 }
+
+export default handler;
