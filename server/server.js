@@ -61,7 +61,7 @@ app.use(async (req, res, next) => {
 });
 
 // Routes
-
+app.get("/api/warmup", (req, res) => res.send("Warmed up ☕"));
 app.use("/api", authRoute);
 app.use("/api", categoryRoute);
 app.use("/api", productRoute);
