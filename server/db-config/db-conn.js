@@ -2,11 +2,10 @@ import mongoose from 'mongoose';
 
 let isConnected;
 
-export const connA = async () => {
-  if (isConnected) return mongoose;
+const connA = async () => {
+  if (isConnected || mongoose.connection.readyState >= 1) return mongoose;
 
   try {
-
     const db = await mongoose.connect(process.env.MONGO_URI, {
       maxPoolSize: 10,          // Maximum number of connections
       serverSelectionTimeoutMS: 5000, // Timeout after 5s instead of 30s
@@ -20,3 +19,5 @@ export const connA = async () => {
     throw error;
   }
 };
+
+export default {connA}
