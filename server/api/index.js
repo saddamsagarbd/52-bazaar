@@ -1,17 +1,7 @@
-// import serverless from "serverless-http";
 import app from "../server.js";
 
-const isProd = process.env.NODE_ENV === "production";
+const PORT = process.env.PORT || 5000;
 
-// Always export the handler (for Vercel)
-// const handler = serverless(app);
-
-// In dev, also start the server
-if (!isProd) {
-  const PORT = process.env.PORT || 5000;
-  app.listen(PORT, '0.0.0.0', () => {
-    console.log(`Server running on port ${PORT}`);
-  });
-}
-
-// export default handler;
+app.listen(PORT, '0.0.0.0', () => {
+  console.log(`Server running on port ${PORT}`);
+});
