@@ -21,6 +21,7 @@ const allowedOrigins = [
   'http://localhost:3000',
   'https://52bazaar.eurovisionbdg.com',
   'https://52-bazaar-frontend.vercel.app',
+  'https://five2-bazaar-backend-api.onrender.com'
 ];
 
 const corsOptions = {
