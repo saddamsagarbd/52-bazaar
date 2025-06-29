@@ -52,31 +52,27 @@ const Products = () => {
         }
     }, []);
     const handleModify = useCallback((id) => {
-
-        console.log("Modal open?", modalIsOpen);
-        console.log("Searching for product with id:", id);
-        console.log("products:", products);
         
         if (!products || products.length === 0) {
-          console.warn("No products loaded");
-          return;
+            console.warn("No products loaded");
+            return;
         }
 
         const product = products.find((p) => String(p._id) === String(id));
 
         if (!product) {
-          console.warn("Product not found for id:", id);
-          return;
+            console.warn("Product not found for id:", id);
+            return;
         }
 
         console.table(product);
         setEditProduct(product);
         setNewProduct({
-          ...product,
-          category:
-            typeof product.category === "object"
-              ? product.category._id
-              : product.category,
+            ...product,
+            category:
+                typeof product.category === "object"
+                ? product.category._id
+                : product.category,
         });
         console.log(product.imgUrl);
         setPreview(product.imgUrl); // if you're previewing existing image
@@ -135,28 +131,28 @@ const Products = () => {
                     console.log('loading:', loading)
                     
                     return (
-                      <div className="flex items-center gap-2">
-                        <button
-                          disabled={loading || products.length === 0}
-                          onClick={() => handleModify(id)}
-                          className="text-primary-500 hover:text-primary-700"
-                          title="Edit"
-                        >
-                          <Edit style={{ color: "skyblue" }} />
-                        </button>
+                        <div className="flex items-center gap-2">
+                            <button
+                                disabled={loading || products.length === 0}
+                                onClick={() => handleModify(id)}
+                                className="text-primary-500 hover:text-primary-700"
+                                title="Edit"
+                            >
+                                <Edit style={{ color: "skyblue" }} />
+                            </button>
 
-                        <button
-                          onClick={() => handleDelete(id)}
-                          className="text-red-500 hover:text-red-700"
-                          title="Delete"
-                        >
-                          <DeleteForever />
-                        </button>
-                      </div>
+                            <button
+                                onClick={() => handleDelete(id)}
+                                className="text-red-500 hover:text-red-700"
+                                title="Delete"
+                            >
+                                <DeleteForever />
+                            </button>
+                        </div>
                     );
                 },
             },
-        ], [apiUrl, handleDelete]);
+        ], [products, loading, handleDelete, handleModify, apiUrl]);
 
     const filteredData = useMemo(() => 
         products.filter((product) =>
