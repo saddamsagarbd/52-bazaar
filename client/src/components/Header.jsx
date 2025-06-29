@@ -2,7 +2,7 @@ import React from "react";
 import Logo from "../assets/images/52-bazaar-logo.png";
 import NavanaLogo from "../assets/images/logo.png";
 import {
-  ShoppingCart,
+  SearchRounded,
   WhatsApp,
   Facebook,
   LinkedIn,
@@ -22,7 +22,7 @@ const Header = () => {
         </div>
 
         {/* Center: Search Bar */}
-        <div className="flex-1 px-8">
+        <div className="flex-1 px-4">
           <form className="flex max-w-2xl mx-auto">
             <input
               type="text"
@@ -34,7 +34,7 @@ const Header = () => {
               type="submit"
               className="bg-[#6AB802] text-white px-4 py-2 rounded-r-md hover:bg-[#6AB802]"
             >
-              Search
+              <SearchRounded style={{ fontSize: "28px", color: "#FFFFFF" }} />
             </button>
           </form>
         </div>

@@ -152,7 +152,7 @@ const Products = () => {
                     );
                 },
             },
-        ], [products, loading, handleDelete, handleModify, apiUrl]);
+        ], [products, loading, handleDelete, handleModify]);
 
     const filteredData = useMemo(() => 
         products.filter((product) =>
