@@ -17,7 +17,6 @@ const getProducts = async (req, res) => {
             query.$text = { $search: name };
         }
 
-
         // if (name) query.name = { $regex: name, $options: "i" };
         if (price && !isNaN(price)) query.price = Number(price);
         if (category && Types.ObjectId.isValid(category)) query.category = new Types.ObjectId(category);

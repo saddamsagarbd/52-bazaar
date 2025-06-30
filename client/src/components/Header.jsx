@@ -41,7 +41,7 @@ const Header = () => {
 
         {/* Right: Cart, Sell Item, Login */}
         {/* <div className="flex items-center space-x-3 md:static md:flex-row fixed bottom-0 left-0 right-0 bg-white border-t md:border-none justify-around md:justify-end py-2 md:py-0 z-50"> */}
-        <div className="fixed bottom-4 left-1/2 -translate-x-1/2 flex items-center justify-around gap-4 bg-white px-6 py-3 rounded-full shadow-lg z-50 md:static md:translate-x-0">
+        <div className="fixed bottom-4 left-1/2 -translate-x-1/2 flex items-center justify-around gap-4 bg-white px-6 py-3 rounded-full shadow-lg md:shadow-none z-50 md:static md:translate-x-0">
 
           {/* CartBadge */}
           <Link to="/cart" className="relative">
