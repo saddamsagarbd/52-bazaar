@@ -5,7 +5,8 @@ import {
   SearchRounded,
   WhatsApp,
   Facebook,
-  LinkedIn
+  LinkedIn,
+  YouTube,
 } from "@mui/icons-material";
 import { Link } from "react-router-dom";
 import CartBadge from "./CartBadge";
@@ -17,7 +18,11 @@ const Header = () => {
         {/* Left: Logo */}
         <div className="flex-shrink-0">
           <Link to="/">
-            <img src={Logo} alt="52-bazaar" className="w-20 h-auto md:w-[80px]" />
+            <img
+              src={Logo}
+              alt="52-bazaar"
+              className="w-20 h-auto md:w-[80px]"
+            />
           </Link>
         </div>
 
@@ -42,7 +47,6 @@ const Header = () => {
         {/* Right: Cart, Sell Item, Login */}
         {/* <div className="flex items-center space-x-3 md:static md:flex-row fixed bottom-0 left-0 right-0 bg-white border-t md:border-none justify-around md:justify-end py-2 md:py-0 z-50"> */}
         <div className="fixed bottom-4 left-1/2 -translate-x-1/2 flex items-center justify-around gap-4 bg-white px-6 py-3 rounded-full shadow-lg md:shadow-none z-50 md:static md:translate-x-0">
-
           {/* CartBadge */}
           <Link to="/cart" className="relative">
             <CartBadge />
@@ -50,27 +54,25 @@ const Header = () => {
 
           {/* WhatsApp */}
           <a
-            href="https://wa.me/8801994282802"
+            href="https://wa.me/8801896270659"
             target="_blank"
             rel="noopener noreferrer"
           >
             <WhatsApp style={{ fontSize: "28px", color: "green" }} />
           </a>
           <a
-            href="https://wa.me/8801994282802"
-            onClick={(e) => e.preventDefault()}
+            href="https://www.facebook.com/share/14DkMAnoDNA/"
             target="_blank"
             rel="noopener noreferrer"
           >
             <Facebook style={{ fontSize: "28px", color: "blue" }} />
           </a>
           <a
-            href="https://wa.me/8801994282802"
-            onClick={(e) => e.preventDefault()}
+            href="https://youtube.com/@eurovisionbd?si=PpE2_a1X0qBsFjVr"
             target="_blank"
             rel="noopener noreferrer"
           >
-            <LinkedIn style={{ fontSize: "28px", color: "skyblue" }} />
+            <YouTube style={{ fontSize: "28px", color: "red" }} />
           </a>
 
           {/* Login */}
