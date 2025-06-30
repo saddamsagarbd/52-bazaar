@@ -10,15 +10,9 @@ const getProducts = async (req, res) => {
         const { name, price, category, page = 1, limit = 20 } = req.query;
         const query = { is_active: true };
 
-        // if (name) query.name = { $regex: name, $options: "i" };
-        // if (price && !isNaN(price)) query.price = Number(price);
-        // if (category && Types.ObjectId.isValid(category)) query.category = new Types.ObjectId(category);
-        if (name) query.$text = { $search: name }; // Use full-text index
+        if (name) query.name = { $regex: name, $options: "i" };
         if (price && !isNaN(price)) query.price = Number(price);
-        if (category && Types.ObjectId.isValid(category)) {
-        query.category = new Types.ObjectId(category);
-        }
-
+        if (category && Types.ObjectId.isValid(category)) query.category = new Types.ObjectId(category);
 
         const [totalProducts, products] = await Promise.all([
             Product.countDocuments(query),
