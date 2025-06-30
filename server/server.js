@@ -18,10 +18,12 @@ const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
 const allowedOrigins = [
-  'http://localhost:3000',
-  'https://52bazaar.eurovisionbdg.com',
-  'https://52-bazaar-frontend.vercel.app',
+  "http://localhost:3000",
+  "https://52bazaar.eurovisionbdg.com",
+  "https://52-bazaar-frontend.vercel.app",
+  "https://52-bazaar-frontend-lrn68lvd5-saddamsagars-projects.vercel.app",
 ];
+
 
 const corsOptions = {
   origin: function (origin, callback) {
