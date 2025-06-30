@@ -11,13 +11,13 @@ import HeroSlider from "./HeroSlider";
 const LandingPage = () => {
   usePageTitle("52 Bazaar | Home");
   return (
-    <>
+    <div className="overflow-x-hidden">
       <Header />
       <NavigationBar />
       <HeroSlider />
       <ProductsList />
       <Footer />
-    </>
+    </div>
   );
 };
 

@@ -19,7 +19,7 @@ const Product = ({ imgSrc, title, price, product }) => {
         <h2 className="text-gray-800 text-lg font-semibold">{title}</h2>
         <p className="text-gray-600 text-lg mt-1">{price} Tk.</p>
 
-        <div className="mt-4 flex space-x-2 opacity-100 transition-opacity duration-300">
+        {/* <div className="mt-4 flex space-x-2 opacity-100 transition-opacity duration-300">
           <button
             className="flex-1 bg-blue-600 hover:bg-blue-700 text-white text-sm py-2 rounded"
             onClick={handleAddToCart}
@@ -30,7 +30,7 @@ const Product = ({ imgSrc, title, price, product }) => {
           <button className="flex-1 bg-gray-600 hover:bg-gray-700 text-white text-sm py-2 rounded">
             Quick View
           </button>
-        </div>
+        </div> */}
       </div>
     </div>
   );

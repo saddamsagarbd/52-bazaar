@@ -48,7 +48,7 @@ const productSchema = new mongoose.Schema({
 productSchema.index({ is_active: 1 });
 productSchema.index({ category: 1 });
 productSchema.index({ price: 1 });
-productSchema.index({ name: "text" }); // Enables full-text search on product names
+productSchema.index({ name: "text" });
 
 const Product = mongoose.model('Product', productSchema);
 

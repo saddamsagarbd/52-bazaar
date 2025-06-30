@@ -1,15 +1,15 @@
-import dotenv from 'dotenv';
+import dotenv from "dotenv";
 dotenv.config();
 
-import express from 'express';
-import path from 'path';
-import cors from 'cors';
-import { fileURLToPath } from 'url';
-import { connA } from './db-config/db-conn.js';
+import express from "express";
+import path from "path";
+import cors from "cors";
+import { fileURLToPath } from "url";
+import { connA } from "./db-config/db-conn.js";
 
-import authRoute from './routes/auth.js';
-import categoryRoute from './routes/category.js';
-import productRoute from './routes/product.js';
+import authRoute from "./routes/auth.js";
+import categoryRoute from "./routes/category.js";
+import productRoute from "./routes/product.js";
 
 const app = express();
 
@@ -21,9 +21,8 @@ const allowedOrigins = [
   "http://localhost:3000",
   "https://52bazaar.eurovisionbdg.com",
   "https://52-bazaar-frontend.vercel.app",
-  "https://52-bazaar-frontend-lrn68lvd5-saddamsagars-projects.vercel.app",
+  "https://five2-bazaar-frontend.onrender.com",
 ];
-
 
 const corsOptions = {
   origin: function (origin, callback) {
@@ -33,22 +32,22 @@ const corsOptions = {
       callback(null, true);
     } else {
       console.warn("CORS Blocked Origin:", origin);
-      callback(new Error('Not allowed by CORS'));
+      callback(new Error("Not allowed by CORS"));
     }
   },
   credentials: true,
-  methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
-  allowedHeaders: ['Content-Type', 'Authorization']
+  methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
+  allowedHeaders: ["Content-Type", "Authorization"],
 };
 
 app.use(cors(corsOptions));
-app.options('*', cors(corsOptions), (req, res) => {
+app.options("*", cors(corsOptions), (req, res) => {
   res.sendStatus(200);
 });
 app.use(express.json());
 
 // Static files
-app.use('/uploads', express.static(path.join(__dirname, 'public/uploads')));
+app.use("/uploads", express.static(path.join(__dirname, "public/uploads")));
 
 // Ensure MongoDB is connected before handling any route
 app.use(async (req, res, next) => {
@@ -68,17 +67,17 @@ app.use("/api", authRoute);
 app.use("/api", categoryRoute);
 app.use("/api", productRoute);
 
-app.all('*', (req, res) => {
-  res.status(404).json({ message: 'API route not found', path: req.path });
+app.all("*", (req, res) => {
+  res.status(404).json({ message: "API route not found", path: req.path });
 });
 
-app.get('/api', (req, res) => {
-  res.json('API established');
+app.get("/api", (req, res) => {
+  res.json("API established");
 });
 
 // Error handler
 app.use((err, req, res, next) => {
-  res.status(500).json({ message: 'Internal server error' });
+  res.status(500).json({ message: "Internal server error" });
 });
 
 // Correctly export for Vercel:
