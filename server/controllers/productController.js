@@ -10,36 +10,51 @@ const getProducts = async (req, res) => {
         const { name, price, category, page = 1, limit = 20 } = req.query;
         const query = { is_active: true };
 
-        if (name) query.name = { $regex: name, $options: "i" };
+        // if (name) query.name = { $regex: name, $options: "i" };
+        // if (price && !isNaN(price)) query.price = Number(price);
+        // if (category && Types.ObjectId.isValid(category)) query.category = new Types.ObjectId(category);
+        if (name) query.$text = { $search: name }; // Use full-text index
         if (price && !isNaN(price)) query.price = Number(price);
-        if (category && Types.ObjectId.isValid(category)) query.category = new Types.ObjectId(category);
+        if (category && Types.ObjectId.isValid(category)) {
+        query.category = new Types.ObjectId(category);
+        }
 
-        const totalProducts = await Product.countDocuments(query);
 
-        const products = await Product.find(query)
-                        .select("name price unit quantity imgUrl category")
-                        .populate("category", "name")
-                        .lean()
-                        .skip((page - 1) * limit)
-                        .limit(limit)
-                        .maxTimeMS(5000);
-
-        console.table(products)
+        const [totalProducts, products] = await Promise.all([
+            Product.countDocuments(query),
+            Product.find(query)
+                .select({
+                    name: 1,
+                    price: 1,
+                    unit: 1,
+                    quantity: 1,
+                    imgUrl: 1,
+                    category: 1,
+                    score: { $meta: "textScore" },
+                })
+                .sort(name ? { score: { $meta: "textScore" } } : {}) // Sort by relevance if searching
+                .populate("category", "name")
+                .lean()
+                .skip((page - 1) * limit)
+                .limit(limit)
+                .maxTimeMS(5000),
+        ]);
 
         res.status(200).json({
             totalProducts,
             totalPages: Math.ceil(totalProducts / limit),
-            currentPage: page,
+            currentPage: Number(page),
             products,
         });
+
     } catch (err) {
         console.error("Full error in getProducts:", {
-          message: err.message,
-          stack: err.stack,
-          name: err.name,
-          code: err.code, // MongoDB error code if available
-          keyPattern: err.keyPattern, // MongoDB duplicate key info
-          keyValue: err.keyValue, // MongoDB duplicate key values
+            message: err.message,
+            stack: err.stack,
+            name: err.name,
+            code: err.code, // MongoDB error code if available
+            keyPattern: err.keyPattern, // MongoDB duplicate key info
+            keyValue: err.keyValue, // MongoDB duplicate key values
         });
         res.status(500).json({ message: "Server error", error: err.message });
     }
