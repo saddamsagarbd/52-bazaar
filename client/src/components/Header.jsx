@@ -1,6 +1,6 @@
 import React from "react";
 import Logo from "../assets/images/52-bazaar-logo.png";
-import NavanaLogo from "../assets/images/logo.png";
+// import NavanaLogo from "../assets/images/logo.png";
 import {
   SearchRounded,
   WhatsApp,
@@ -18,7 +18,7 @@ const Header = () => {
         <div className="flex-shrink-0">
           <Link to="/">
             <img
-              src={NavanaLogo}
+              src={Logo}
               alt="52-bazaar"
               className="w-20 h-auto md:w-[80px]"
             />

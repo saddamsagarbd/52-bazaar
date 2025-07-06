@@ -1,12 +1,10 @@
-import { ShoppingCart } from "@mui/icons-material";
+// import { ShoppingCart } from "@mui/icons-material";
 import React from "react";
-import { useCart } from "./CartContext";
+// import { useCart } from "./CartContext";
 
 const Product = ({ product, DefaultProImg }) => {
 
-  const { addToCart } = useCart();
-
-  console.log(product);
+  // const { addToCart } = useCart();
 
   if (!product) return null;
 

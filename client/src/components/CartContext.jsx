@@ -11,6 +11,10 @@ export function CartProvider({ children }) {
         return stored ? JSON.parse(stored) : { products: [] };
     });
 
+    useEffect(() => {
+        localStorage.setItem("cart", JSON.stringify(cart));
+    }, [cart]);
+
     const addToCart = (product) => {
         setCart(prev => {
             const existing = prev.find(i => i.product._id === product._id);
@@ -41,11 +45,11 @@ export function CartProvider({ children }) {
 
     const clearCart = () => setCart([]);
 
+    // const cartCount = cart.reduce((acc, item) => acc + item.quantity, 0);
     const cartCount = cart.length;
-    const cartTotal = cart.reduce(
-        (sum, item) => sum + item.product.price * item.quantity,
-        0
-    );
+    const cartTotal = Array.isArray(cart.products) 
+    ? cart.products.reduce((sum, item) => sum + item.product.price * item.quantity, 0)
+    : 0;
 
     return (
         <CartContext.Provider value={{
