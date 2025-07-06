@@ -5,7 +5,6 @@ import {
   SearchRounded,
   WhatsApp,
   Facebook,
-  LinkedIn,
   YouTube,
 } from "@mui/icons-material";
 import { Link } from "react-router-dom";
@@ -19,7 +18,7 @@ const Header = () => {
         <div className="flex-shrink-0">
           <Link to="/">
             <img
-              src={Logo}
+              src={NavanaLogo}
               alt="52-bazaar"
               className="w-20 h-auto md:w-[80px]"
             />

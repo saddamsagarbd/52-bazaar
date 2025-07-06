@@ -1,69 +1,88 @@
 import React from 'react';
-import { useSelector, useDispatch } from 'react-redux';
-import { removeFromCart } from '../redux/cartActions';
-import { Table, Button, Typography } from 'antd';
+import { Table, Button, Typography, InputNumber } from 'antd';
 import { Link, useNavigate } from 'react-router-dom';
+import { useCart } from './CartContext';
+import { toast } from 'react-toastify';
+import Swal from 'sweetalert2';
 
 const { Title } = Typography;
 
 const CartPage = () => {
-    const dispatch = useDispatch();
     const navigate = useNavigate();
+    const { cart, updateQuantity, removeFromCart, cartTotal } = useCart();
 
-    const cart = useSelector(state => state.cart);
-
-    const handleRemove = (productId) => {
-        dispatch(removeFromCart(productId));
-    };
+    const handleRemove = (id) => {
+        Swal.fire({
+            title: 'Are you sure?',
+            text: "You won't be able to undo this!",
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#3085d6',
+            cancelButtonColor: '#d33',
+            confirmButtonText: 'Yes, remove it!'
+        }).then((result) => {
+            if (result.isConfirmed) {
+                removeFromCart(id);
+                toast.success("Item removed from cart");
+            }
+        });
+    }
 
     const columns = [
         {
-        title: 'Product',
-        dataIndex: 'product',
-        key: 'product',
-        render: (product) => (
+            title: 'Product',
+            key: 'product',
+            render: (_, record) => (
             <div style={{ display: 'flex', alignItems: 'center' }}>
-            <img
-                src={product.image || product.imgUrl}
-                alt={product.name || product.title}
+                <img
+                src={record.product.imgUrl}
+                alt={record.product.name || record.product.title}
                 style={{ width: 60, height: 60, objectFit: 'cover', marginRight: 10 }}
-            />
-            <span>{product.name || product.title}</span>
+                />
+                <span>{record.product.name || record.product.title}</span>
             </div>
-        )
+            ),
         },
         {
-        title: 'Price',
-        dataIndex: 'product',
-        key: 'price',
-        render: (product) => `৳${product.price}`
+            title: 'Price',
+            key: 'price',
+            render: (_, record) => `৳${record.product.price}`,
         },
         {
-        title: 'Quantity',
-        dataIndex: 'quantity',
-        key: 'quantity'
+            title: 'Quantity',
+            key: 'quantity',
+            render: (_, record) => (
+                <InputNumber
+                    min={1}
+                    value={record.quantity || 1}
+                    onChange={(value) => updateQuantity(record.product._id, value)}
+                    style={{ width: 80 }}
+                />
+            ),
         },
         {
-        title: 'Total',
-        key: 'total',
-        render: (_, record) => `৳${record.product.price * record.quantity}`
+            title: 'Total',
+            key: 'total',
+            render: (_, record) =>
+            `৳${record.product.price * record.quantity}`,
         },
         {
-        title: 'Action',
-        key: 'action',
-        render: (_, record) => (
+            title: 'Action',
+            key: 'action',
+            render: (_, record) => (
             <Button danger onClick={() => handleRemove(record.product._id)}>
-            Remove
+                Remove
             </Button>
-        )
-        }
+            ),
+        },
     ];
 
-    if (!cart.items.length) {
+
+    if (!cart.length) {
         return (
         <div style={{ padding: '50px', textAlign: 'center' }}>
             <Title level={3}>Your cart is empty</Title>
-            <Link to="/products">
+            <Link to="/">
             <Button type="primary">Browse Products</Button>
             </Link>
         </div>
@@ -71,20 +90,26 @@ const CartPage = () => {
     }
 
     return (
-        <div style={{ padding: '30px' }}>
-        <Title level={2}>Your Cart</Title>
-        <Table
-            columns={columns}
-            dataSource={cart.items.map(item => ({ ...item, key: item.product._id }))}
-            pagination={false}
-        />
-        <div style={{ textAlign: 'right', marginTop: 20 }}>
-            <Title level={4}>Total: ৳{cart.total}</Title>
-            <Button type="primary" onClick={() => navigate('/checkout')}>
-            Proceed to Checkout
-            </Button>
-        </div>
-        </div>
+        <>
+            <div className="flex flex-col justify-center bg-[transparent] w-full items-center">
+                <div className="flex justify-center w-full max-w-[990px] mx-auto">
+                    <div className="p-6">
+
+                        <Table
+                            columns={columns}
+                            dataSource={cart.map(item => ({ ...item, key: item._id }))}
+                            pagination={false}
+                        />
+                        <div style={{ textAlign: 'right', marginTop: 20 }}>
+                            <Title level={4}>Total: ৳{cartTotal}</Title>
+                            <Button type="primary" onClick={() => navigate('/checkout')}>
+                                Proceed to Checkout
+                            </Button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </>
     );
 };
 

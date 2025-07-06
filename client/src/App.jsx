@@ -16,6 +16,7 @@ import { loginSuccess } from './redux/authSlice';
 import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import { initCart } from './redux/cartActions';
+import Layout from './components/Layout';
 
 function App() {
   const dispatch = useDispatch();
@@ -36,9 +37,14 @@ function App() {
     <>
       <ToastContainer />
       <Routes>
-        <Route path="/" element={<LandingPage />} />
+        {/* <Route path="/" element={<LandingPage />} />
         <Route path="/cart" element={<CartPage />} />
-        <Route path="/checkout" element={<CheckoutPage />} />
+        <Route path="/checkout" element={<CheckoutPage />} /> */}
+        <Route path="/" element={<Layout />}>
+          <Route index element={<LandingPage />} />
+          <Route path="cart" element={<CartPage />} />
+          <Route path="checkout" element={<CheckoutPage />} />
+        </Route>
         <Route path="/admin" element={
           <RedirectIfLoggedIn>
             <AdminLogin />

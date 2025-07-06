@@ -1,9 +1,5 @@
 import React from "react";
 
-import Facebook from "@mui/icons-material/FacebookSharp";
-import WhatsApp from "@mui/icons-material/WhatsApp";
-import LinkedIn from "@mui/icons-material/LinkedIn";
-
 const Footer = () => {
   return (
     <div className="flex flex-col justify-center bg-[#6AB802] w-full items-center">

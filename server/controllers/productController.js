@@ -45,6 +45,8 @@ const getProducts = async (req, res) => {
                 .maxTimeMS(5000),
         ]);
 
+        console.log("products: ", products);
+
         res.status(200).json({
             totalProducts,
             totalPages: Math.ceil(totalProducts / limit),
