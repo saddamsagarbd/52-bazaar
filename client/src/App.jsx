@@ -37,15 +37,12 @@ function App() {
     <>
       <ToastContainer />
       <Routes>
-        {/* <Route path="/" element={<LandingPage />} />
-        <Route path="/cart" element={<CartPage />} />
-        <Route path="/checkout" element={<CheckoutPage />} /> */}
         <Route path="/" element={<Layout />}>
           <Route index element={<LandingPage />} />
           <Route path="cart" element={<CartPage />} />
           <Route path="checkout" element={<CheckoutPage />} />
         </Route>
-        <Route path="/admin" element={
+        <Route path="/login" element={
           <RedirectIfLoggedIn>
             <AdminLogin />
           </RedirectIfLoggedIn>

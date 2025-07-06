@@ -16,7 +16,7 @@ const Topbar = () => {
         e.preventDefault();
         dispatch(logout());
         localStorage.clear();
-        navigate('/admin');
+        navigate('/login');
     }
 
     return (

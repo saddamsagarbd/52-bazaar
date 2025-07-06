@@ -75,7 +75,7 @@ const Header = () => {
           </a>
 
           {/* Login */}
-          <Link to="/admin">
+          <Link to="/login">
             <button className="bg-[#6AB802] border px-4 py-1 rounded-md text-white hover:bg-[#6AB802]">
               Login
             </button>
