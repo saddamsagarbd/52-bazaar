@@ -1,16 +1,14 @@
 import { ShoppingCart } from "@mui/icons-material";
 import React from "react";
-// import { useCart } from "./CartContext";
+import { useCart } from "./CartContext";
 
 const Product = ({ product, DefaultProImg }) => {
 
-  // const { addToCart } = useCart();
+  const { addToCart } = useCart();
 
   if (!product) return null;
 
   const { imgUrl, name, price } = product;
-
-  console.log(imgUrl);
 
   return (
     // <div className="bg-white shadow-lg rounded-[0.5rem] overflow-hidden group p-3 border-[0.1rem] border-[#ececea] min-h-[250px] flex flex-col">
@@ -80,7 +78,7 @@ const Product = ({ product, DefaultProImg }) => {
         {/* Action Buttons */}
         <div className="mt-2 grid grid-cols-1 gap-2">
           <button 
-            // onClick={() => addToCart(product)}
+            onClick={() => addToCart(product)}
             className="bg-[#1abc9c] hover:bg-[#1abc9c] text-white text-sm py-2 px-2 rounded flex items-center justify-center transition-colors"
           >
             <ShoppingCart style={{ fontSize: "16px", marginRight: "4px" }} />

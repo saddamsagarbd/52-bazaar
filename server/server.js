@@ -10,6 +10,7 @@ import { connA } from "./db-config/db-conn.js";
 import authRoute from "./routes/auth.js";
 import categoryRoute from "./routes/category.js";
 import productRoute from "./routes/product.js";
+import orderRoute from "./routes/order.js";
 
 const app = express();
 
@@ -26,7 +27,6 @@ const allowedOrigins = [
 
 const corsOptions = {
   origin: function (origin, callback) {
-    console.log("Request Origin:", origin);
 
     if (!origin || allowedOrigins.includes(origin)) {
       callback(null, true);
@@ -45,6 +45,7 @@ app.options("*", cors(corsOptions), (req, res) => {
   res.sendStatus(200);
 });
 app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
 
 // Static files
 app.use("/uploads", express.static(path.join(__dirname, "public/uploads")));
@@ -52,7 +53,6 @@ app.use("/uploads", express.static(path.join(__dirname, "public/uploads")));
 // Ensure MongoDB is connected before handling any route
 app.use(async (req, res, next) => {
   try {
-    console.log(`${req.method} ${req.url}`);
     await connA();
     next();
   } catch (err) {
@@ -66,6 +66,7 @@ app.get("/api/warmup", (req, res) => res.send("Warmed up ☕"));
 app.use("/api", authRoute);
 app.use("/api", categoryRoute);
 app.use("/api", productRoute);
+app.use("/api", orderRoute);
 
 app.all("*", (req, res) => {
   res.status(404).json({ message: "API route not found", path: req.path });

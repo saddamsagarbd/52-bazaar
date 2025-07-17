@@ -9,6 +9,7 @@ const menuItems = [
     { name: "Dashboard", icon: DashboardIcon, to: "/admin/dashboard" },
     { name: "Categories", icon: CategoryIcon, to: "/admin/categories", badge: "" },
     { name: "Products", icon: InventoryIcon, to: "/admin/products", badge: "" },
+    { name: "Orders", icon: InventoryIcon, to: "/admin/orders", badge: "" },
 ];
 
 const Sidenav = () => {

@@ -1,25 +1,13 @@
 // routes/order.js
 import express from 'express';
 const router = express.Router();
-import Order from '../models/Order.js';
+import Order from '../models/orderModel.js';
 import authMiddleware from '../middleware/authMiddleware.js'; // validate token
+import orderController from '../controllers/orderController.js'
 
-router.post('/', authMiddleware, async (req, res) => {
-    try {
-        const { items, totalAmount, address, paymentMethod } = req.body;
-        const order = new Order({
-        user: req.user._id,
-        items,
-        totalAmount,
-        address,
-        paymentMethod
-        });
-        await order.save();
-        res.status(201).json({ message: 'Order placed successfully', order });
-    } catch (err) {
-        res.status(500).json({ error: 'Order creation failed' });
-    }
-});
+router.get('/orders', orderController.getOrders);
+router.get('/orders/:id', orderController.getOrderDetails);
+router.post('/place-order', orderController.placeOrder);
 
 router.get('/my-orders', authMiddleware, async (req, res) => {
     const orders = await Order.find({ user: req.user._id }).populate('items.product');

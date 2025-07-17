@@ -14,7 +14,6 @@ const ProductsList = () => {
     const fetchProducts = async (apiUrl) => {
         try {
             const url = `${apiUrl}/api/products`;
-            console.log('Fetching products from:', url);
 
             const response = await axios.get(url, {
                 withCredentials: true,

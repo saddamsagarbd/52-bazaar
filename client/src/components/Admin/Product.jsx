@@ -74,7 +74,6 @@ const Products = () => {
                 ? product.category._id
                 : product.category,
         });
-        console.log(product.imgUrl);
         setPreview(product.imgUrl); // if you're previewing existing image
         setModalIsOpen(true);
     }, [products]);
@@ -126,9 +125,6 @@ const Products = () => {
                 header: 'Actions',
                 cell: ({ row }) => {
                     const id = row.original._id;
-
-                    console.log('products length:', products.length)
-                    console.log('loading:', loading)
                     
                     return (
                         <div className="flex items-center gap-2">
@@ -227,8 +223,6 @@ const Products = () => {
                 }
             });
 
-            console.log("Product: ", response);
-
             if (response.data.success) {
                 toast.success(editProduct ? "Product updated successfully" : "Product added successfully");
                 closeModal();
@@ -254,8 +248,6 @@ const Products = () => {
                 },
             });
 
-            console.log(response);
-
             setCategories(response.data.categories);
         } catch (err) {
             console.error("Failed to fetch categories", err);
@@ -272,7 +264,6 @@ const Products = () => {
 
         try {
             const url = `${apiUrl}/api/products`;
-            console.log('Fetching products from:', url);
 
             const response = await axios.get(url, {
                 withCredentials: true,
@@ -284,8 +275,6 @@ const Products = () => {
 
             const productsList =
               response.data.products || response.data?.data?.products || [];
-
-              console.log(productsList);
 
             if (Array.isArray(productsList)) {
                 setProducts(productsList);
@@ -307,11 +296,6 @@ const Products = () => {
         fetchCategories(apiUrl);
         fetchProducts(apiUrl);
     }, [apiUrl]);
-
-    useEffect(() => {
-      console.log("Products state updated:", products);
-    }, [products]);
-
 
     return (
         <div className="p-4 sm:ml-64">

@@ -40,7 +40,7 @@ const Categories = () => {
         const token = localStorage.getItem('token');
     
         if (!token) {
-            console.log("No token found, user not authenticated");
+            toast.error("No token found, user not authenticated");
             return;
         }
 
@@ -71,9 +71,7 @@ const Categories = () => {
             closeModal();
             fetchCategories();
     
-        } catch (err) {
-            console.log('Category submission error:', err);
-        
+        } catch (err) {        
             // Enhanced error messages
             const errorMessage = err.response?.data?.message || 
                                 err.message || 
@@ -147,8 +145,6 @@ const Categories = () => {
                 },
             });
 
-            console.log("response: ", response);
-
             if (Array.isArray(response.data.categories)) {
                 setCategories(response.data.categories);
             } else {
@@ -156,7 +152,7 @@ const Categories = () => {
             }
             
         } catch (err) {
-            console.log("Failed to fetch categories", err);
+            toast.error("Failed to fetch categories");
         }
     };
 

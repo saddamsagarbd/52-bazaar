@@ -27,8 +27,6 @@ const getCategories = async (req, res) => {
                             .limit(limit)
                             .maxTimeMS(5000);
 
-        console.log('Categories response:', categories);
-
         res.status(200).json({
             totalCategories,
             totalPages: Math.ceil(totalCategories / limit),
