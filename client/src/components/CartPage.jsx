@@ -43,16 +43,19 @@ const CartPage = () => {
             title: 'Product',
             dataIndex: 'product',
             key: 'product',
+            responsive: ['xs', 'sm', 'md', 'lg'],
             render: (_, record) => (
                 <div className="flex items-center">
                     <img
                         src={record.product.imgUrl}
                         alt={record.product.name}
-                        className="w-16 h-16 object-cover rounded mr-4"
+                        className="hidden sm:block w-12 h-12 sm:w-16 sm:h-16 object-cover rounded mr-3"
                     />
-                    <div>
-                        <Text strong className="block">{record.product.name}</Text>
-                        <Text type="secondary" className="text-xs">SKU: {record.product.sku || 'N/A'}</Text>
+                    <div className="max-w-[120px] sm:max-w-[200px] truncate">
+                        <Text strong className="block truncate">{record.product.name}</Text>
+                        <Text type="secondary" className="text-xs hidden sm:block">
+                        SKU: {record.product.sku || 'N/A'}
+                        </Text>
                     </div>
                 </div>
             ),
@@ -61,14 +64,15 @@ const CartPage = () => {
             title: 'Price',
             dataIndex: 'price',
             key: 'price',
+            responsive: ['xs', 'sm', 'md', 'lg'],
             render: (_, record) => <Text strong>৳{record.product.price.toFixed(2)}</Text>,
             align: 'right'
         },
         {
             title: 'Quantity',
             key: 'quantity',
+            responsive: ['xs', 'sm', 'md', 'lg'],
             render: (_, record) => (
-                console.log("item:", record),
                 <InputNumber
                     min={1}
                     max={record.product.quantity}
@@ -82,12 +86,14 @@ const CartPage = () => {
         {
             title: 'Total',
             key: 'total',
+            responsive: ['xs', 'sm', 'md', 'lg'],
             render: (_, record) => <Text strong>৳{(record.product.price * record.quantity).toFixed(2)}</Text>,
             align: 'right'
         },
         {
             title: 'Action',
             key: 'action',
+            responsive: ['xs', 'sm', 'md', 'lg'],
             render: (_, record) => (
                 <Button 
                     danger 
@@ -95,7 +101,6 @@ const CartPage = () => {
                     onClick={() => handleRemove(record.product._id)}
                     className="flex items-center"
                 >
-                    Remove
                 </Button>
             ),
             align: 'center'
@@ -126,14 +131,62 @@ const CartPage = () => {
             <Row gutter={[24, 24]}>
                 <Col xs={24} lg={16}>
                     <Card className="shadow-sm">
-                        <div className="overflow-x-auto">
+                        <div className="lg:hidden space-y-4">
+                            {cart.map((item) => (
+                                <div
+                                key={item.product._id}
+                                className="border rounded-lg p-4 shadow-sm bg-white"
+                                >
+                                <div className="flex justify-between">
+                                    <div>
+                                    <Text strong className="block text-base">{item.product.name}</Text>
+                                    <Text type="secondary" className="text-xs">
+                                        SKU: {item.product.sku || 'N/A'}
+                                    </Text>
+                                    </div>
+                                    <Text strong className="text-right text-green-600">
+                                    ৳{(item.product.price * item.quantity).toFixed(2)}
+                                    </Text>
+                                </div>
+
+                                {/* Image (optional: hidden on very small screens) */}
+                                <img
+                                    src={item.product.imgUrl}
+                                    alt={item.product.name}
+                                    className="w-20 h-20 object-cover rounded mt-2"
+                                />
+
+                                <div className="flex justify-between items-center mt-3">
+                                    <InputNumber
+                                    min={1}
+                                    max={item.product.quantity}
+                                    value={item.quantity}
+                                    onChange={(value) => updateQuantity(item.product._id, value)}
+                                    className="w-20"
+                                    />
+
+                                    <Button
+                                    danger
+                                    size="small"
+                                    icon={<DeleteOutlined />}
+                                    onClick={() => handleRemove(item.product._id)}
+                                    >
+                                    Remove
+                                    </Button>
+                                </div>
+                                </div>
+                            ))}
+                        </div>
+                        <div className="hidden lg:block">
                             <Table
                                 columns={columns}
-                                dataSource={cart.map(item => ({ ...item, key: item.product._id }))}
+                                dataSource={cart.map((item) => ({
+                                ...item,
+                                key: item.product._id,
+                                }))}
                                 pagination={false}
                                 bordered={false}
                                 className="cart-table"
-                                scroll={{ x: "max-content" }}
                             />
                         </div>
                     </Card>

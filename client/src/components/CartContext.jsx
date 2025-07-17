@@ -94,11 +94,11 @@ export function CartProvider({ children }) {
         setCart(prev => {
             const updatedProducts = prev.products.map(item => {
                 if (item.product._id === productId) {
-                    if (newQuantity <= item.product.stock) {
+                    if (newQuantity <= item.product.quantity) {
                         return { ...item, quantity: newQuantity };
                     } else {
-                        alert(`Only ${item.product.stock} items available in stock.`);
-                        return { ...item, quantity: item.product.stock };
+                        alert(`Only ${item.product.quantity} items available in stock.`);
+                        return { ...item, quantity: item.quantity };
                     }
                 }
                 return item;
