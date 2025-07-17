@@ -118,61 +118,64 @@ const CartPage = () => {
     }
 
     return (
-        <div className="container mx-auto px-4 py-8">
-            <Title level={2} className="mb-6">Shopping Cart ({cartCount} {cartCount === 1 ? 'item' : 'items'})</Title>
-            
+        <div className="max-w-7xl mx-auto px-4 py-8">
+            <Title level={2} className="mb-6">
+                Shopping Cart ({cartCount} {cartCount === 1 ? 'item' : 'items'})
+            </Title>
+
             <Row gutter={[24, 24]}>
                 <Col xs={24} lg={16}>
                     <Card className="shadow-sm">
-                        <Table
-                            columns={columns}
-                            dataSource={cart.map(item => ({ ...item, key: item.product._id }))}
-                            pagination={false}
-                            bordered={false}
-                            className="cart-table"
-                        />
+                        <div className="overflow-x-auto">
+                            <Table
+                                columns={columns}
+                                dataSource={cart.map(item => ({ ...item, key: item.product._id }))}
+                                pagination={false}
+                                bordered={false}
+                                className="cart-table"
+                                scroll={{ x: "max-content" }}
+                            />
+                        </div>
                     </Card>
                 </Col>
-                
+
                 <Col xs={24} lg={8}>
-                    <Card title="Order Summary" className="shadow-sm sticky top-4">
+                    <Card title="Order Summary" className="shadow-sm lg:sticky lg:top-4">
                         <div className="space-y-3">
                             <div className="flex justify-between">
                                 <Text>Subtotal ({cartCount} items):</Text>
                                 <Text>৳{subtotal.toFixed(2)}</Text>
                             </div>
-                            
+
                             <div className="flex justify-between">
                                 <Text>VAT (10%):</Text>
                                 <Text>৳{vat.toFixed(2)}</Text>
                             </div>
-                            
+
                             <div className="flex justify-between">
                                 <Text>Delivery Charge:</Text>
                                 <Text>৳{deliveryCharge.toFixed(2)}</Text>
                             </div>
-                            
+
                             <Divider className="my-3" />
-                            
+
                             <div className="flex justify-between text-lg">
                                 <Text strong>Total:</Text>
                                 <Text strong>৳{grandTotal.toFixed(2)}</Text>
                             </div>
-                            
-                            <Button 
-                                type="primary" 
-                                size="large" 
-                                block 
+
+                            <Button
+                                type="primary"
+                                size="large"
+                                block
                                 onClick={() => navigate('/checkout')}
                                 className="mt-4 h-12"
                             >
                                 Proceed to Checkout
                             </Button>
-                            
-                            <Link to="/products" className="block mt-2">
-                                <Button block size="large">
-                                    Continue Shopping
-                                </Button>
+
+                            <Link to="/" className="block mt-2">
+                                <Button block size="large">Continue Shopping</Button>
                             </Link>
                         </div>
                     </Card>
