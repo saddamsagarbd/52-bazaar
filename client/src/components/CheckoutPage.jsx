@@ -71,7 +71,7 @@ const CheckoutPage = () => {
         return (
         <div className="flex flex-col items-center justify-center min-h-[60vh] p-6 text-center">
             <Title level={3} className="mb-4">Your cart is empty</Title>
-            <Button type="primary" onClick={() => navigate('/products')}>
+            <Button type="primary" onClick={() => navigate('/')}>
             Browse Products
             </Button>
         </div>

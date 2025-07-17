@@ -108,7 +108,7 @@ const CartPage = () => {
                 <ShoppingCartOutlined className="text-5xl text-gray-400 mb-4" />
                 <Title level={3} className="mb-4">Your shopping cart is empty</Title>
                 <Text type="secondary" className="mb-6">You haven't added any products to your cart yet.</Text>
-                <Link to="/products">
+                <Link to="/">
                     <Button type="primary" size="large">
                         Continue Shopping
                     </Button>
