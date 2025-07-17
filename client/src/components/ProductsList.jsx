@@ -45,7 +45,7 @@ const ProductsList = () => {
       <div className="flex flex-col justify-center bg-[transparent] w-full items-center p-4">
         <div className="flex justify-center w-full max-w-[990px] mx-auto">
           <div className="p-6">
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+            <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4 p-4">
               {products.map((product, index) => (
                   <Product
                     key={index}

@@ -8,20 +8,20 @@ const slides = [
   {
     id: 1,
     title: "Welcome to 52 Bazaar",
-    subtitle: "Your trusted ecommerce solution",
-    image: "/images/slide1.jpg",
+    subtitle: "Shop with Confidence - Your Trusted eCommerce Partner",
+    image: "/images/online-shopping.jpg",
   },
   {
     id: 2,
-    title: "Big Discounts",
-    subtitle: "Up to 50% off on all items!",
-    image: "/images/slide2.jpg",
+    title: "Price Hunt Challenge",
+    subtitle: "Best Price from Retail Shop",
+    image: "/images/best-price.jpg",
   },
   {
     id: 3,
-    title: "Fast Delivery",
-    subtitle: "We deliver within 24 hours",
-    image: "/images/slide3.jpg",
+    title: "Why Wait? Shop NOW!",
+    subtitle: "Quick Delivery Guaranteed!",
+    image: "/images/delivery.jpg",
   },
 ];
 
