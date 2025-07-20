@@ -103,12 +103,12 @@ export default function OrderDetails() {
                     alt="Company Logo"
                     className="h-20 mx-auto"
                     />
-                    <h1 className="text-3xl font-bold text-gray-800">Your Company Name</h1>
+                    <h1 className="text-3xl font-bold text-gray-800">52 Bazaar</h1>
                     <p className="text-gray-600 text-sm">
-                    123 Business Street, Dhaka, Bangladesh
+                    Ka-96/D, Kuril, Vatara, Dhaka-1229, Bangladesh
                     </p>
                     <p className="text-gray-600 text-sm">
-                    Phone: +880 1234-567890 | Email: info@yourcompany.com
+                    Phone: +880 1896-270659 | Email: info@bayannobazaar.com
                     </p>
                     <hr className="my-3 border-gray-400" />
                 </div>
@@ -122,13 +122,13 @@ export default function OrderDetails() {
                         />
                         <div>
                             <h1 className="text-2xl font-bold text-gray-800">
-                            Your Company Name
+                            52 Bazaar
                             </h1>
                             <p className="text-gray-500 text-sm">
-                            123 Business Street, Dhaka, Bangladesh
+                            Ka-96/D, Kuril, Vatara, Dhaka-1229, Bangladesh
                             </p>
                             <p className="text-gray-500 text-sm">
-                            Phone: +880 1234-567890 | Email: info@yourcompany.com
+                            Phone: +880 1896-270659 | Email: info@bayannobazaar.com
                             </p>
                         </div>
                     </div>
