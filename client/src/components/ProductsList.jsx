@@ -4,59 +4,90 @@ import DefaultProImg from '../assets/images/default-img.jpg';
 import Product from "./Product";
 
 const ProductsList = () => {
-    const [products, setProducts] = useState([]);
-    const [loading, setLoading] = useState(true);
+  const [products, setProducts] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [currentPage, setCurrentPage] = useState(1);
+  const [totalPages, setTotalPages] = useState(1);
 
-    const apiUrl = import.meta.env.VITE_API_URL;
+  const itemsPerPage = 20; // default, you can change this
 
-    axios.defaults.withCredentials=true;
+  const apiUrl = import.meta.env.VITE_API_URL;
 
-    const fetchProducts = async (apiUrl) => {
-        try {
-            const url = `${apiUrl}/api/products`;
+  axios.defaults.withCredentials = true;
 
-            const response = await axios.get(url, {
-                withCredentials: true,
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-            });
+  const fetchProducts = async (page = 1, limit = itemsPerPage) => {
+    try {
+      // const url = `${apiUrl}/api/products`;
+      const url = `${apiUrl}/api/products?page=${page}&limit=${limit}`;
 
-            if (Array.isArray(response.data.products)) {
-                setProducts(response.data.products);
-            } else {
-                console.error("Unexpected response format:", response.data.products);
-            }
-        } catch (err) {
-            console.error("Failed to fetch products", err);
-        } finally {
-            setLoading(false)   
-        }
-    };
+      const response = await axios.get(url, {
+        withCredentials: true,
+        headers: {
+          "Content-Type": "application/json",
+        },
+      });
 
-    useEffect(() => {
-        fetchProducts(apiUrl);
-    }, [apiUrl]);
+      if (Array.isArray(response.data.products)) {
+        setProducts(response.data.products);
+        setTotalPages(response.data.totalPages);
+        setCurrentPage(response.data.currentPage);
+      } else {
+        console.error("Unexpected response format:", response.data.products);
+      }
+    } catch (err) {
+      console.error("Failed to fetch products", err);
+    } finally {
+      setLoading(false);
+    }
+  };
 
-    if (loading) return <div>Loading products...</div>;
+  useEffect(() => {
+    fetchProducts(currentPage);
+  }, [currentPage]);
 
-    return (
-      <div className="flex flex-col justify-center bg-[transparent] w-full items-center p-4">
-        <div className="flex justify-center w-full max-w-[990px] mx-auto">
-          <div className="p-6">
-            <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4 p-4">
-              {products.map((product, index) => (
-                  <Product
-                    key={index}
-                    DefaultProImg={DefaultProImg}
-                    product={product}
-                  />
-              ))}
-            </div>
+  if (loading) return <div>Loading products...</div>;
+
+  return (
+    <div className="flex flex-col justify-center bg-[transparent] w-full items-center p-4">
+      <div className="flex justify-center w-full max-w-[990px] mx-auto">
+        <div className="p-6">
+          <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4 p-4">
+            {products.map((product, index) => (
+              <Product
+                key={index}
+                DefaultProImg={DefaultProImg}
+                product={product}
+              />
+            ))}
+          </div>
+
+          <div className="flex justify-center mt-4 space-x-2">
+            <button
+              className="px-3 py-1 bg-gray-200 rounded disabled:opacity-50"
+              onClick={() => setCurrentPage((prev) => Math.max(prev - 1, 1))}
+              disabled={currentPage === 1}
+            >
+              {"<"}
+            </button>
+
+            {/* <span className="px-3 py-1">
+              Page {currentPage} of {totalPages}
+            </span> */}
+
+            <button
+              className="px-3 py-1 bg-gray-200 rounded disabled:opacity-50"
+              onClick={() =>
+                setCurrentPage((prev) => Math.min(prev + 1, totalPages))
+              }
+              disabled={currentPage === totalPages}
+            >
+              {">"}
+            </button>
           </div>
         </div>
       </div>
-    );
+    </div>
+  );
 }
 
 export default ProductsList;
