@@ -161,172 +161,186 @@ const Categories = () => {
     }, []);
 
     return (
-        <div className="p-4 sm:ml-64">
-            <div className="p-4 border-2 border-dashed rounded-lg mt-14">
-                <div className="flex justify-between items-center mb-6">
-                    <h2 className="text-2xl font-semibold">Categories</h2>
-                    <Dialog open={modalIsOpen} onOpenChange={setModalIsOpen}>
-                        <DialogTrigger asChild>
-                            <button
-                                className="bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded-lg transition-colors"
-                            >
-                                Add Category
-                            </button>
-                        </DialogTrigger>
-                        <DialogContent>
-                            <DialogHeader>
-                            <DialogTitle>Add New Category</DialogTitle>
-                            </DialogHeader>
+      <div className="p-4 sm:ml-64">
+        <div className="p-4 border-2 border-dashed rounded-lg mt-14">
+          <div className="flex justify-between items-center mb-6">
+            <h2 className="text-2xl font-semibold">Categories</h2>
+            <Dialog open={modalIsOpen} onOpenChange={setModalIsOpen}>
+              <DialogTrigger asChild>
+                <button className="bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded-lg transition-colors">
+                  Add Category
+                </button>
+              </DialogTrigger>
+              <DialogContent>
+                <DialogHeader>
+                  <DialogTitle>Add New Category</DialogTitle>
+                </DialogHeader>
 
-                            <form onSubmit={handleAddCategory} className="space-y-4 mt-2">
-                                <input
-                                    type="text"
-                                    placeholder="Category Name"
-                                    value={newCategory.name}
-                                    onChange={(e) => setNewCategory({ ...newCategory, name: e.target.value })}
-                                    className="w-full px-4 py-2 border rounded-md focus:outline-none"
-                                    required
-                                />
+                <form onSubmit={handleAddCategory} className="space-y-4 mt-2">
+                  <input
+                    type="text"
+                    placeholder="Category Name"
+                    value={newCategory.name}
+                    onChange={(e) =>
+                      setNewCategory({ ...newCategory, name: e.target.value })
+                    }
+                    className="w-full px-4 py-2 border rounded-md focus:outline-none"
+                    required
+                  />
 
-                                <input
-                                    type="text"
-                                    placeholder="Parent Category (optional)"
-                                    value={newCategory.parent}
-                                    onChange={(e) => setNewCategory({ ...newCategory, parent: e.target.value })}
-                                    className="w-full px-4 py-2 border rounded-md focus:outline-none"
-                                />
+                  <select
+                    value={newCategory.parent}
+                    onChange={(e) =>
+                      setNewCategory({ ...newCategory, parent: e.target.value })
+                    }
+                    className="w-full px-4 py-2 border rounded-md focus:outline-none"
+                  >
+                    <option value="">Parent Category (optional)</option>
+                    {categories.map((cat) => (
+                      <option key={cat._id} value={cat._id}>
+                        {cat.name}
+                      </option>
+                    ))}
+                  </select>
 
-                                <DialogFooter>
-                                    <button
-                                    type="button"
-                                    onClick={() => setModalIsOpen(false)}
-                                    className="px-4 py-2 bg-gray-300 hover:bg-gray-400 rounded-md text-sm"
-                                    >
-                                    Cancel
-                                    </button>
-                                    <button
-                                    type="submit"
-                                    className="px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-md text-sm"
-                                    >
-                                    Add
-                                    </button>
-                                </DialogFooter>
-                            </form>
-                        </DialogContent>
-                    </Dialog>
-                    
-                </div>
+                  <DialogFooter>
+                    <button
+                      type="button"
+                      onClick={() => setModalIsOpen(false)}
+                      className="px-4 py-2 bg-gray-300 hover:bg-gray-400 rounded-md text-sm"
+                    >
+                      Cancel
+                    </button>
+                    <button
+                      type="submit"
+                      className="px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-md text-sm"
+                    >
+                      Add
+                    </button>
+                  </DialogFooter>
+                </form>
+              </DialogContent>
+            </Dialog>
+          </div>
 
-                <div className="mb-4">
-                    <input
-                        type="text"
-                        value={searchQuery}
-                        onChange={(e) => setSearchQuery(e.target.value)}
-                        placeholder="Search Categories..."
-                        className="px-4 py-2 border rounded-md w-full max-w-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-                    />
-                </div>
+          <div className="mb-4">
+            <input
+              type="text"
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
+              placeholder="Search Categories..."
+              className="px-4 py-2 border rounded-md w-full max-w-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+            />
+          </div>
 
-                <div className="overflow-x-auto bg-white rounded-lg shadow">
-                    <table className="min-w-full divide-y divide-gray-200">
-                        <thead className="bg-gray-50">
-                            {table.getHeaderGroups().map((headerGroup) => (
-                                <tr key={headerGroup.id}>
-                                    {headerGroup.headers.map((header) => (
-                                        <th 
-                                            key={header.id} 
-                                            className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
-                                        >
-                                            {flexRender(header.column.columnDef.header, header.getContext())}
-                                        </th>
-                                    ))}
-                                </tr>
-                            ))}
-                        </thead>
-                        <tbody className="bg-white divide-y divide-gray-200">
-                            {table.getRowModel().rows.length > 0 ? (
-                                table.getRowModel().rows.map((row) => (
-                                    <tr key={row.id} className="hover:bg-gray-50">
-                                        {row.getVisibleCells().map((cell) => (
-                                            <td 
-                                                key={cell.id} 
-                                                className="px-6 py-4 whitespace-nowrap text-sm text-gray-500"
-                                            >
-                                                {
-                                                    flexRender(cell.column.columnDef.cell, cell.getContext())
-                                                }
-                                            </td>
-                                        ))}
-                                    </tr>
-                                ))
-                            ) : (
-                                <tr>
-                                    <td colSpan={columns.length} className="px-6 py-4 text-center text-sm text-gray-500">
-                                        No categories found
-                                    </td>
-                                </tr>
-                            )}
-                        </tbody>
-                    </table>
-                </div>
-
-                {/* Pagination */}
-                <div className="flex items-center justify-between mt-4 px-2">
-                    <div className="flex space-x-2">
-                        <button
-                            onClick={() => table.setPageIndex(0)}
-                            disabled={!table.getCanPreviousPage()}
-                            className="px-3 py-1 border rounded-md disabled:opacity-50"
+          <div className="overflow-x-auto bg-white rounded-lg shadow">
+            <table className="min-w-full divide-y divide-gray-200">
+              <thead className="bg-gray-50">
+                {table.getHeaderGroups().map((headerGroup) => (
+                  <tr key={headerGroup.id}>
+                    {headerGroup.headers.map((header) => (
+                      <th
+                        key={header.id}
+                        className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
+                      >
+                        {flexRender(
+                          header.column.columnDef.header,
+                          header.getContext()
+                        )}
+                      </th>
+                    ))}
+                  </tr>
+                ))}
+              </thead>
+              <tbody className="bg-white divide-y divide-gray-200">
+                {table.getRowModel().rows.length > 0 ? (
+                  table.getRowModel().rows.map((row) => (
+                    <tr key={row.id} className="hover:bg-gray-50">
+                      {row.getVisibleCells().map((cell) => (
+                        <td
+                          key={cell.id}
+                          className="px-6 py-4 whitespace-nowrap text-sm text-gray-500"
                         >
-                            {'<<'}
-                        </button>
-                        <button
-                            onClick={() => table.previousPage()}
-                            disabled={!table.getCanPreviousPage()}
-                            className="px-3 py-1 border rounded-md disabled:opacity-50"
-                        >
-                            Previous
-                        </button>
-                    </div>
-                    
-                    <div className="flex items-center space-x-4">
-                        <span className="text-sm">
-                            Page <strong>{table.getState().pagination.pageIndex + 1}</strong> of{' '}
-                            <strong>{table.getPageCount()}</strong>
-                        </span>
-                        <select
-                            value={table.getState().pagination.pageSize}
-                            onChange={e => table.setPageSize(Number(e.target.value))}
-                            className="text-sm border rounded-md px-2 py-1"
-                        >
-                            {[5, 10, 20].map(size => (
-                                <option key={size} value={size}>
-                                    Show {size}
-                                </option>
-                            ))}
-                        </select>
-                    </div>
-                    
-                    <div className="flex space-x-2">
-                        <button
-                            onClick={() => table.nextPage()}
-                            disabled={!table.getCanNextPage()}
-                            className="px-3 py-1 border rounded-md disabled:opacity-50"
-                        >
-                            Next
-                        </button>
-                        <button
-                            onClick={() => table.setPageIndex(table.getPageCount() - 1)}
-                            disabled={!table.getCanNextPage()}
-                            className="px-3 py-1 border rounded-md disabled:opacity-50"
-                        >
-                            {'>>'}
-                        </button>
-                    </div>
-                </div>
+                          {flexRender(
+                            cell.column.columnDef.cell,
+                            cell.getContext()
+                          )}
+                        </td>
+                      ))}
+                    </tr>
+                  ))
+                ) : (
+                  <tr>
+                    <td
+                      colSpan={columns.length}
+                      className="px-6 py-4 text-center text-sm text-gray-500"
+                    >
+                      No categories found
+                    </td>
+                  </tr>
+                )}
+              </tbody>
+            </table>
+          </div>
 
-                {/* Add Category Modal */}
-                {/* <Modal
+          {/* Pagination */}
+          <div className="flex items-center justify-between mt-4 px-2">
+            <div className="flex space-x-2">
+              <button
+                onClick={() => table.setPageIndex(0)}
+                disabled={!table.getCanPreviousPage()}
+                className="px-3 py-1 border rounded-md disabled:opacity-50"
+              >
+                {"<<"}
+              </button>
+              <button
+                onClick={() => table.previousPage()}
+                disabled={!table.getCanPreviousPage()}
+                className="px-3 py-1 border rounded-md disabled:opacity-50"
+              >
+                Previous
+              </button>
+            </div>
+
+            <div className="flex items-center space-x-4">
+              <span className="text-sm">
+                Page{" "}
+                <strong>{table.getState().pagination.pageIndex + 1}</strong> of{" "}
+                <strong>{table.getPageCount()}</strong>
+              </span>
+              <select
+                value={table.getState().pagination.pageSize}
+                onChange={(e) => table.setPageSize(Number(e.target.value))}
+                className="text-sm border rounded-md px-2 py-1"
+              >
+                {[5, 10, 20].map((size) => (
+                  <option key={size} value={size}>
+                    Show {size}
+                  </option>
+                ))}
+              </select>
+            </div>
+
+            <div className="flex space-x-2">
+              <button
+                onClick={() => table.nextPage()}
+                disabled={!table.getCanNextPage()}
+                className="px-3 py-1 border rounded-md disabled:opacity-50"
+              >
+                Next
+              </button>
+              <button
+                onClick={() => table.setPageIndex(table.getPageCount() - 1)}
+                disabled={!table.getCanNextPage()}
+                className="px-3 py-1 border rounded-md disabled:opacity-50"
+              >
+                {">>"}
+              </button>
+            </div>
+          </div>
+
+          {/* Add Category Modal */}
+          {/* <Modal
                     isOpen={modalIsOpen}
                     onRequestClose={closeModal}
                     contentLabel="Add Category"
@@ -405,10 +419,8 @@ const Categories = () => {
                         </div>
                     </div>
                 </Modal> */}
-                
-
-            </div>
         </div>
+      </div>
     );
 };
 
