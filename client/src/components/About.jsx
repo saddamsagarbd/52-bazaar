@@ -4,7 +4,7 @@ import Team from '../assets/images/team.jpg';
 const About = () => {
     return (
       <div className="flex flex-col justify-center bg-[#f0f0f0] w-full items-center py-6">
-        <div className="flex justify-center w-full max-w-[990px] mx-auto">
+        <div className="flex justify-center w-full max-w-[1080px] mx-auto">
           <h3 className="text-4xl font-bold text-black text-center">
             About 52 Bazaar
           </h3>

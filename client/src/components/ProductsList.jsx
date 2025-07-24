@@ -3,7 +3,8 @@ import axios from 'axios';
 import DefaultProImg from '../assets/images/default-img.jpg';
 import Product from "./Product";
 
-const ProductsList = () => {
+const ProductsList = ({ selectedCategory }) => {
+
   const [products, setProducts] = useState([]);
   const [loading, setLoading] = useState(true);
   const [currentPage, setCurrentPage] = useState(1);
@@ -18,7 +19,11 @@ const ProductsList = () => {
   const fetchProducts = async (page = 1, limit = itemsPerPage) => {
     try {
       // const url = `${apiUrl}/api/products`;
-      const url = `${apiUrl}/api/products?page=${page}&limit=${limit}`;
+      let url = `${apiUrl}/api/products?page=${page}&limit=${limit}`;
+
+      if(selectedCategory){
+        url += `&category=${encodeURIComponent(selectedCategory)}`;
+      }
 
       const response = await axios.get(url, {
         withCredentials: true,
@@ -43,50 +48,47 @@ const ProductsList = () => {
 
   useEffect(() => {
     fetchProducts(currentPage);
-  }, [currentPage]);
+  }, [currentPage, selectedCategory]);
 
   if (loading) return <div>Loading products...</div>;
 
   return (
-    <div className="flex flex-col justify-center bg-[transparent] w-full items-center p-4">
-      <div className="flex justify-center w-full max-w-[990px] mx-auto">
-        <div className="p-6">
-          <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4 p-4">
-            {products.map((product, index) => (
-              <Product
-                key={index}
-                DefaultProImg={DefaultProImg}
-                product={product}
-              />
-            ))}
-          </div>
-
-          <div className="flex justify-center mt-4 space-x-2">
-            <button
-              className="px-3 py-1 bg-gray-200 rounded disabled:opacity-50"
-              onClick={() => setCurrentPage((prev) => Math.max(prev - 1, 1))}
-              disabled={currentPage === 1}
-            >
-              {"<"}
-            </button>
-
-            {/* <span className="px-3 py-1">
-              Page {currentPage} of {totalPages}
-            </span> */}
-
-            <button
-              className="px-3 py-1 bg-gray-200 rounded disabled:opacity-50"
-              onClick={() =>
-                setCurrentPage((prev) => Math.min(prev + 1, totalPages))
-              }
-              disabled={currentPage === totalPages}
-            >
-              {">"}
-            </button>
-          </div>
+      <>
+        <div className="w-full md:w-3/4 grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+          {products.map((product, index) => (
+            <Product
+              key={index}
+              DefaultProImg={DefaultProImg}
+              product={product}
+            />
+          ))}
         </div>
-      </div>
-    </div>
+
+        <div className="flex justify-center mt-4 space-x-2">
+          <button
+            className="px-3 py-1 bg-gray-200 rounded disabled:opacity-50"
+            onClick={() => setCurrentPage((prev) => Math.max(prev - 1, 1))}
+            disabled={currentPage === 1}
+          >
+            {"<"}
+          </button>
+
+          {/* <span className="px-3 py-1">
+            Page {currentPage} of {totalPages}
+          </span> */}
+
+          <button
+            className="px-3 py-1 bg-gray-200 rounded disabled:opacity-50"
+            onClick={() =>
+              setCurrentPage((prev) => Math.min(prev + 1, totalPages))
+            }
+            disabled={currentPage === totalPages}
+          >
+            {">"}
+          </button>
+        </div>
+      
+      </>
   );
 }
 

@@ -11,10 +11,7 @@ const Layout = () => {
     return (
         <div className="overflow-x-hidden min-h-screen flex flex-col">
             <Header />
-            <NavigationBar />
-            <main className="flex-grow pb-16">
-                <Outlet />
-            </main>
+            <Outlet />
             <Footer />
         </div>
     );

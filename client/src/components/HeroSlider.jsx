@@ -27,7 +27,7 @@ const slides = [
 
 export default function HeroSlider() {
   return (
-    <div className="w-full h-[400px] relative">
+    <div className="w-full h-[400px] sm:h-[300px] md:h-[400px] z-0">
       <Swiper
         modules={[Autoplay, Pagination, Navigation]}
         loop
@@ -43,9 +43,7 @@ export default function HeroSlider() {
               style={{ backgroundImage: `url(${slide.image})` }}
             >
               <div className="bg-black bg-opacity-50 p-6 rounded text-center">
-                <h1 className="text-3xl md:text-5xl font-bold">
-                  {slide.title}
-                </h1>
+                <h1 className="text-3xl md:text-5xl font-bold">{slide.title}</h1>
                 <p className="text-lg mt-2">{slide.subtitle}</p>
               </div>
             </div>

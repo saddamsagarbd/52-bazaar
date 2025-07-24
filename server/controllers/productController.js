@@ -10,6 +10,9 @@ import {
 
 const getProducts = async (req, res) => {
   try {
+
+    console.log(req.query);
+
     let { name, price, category, page = 1, limit = 10 } = req.query;
     const query = { is_active: true };
 
@@ -32,8 +35,10 @@ const getProducts = async (req, res) => {
 
     // if (name) query.name = { $regex: name, $options: "i" };
     if (price && !isNaN(price)) query.price = Number(price);
+    
     if (category && Types.ObjectId.isValid(category))
       query.category = new Types.ObjectId(category);
+
 
     const projection = {
       name: 1,

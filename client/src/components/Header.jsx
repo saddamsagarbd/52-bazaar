@@ -12,7 +12,7 @@ import CartBadge from "./CartBadge";
 
 const Header = () => {
   return (
-    <header className="bg-white border-b shadow-sm py-3 max-w-[990px] mx-auto">
+    <header className="bg-white py-3 max-w-[1080px] mx-auto">
       <div className="w-full flex flex-col md:flex-row items-center justify-between px-4 py-2 space-y-3 md:space-y-0">
         {/* Left: Logo */}
         <div className="flex-shrink-0">
