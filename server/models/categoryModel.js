@@ -22,6 +22,7 @@ const categorySchema = new Schema({
 
 categorySchema.index({ name: "text" });
 categorySchema.index({ is_active: 1, parent_id: 1, created_at: -1 });
+categorySchema.index({ name: 1, parent_id: 1, is_active: 1 });
 
 const Category = mongoose.model('Category', categorySchema);
 

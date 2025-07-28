@@ -45,9 +45,7 @@ const productSchema = new mongoose.Schema({
   timestamps: { createdAt: 'created_at', updatedAt: 'updated_at' }
 });
 
-productSchema.index({ is_active: 1 });
-productSchema.index({ category: 1 });
-productSchema.index({ price: 1 });
+productSchema.index({ name: 1, category: 1, is_active: 1 });
 productSchema.index({ name: "text" });
 
 const Product = mongoose.model('Product', productSchema);

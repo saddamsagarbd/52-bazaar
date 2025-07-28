@@ -11,8 +11,6 @@ import {
 const getProducts = async (req, res) => {
   try {
 
-    console.log(req.query);
-
     let { name, price, category, page = 1, limit = 10 } = req.query;
     const query = { is_active: true };
 
@@ -106,6 +104,7 @@ const addProduct = async (req, res) => {
     const existingProduct = await Product.findOne({
       name: name.trim(),
       category,
+      is_active: true,
     });
 
     if (existingProduct) {
