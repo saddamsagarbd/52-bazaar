@@ -1,7 +1,7 @@
 import React, { useCallback, useEffect, useMemo, useState } from "react";
 import axios from "axios";
 import { toast } from "react-toastify";
-import Swal from 'sweetalert2';
+import Swal from "sweetalert2";
 import {
   useReactTable,
   getCoreRowModel,
@@ -51,34 +51,35 @@ const Products = () => {
     }
   };
 
-    const handleDelete = useCallback((id) => {
-      Swal.fire({
-        title: 'Are you sure?',
-        text: 'This will remove the category!',
-        icon: 'warning',
-        showCancelButton: true,
-        confirmButtonColor: '#3085d6',
-        cancelButtonColor: '#d33',
-        confirmButtonText: 'Yes, remove it!'
-      }).then((result) => {
-        if (result.isConfirmed) {
-          axios.post(`${apiUrl}/api/product/${id}/deactivate`)
-            .then((res) => {
-              if (res.data.success) {
-                toast.success(res.data.message);
-                // remove from UI
-                setCategories(prev => prev.filter(cat => cat._id !== id));
-              } else {
-                toast.error(res.data.message || 'Something went wrong.');
-              }
-            })
-            .catch((err) => {
-              console.error(err);
-              toast.error('Failed to remove the product.');
-            });
-        }
-      });
-    }, []);
+  const handleDelete = useCallback((id) => {
+    Swal.fire({
+      title: "Are you sure?",
+      text: "This will remove the category!",
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonColor: "#3085d6",
+      cancelButtonColor: "#d33",
+      confirmButtonText: "Yes, remove it!",
+    }).then((result) => {
+      if (result.isConfirmed) {
+        axios
+          .post(`${apiUrl}/api/product/${id}/deactivate`)
+          .then((res) => {
+            if (res.data.success) {
+              toast.success(res.data.message);
+              // remove from UI
+              setCategories((prev) => prev.filter((cat) => cat._id !== id));
+            } else {
+              toast.error(res.data.message || "Something went wrong.");
+            }
+          })
+          .catch((err) => {
+            console.error(err);
+            toast.error("Failed to remove the product.");
+          });
+      }
+    });
+  }, []);
 
   const handleModify = useCallback(
     (id) => {
@@ -261,7 +262,7 @@ const Products = () => {
         method,
         url,
         data: formData,
-        timeout: 10000,
+        timeout: 30000,
         headers: {
           "Content-Type": "multipart/form-data",
         },
@@ -310,10 +311,8 @@ const Products = () => {
     setLoading(true);
 
     try {
-
       const safePage = Number(page);
       const safeLimit = Number(limit);
-
 
       // const url = `${apiUrl}/api/products`;
       const url = `${apiUrl}/api/products?page=${safePage}&limit=${safeLimit}`;
