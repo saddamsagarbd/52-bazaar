@@ -189,4 +189,23 @@ const updateProduct = async (req, res) => {
   }
 };
 
-export default { getProducts, addProduct, updateProduct };
+const deactivateProduct = async (req, res) => {
+  try {
+      const { id } = req.params;
+      const product = await Product.findById(id);
+
+      if (!product) {
+          return res.status(404).json({ success: false, message: 'Category not found' });
+      }
+
+      product.is_active = false; // assuming you have an `is_active` field
+      await product.save();
+
+      return res.json({ success: true, message: 'Product removed successfully.' });
+  } catch (err) {
+      console.error(err);
+      return res.status(500).json({ success: false, message: 'Server error' });
+  }
+};
+
+export default { getProducts, addProduct, updateProduct, deactivateProduct };

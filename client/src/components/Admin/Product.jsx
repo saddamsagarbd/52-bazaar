@@ -1,6 +1,7 @@
 import React, { useCallback, useEffect, useMemo, useState } from "react";
 import axios from "axios";
 import { toast } from "react-toastify";
+import Swal from 'sweetalert2';
 import {
   useReactTable,
   getCoreRowModel,
@@ -50,14 +51,35 @@ const Products = () => {
     }
   };
 
-  const handleDelete = useCallback((id) => {
-    const confirmDelete = window.confirm(
-      "Are you sure you want to delete this category?"
-    );
-    if (confirmDelete) {
-      setProducts((prev) => prev.filter((product) => product._id !== id));
-    }
-  }, []);
+    const handleDelete = useCallback((id) => {
+      Swal.fire({
+        title: 'Are you sure?',
+        text: 'This will remove the category!',
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonColor: '#3085d6',
+        cancelButtonColor: '#d33',
+        confirmButtonText: 'Yes, remove it!'
+      }).then((result) => {
+        if (result.isConfirmed) {
+          axios.post(`${apiUrl}/api/product/${id}/deactivate`)
+            .then((res) => {
+              if (res.data.success) {
+                toast.success(res.data.message);
+                // remove from UI
+                setCategories(prev => prev.filter(cat => cat._id !== id));
+              } else {
+                toast.error(res.data.message || 'Something went wrong.');
+              }
+            })
+            .catch((err) => {
+              console.error(err);
+              toast.error('Failed to remove the product.');
+            });
+        }
+      });
+    }, []);
+
   const handleModify = useCallback(
     (id) => {
       if (!products || products.length === 0) {

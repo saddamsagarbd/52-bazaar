@@ -1,10 +1,12 @@
 import React, { useCallback, useEffect, useMemo, useState } from 'react';
 import axios from 'axios';
 import { toast } from 'react-toastify';
+import Swal from 'sweetalert2';
 import {
     useReactTable,
     getCoreRowModel,
     flexRender,
+    getPaginationRowModel,
 } from '@tanstack/react-table';
 import {
     Dialog,
@@ -14,7 +16,7 @@ import {
     DialogTitle,
     DialogFooter,
 } from "@/components/ui/dialog";
-
+import { DeleteForever, Edit } from "@mui/icons-material";
 import usePageTitle from "../../hooks/usePageTitle";
 
 const Categories = () => {
@@ -22,8 +24,15 @@ const Categories = () => {
 
     const [searchQuery, setSearchQuery] = useState('');
     const [modalIsOpen, setModalIsOpen] = useState(false);
+    const [loading, setLoading] = useState(true);
     const [newCategory, setNewCategory] = useState({ name: '', parent: '' });
     const [categories, setCategories] = useState([]);
+    const [editCategory, setEditCategory] = useState(null);
+
+    const [pageCount, setPageCount] = useState(0);
+    const [pageIndex, setPageIndex] = useState(0);
+    const [pageSize, setPageSize] = useState(10);
+
     const apiUrl = import.meta.env.VITE_API_URL;
     
     const closeModal = () => {
@@ -52,13 +61,22 @@ const Categories = () => {
     
         try {
             let apiUrl = import.meta.env.VITE_API_URL;
-            const url = `${apiUrl}/api/add-category`;
-            const response = await axios.post(url, data, {
-                headers: {
-                    'Authorization': `Bearer ${token}`,
-                    "Content-Type": "multipart/form-data"
-                },
-                timeout: 10000
+
+            const url = editCategory
+              ? `${apiUrl}/api/category/edit/${editCategory._id}` // <-- PUT route
+              : `${apiUrl}/api/category/store`; // <-- POST route
+      
+            const method = editCategory ? "put" : "post";
+      
+            const response = await axios({
+              method,
+              url,
+              data,
+              timeout: 10000,
+              headers: {
+                'Authorization': `Bearer ${token}`,
+                "Content-Type": "multipart/form-data",
+              },
             });
 
             // Validate response structure
@@ -67,9 +85,16 @@ const Categories = () => {
             }
 
             // Success handling
-            toast.success("Category added successfully");
-            closeModal();
-            fetchCategories();
+            if (response.data.success) {
+              toast.success(
+                editCategory
+                  ? "Category updated successfully"
+                  : "Category added successfully"
+              );
+              closeModal();
+              await fetchCategories(apiUrl);
+              setEditCategory(null);
+            }
     
         } catch (err) {        
             // Enhanced error messages
@@ -79,14 +104,64 @@ const Categories = () => {
             
             toast.error(errorMessage);
         }
-    };    
-
+    };
+    
     const handleDelete = useCallback((id) => {
-        const confirmDelete = window.confirm('Are you sure you want to delete this category?');
-        if (confirmDelete) {
-            setCategories(prev => prev.filter(category => category.id !== id));
+      Swal.fire({
+        title: 'Are you sure?',
+        text: 'This will remove the category!',
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonColor: '#3085d6',
+        cancelButtonColor: '#d33',
+        confirmButtonText: 'Yes, remove it!'
+      }).then((result) => {
+        if (result.isConfirmed) {
+          axios.post(`${apiUrl}/api/category/${id}/deactivate`)
+            .then((res) => {
+              if (res.data.success) {
+                toast.success(res.data.message);
+                // remove from UI
+                setCategories(prev => prev.filter(cat => cat._id !== id));
+              } else {
+                toast.error(res.data.message || 'Something went wrong.');
+              }
+            })
+            .catch((err) => {
+              console.error(err);
+              toast.error('Failed to remove the category.');
+            });
         }
+      });
     }, []);
+
+    const handleModify = useCallback(
+      (id) => {
+        if (!categories?.length) {
+          console.warn("No categories loaded");
+          return;
+        }
+
+        const category = categories.find((p) => String(p._id) === String(id));
+
+        if (!category) {
+          console.warn("Category not found for id:", id);
+          return;
+        }
+
+        setEditCategory(category);
+
+        setNewCategory({
+          ...category,
+          parent: typeof category.parent_id === "object"
+            ? category.parent_id?._id ?? ""
+            : category.parent_id ?? "",
+        });
+
+        setModalIsOpen(true);
+      },
+      [categories]
+    );
 
     const columns = useMemo(() => [
         {
@@ -104,39 +179,70 @@ const Categories = () => {
         },
         {
             header: 'Actions',
-            cell: ({ row }) => (
-                <button
-                    onClick={() => handleDelete(row.original.id)}
-                    className="text-sm text-red-500 hover:text-red-700"
-                >
-                    Delete
-                </button>
-            ),
+            cell: ({ row }) => {
+              const id = row.original._id;
+    
+              return (
+                <div className="flex items-center gap-2">
+                  <button
+                    disabled={loading || categories.length === 0}
+                    onClick={() => handleModify(id)}
+                    className="text-primary-500 hover:text-primary-700 cursor-pointer"
+                    title="Edit"
+                  >
+                    <Edit style={{ color: "skyblue" }} />
+                  </button>
+    
+                  <button
+                    onClick={() => handleDelete(id)}
+                    className="text-red-500 hover:text-red-700"
+                    title="Delete"
+                  >
+                    <DeleteForever />
+                  </button>
+                </div>
+              );
+            },
         },
-    ], [handleDelete]);
+    ], [categories, loading, handleDelete, handleModify]);
 
     const filteredData = useMemo(() => {
         return categories.filter((category) => `${category.name}`.toLowerCase().includes(searchQuery.toLowerCase()));
     }, [categories, searchQuery]);
-    
 
     const table = useReactTable({
-        data: filteredData,
-        columns,
-        getCoreRowModel: getCoreRowModel(),
-        initialState: {
-            pagination: {
-                pageSize: 5,
-            },
+      data: filteredData,
+      columns,
+      pageCount, // total pages from backend
+      manualPagination: true, // tell react-table to NOT paginate data internally
+      state: {
+        pagination: {
+          pageIndex,
+          pageSize,
         },
+      },
+      onPaginationChange: (updater) => {
+        const newPagination =
+          typeof updater === "function"
+            ? updater({ pageIndex, pageSize })
+            : updater;
+        setPageIndex(newPagination.pageIndex);
+        setPageSize(newPagination.pageSize);
+      },
+      getCoreRowModel: getCoreRowModel(),
+      getPaginationRowModel: getPaginationRowModel(),
     });
 
-    const fetchCategories = async () => {
+    const fetchCategories = async (page = 1, limit = pageSize) => {
         const token = localStorage.getItem('token');
         if (!token) return;
-
         try {
-            const url = `${apiUrl}/api/categories`;
+            setLoading(true);
+            const safePage = Number(page);
+            const safeLimit = Number(limit);
+
+            const url = `${apiUrl}/api/categories?page=${safePage}&limit=${safeLimit}`;
+            
             const response = await axios.get(url, {
                 withCredentials: true,
                 headers: {
@@ -147,18 +253,21 @@ const Categories = () => {
 
             if (Array.isArray(response.data.categories)) {
                 setCategories(response.data.categories);
+                setPageCount(response.data.totalPages);
             } else {
                 console.error("Unexpected response format:", response.data.categories);
             }
             
         } catch (err) {
             toast.error("Failed to fetch categories");
+        } finally {
+          setLoading(false);
         }
     };
 
     useEffect(() => {
-        fetchCategories(apiUrl);
-    }, []);
+        fetchCategories(pageIndex + 1, pageSize);
+    }, [pageIndex, pageSize]);
 
     return (
       <div className="p-4 sm:ml-64">
