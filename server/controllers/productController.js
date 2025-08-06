@@ -1,4 +1,4 @@
-import { Types } from "mongoose";
+import { mongoose, Types } from "mongoose";
 import path from "path";
 import fs from "fs";
 const fsPromises = fs.promises;
@@ -10,72 +10,85 @@ import {
 
 const getProducts = async (req, res) => {
   try {
-
-    let { name, price, category, page = 1, limit = 10 } = req.query;
+    // Destructure with defaults
+    let { name, price, categories, page = 1, limit = 10, sort: sortParam } = req.query;
     const query = { is_active: true };
 
-    const isTextSearch = Boolean(name);
+    // Convert to array and validate categories
+    const categoryIds = [].concat(categories || []).filter(id => 
+      mongoose.Types.ObjectId.isValid(id)
+    );
 
+    // Pagination setup
+    const pagination = { skip: 0, limit: 10 };
     if (limit === "all" || limit === 0) {
-      limit = 0; // MongoDB: 0 means "no limit" (return all)
+      pagination.limit = 0;
       page = 1;
     } else {
-      limit = Number(limit);
-      page = Number(page);
+      pagination.limit = Number(limit) || 10;
+      page = Math.max(1, Number(page) || 1);
     }
+    pagination.skip = pagination.limit === 0 ? 0 : (page - 1) * pagination.limit;
 
-    const skip = limit === 0 ? 0 : (page - 1) * limit;
-
-    // Filters
-    if (isTextSearch) {
+    // Build filters
+    if (name) {
       query.$text = { $search: name };
     }
+    if (price && !isNaN(price)) {
+      query.price = Number(price);
+    }
+    if (categoryIds.length > 0) {
+      query.category = { $in: categoryIds.map(id => new mongoose.Types.ObjectId(id)) };
+    }
 
-    // if (name) query.name = { $regex: name, $options: "i" };
-    if (price && !isNaN(price)) query.price = Number(price);
-    
-    if (category && Types.ObjectId.isValid(category))
-      query.category = new Types.ObjectId(category);
+    // Sorting (enhanced)
+    const sort = {};
+    if (name) {
+      sort.score = { $meta: "textScore" };
+    } else if (sortParam) {
+      // Handle custom sort params like "price_asc", "name_desc"
+      const [field, order] = sortParam.split('_');
+      sort[field] = order === 'desc' ? -1 : 1;
+    } else {
+      sort.name = 1; // Default
+    }
 
-
-    const projection = {
-      name: 1,
-      price: 1,
-      unit: 1,
-      quantity: 1,
-      imgUrl: 1,
-      category: 1,
-      ...(isTextSearch && { score: { $meta: "textScore" } }),
-    };
-
-    const sort = isTextSearch ? { score: { $meta: "textScore" } } : { name: 1 };
-
+    // Execute queries
     const [totalProducts, products] = await Promise.all([
       Product.countDocuments(query),
       Product.find(query)
-        .select(projection)
+        .select('name price unit quantity imgUrl category')
         .sort(sort)
         .populate("category", "name")
         .lean()
-        .skip(skip)
-        .limit(limit === 0 ? undefined : limit) // ✅ no limit if 0
+        .skip(pagination.skip)
+        .limit(pagination.limit || undefined)
         .maxTimeMS(5000),
     ]);
 
     res.status(200).json({
+      success: true,
       totalProducts,
-      totalPages: limit === 0 ? 1 : Math.ceil(totalProducts / limit), // ✅ prevent division by zero
-      currentPage: Number(page),
+      totalPages: pagination.limit === 0 ? 1 : Math.ceil(totalProducts / pagination.limit),
+      currentPage: page,
       products,
+      filters: { // Return active filters
+        ...(name && { name }),
+        ...(price && { price: Number(price) }),
+        ...(categoryIds.length > 0 && { categories: categoryIds })
+      }
     });
   } catch (err) {
-    console.error("Full error in getProducts:", {
-      message: err.message,
-      stack: err.stack,
-      name: err.name,
-      code: err.code, // MongoDB error code if available
+    console.error(`Product API Error: ${err.message}`, {
+      query: req.query,
+      stack: process.env.NODE_ENV === 'development' ? err.stack : undefined
     });
-    res.status(500).json({ message: "Server error", error: err.message });
+
+    res.status(500).json({ 
+      success: false,
+      message: "Failed to fetch products",
+      ...(process.env.NODE_ENV === 'development' && { error: err.message })
+    });
   }
 };
 

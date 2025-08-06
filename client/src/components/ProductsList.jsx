@@ -3,7 +3,7 @@ import axios from 'axios';
 import DefaultProImg from '../assets/images/default-img.jpg';
 import Product from "./Product";
 
-const ProductsList = ({ selectedCategory }) => {
+const ProductsList = ({ selectedCategories }) => {
 
   const [products, setProducts] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -18,12 +18,19 @@ const ProductsList = ({ selectedCategory }) => {
 
   const fetchProducts = async (page = 1, limit = itemsPerPage) => {
     try {
-      // const url = `${apiUrl}/api/products`;
-      let url = `${apiUrl}/api/products?page=${page}&limit=${limit}`;
+      const params = new URLSearchParams({
+        page: currentPage.toString(),
+        limit: itemsPerPage.toString()
+      });
 
-      if(selectedCategory){
-        url += `&category=${encodeURIComponent(selectedCategory)}`;
+      if (selectedCategories.length > 0) {
+        selectedCategories.forEach(catId => {
+          params.append('categories[]', catId);
+        });
       }
+
+      // let url = `${apiUrl}/api/products?page=${page}&limit=${limit}`;
+      const url = `${apiUrl}/api/products?${params.toString()}`;
 
       const response = await axios.get(url, {
         withCredentials: true,
@@ -48,13 +55,13 @@ const ProductsList = ({ selectedCategory }) => {
 
   useEffect(() => {
     fetchProducts(currentPage);
-  }, [currentPage, selectedCategory]);
+  }, [currentPage, selectedCategories]);
 
   if (loading) return <div>Loading products...</div>;
 
   return (
       <>
-        <div className="w-full md:w-3/4 grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+        <div className="w-full md:w-4/4 grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-4 gap-4">
           {products.map((product, index) => (
             <Product
               key={index}

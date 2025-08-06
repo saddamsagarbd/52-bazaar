@@ -12,6 +12,15 @@ const LandingPage = () => {
   const [categories, setCategories] = useState([]);
   const [selectedCategory, setSelectedCategory] = useState(null);
   const [isFilterOpen, setIsFilterOpen] = useState(false);
+  const [selectedCategories, setSelectedCategories] = useState([]);
+
+  const handleCategorySelect = (categoryId) => {
+    setSelectedCategories(prev => 
+      prev.includes(categoryId)
+        ? prev.filter(id => id !== categoryId)
+        : [...prev, categoryId]
+    );
+  };
 
   const apiUrl = import.meta.env.VITE_API_URL;
 
@@ -49,7 +58,7 @@ const LandingPage = () => {
       </div>
       <main className="flex flex-grow p-4 gap-4">
         <div className="flex flex-col justify-center bg-transparent w-full items-center p-4">
-          <div className="flex justify-center w-full max-w-[1080px] mx-auto">
+          <div className="flex justify-center w-full max-w-[1280px] mx-auto">
             <div className="flex flex-col lg:flex-row gap-6 w-full">
               
               <button
@@ -70,20 +79,23 @@ const LandingPage = () => {
 
               {/* Sidebar Filters */}
               <div className={`w-full lg:w-1/4 ${isFilterOpen ? "block" : "hidden"} lg:block`}>
-                <SidebarFilters categories={categories} onCategorySelect={setSelectedCategory} />
+                <SidebarFilters 
+                  categories={categories.map(cat => ({
+                    ...cat,
+                    isSelected: selectedCategories.includes(cat._id)
+                  }))}
+                  onCategorySelect={handleCategorySelect}
+                />
               </div>
 
               {/* Product List */}
               <div className="w-full lg:w-3/4">
-                <ProductsList selectedCategory={selectedCategory} />
+                <ProductsList selectedCategories={selectedCategories} />
               </div>
             </div>
           </div>
         </div>
       </main>
-
-
-      {/* <ProductsList /> */}
     </>
   );
 };

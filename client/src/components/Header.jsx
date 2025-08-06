@@ -12,9 +12,8 @@ import CartBadge from "./CartBadge";
 
 const Header = () => {
   return (
-    <header className="bg-white py-3 max-w-[1080px] mx-auto">
+    <header className="bg-white py-3 w-full max-w-[1280px] mx-auto">
       <div className="w-full flex flex-col md:flex-row items-center justify-between px-4 py-2 space-y-3 md:space-y-0">
-        {/* Left: Logo */}
         <div className="flex-shrink-0">
           <Link to="/">
             <img
@@ -25,7 +24,6 @@ const Header = () => {
           </Link>
         </div>
 
-        {/* Center: Search Bar */}
         <div className="w-full md:flex-1">
           <form className="flex w-full max-w-full md:max-w-2xl mx-auto">
             <input
@@ -43,8 +41,6 @@ const Header = () => {
           </form>
         </div>
 
-        {/* Right: Cart, Sell Item, Login */}
-        {/* <div className="flex items-center space-x-3 md:static md:flex-row fixed bottom-0 left-0 right-0 bg-white border-t md:border-none justify-around md:justify-end py-2 md:py-0 z-50"> */}
         <div className="fixed bottom-4 left-1/2 -translate-x-1/2 flex items-center justify-around gap-4 bg-white px-6 py-3 rounded-full shadow-lg md:shadow-none z-50 md:static md:translate-x-0">
           {/* CartBadge */}
           <Link to="/cart" className="relative">
